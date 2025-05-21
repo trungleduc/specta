@@ -41,3 +41,6 @@ path = "specta/_version.py"
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
+
+[project.entry-points."jupyterlite.addon.v0"]
+specta = "specta.addon:SpectaAddon"

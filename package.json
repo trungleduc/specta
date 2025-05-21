@@ -2,8 +2,7 @@
     "name": "specta",
     "version": "0.1.0",
     "description": "",
-    "keywords": [
-    ],
+    "keywords": [],
     "homepage": "https://github.com/trungleduc/specta",
     "bugs": {
         "url": "https://github.com/trungleduc/specta/issues"
@@ -25,16 +24,22 @@
         "url": "https://github.com/trungleduc/specta.git"
     },
     "scripts": {
+        "clean": "rimraf specta/build && rimraf specta/static/build",
+        "build:lib": "tsc",
+        "build": "npm run clean && npm run build:lib && webpack",
+        "build:demo": "cd  demo && rm -rf .jupyterlite.doit.db _output && jupyter lite build ."
     },
-    "dependencies": {
-    },
+    "dependencies": {},
     "devDependencies": {
+        "@jupyterlab/builder": "~4.4.2",
         "@typescript-eslint/eslint-plugin": "^6.1.0",
         "@typescript-eslint/parser": "^6.1.0",
         "css-loader": "^7.1.2",
         "eslint": "^8.36.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^5.0.0",
+        "handlebars": "^4.7.8",
+        "html-webpack-plugin": "^5.5.3",
         "npm-run-all": "^4.1.5",
         "prettier": "^3.0.0",
         "rimraf": "^5.0.1",

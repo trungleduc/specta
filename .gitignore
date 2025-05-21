@@ -136,3 +136,8 @@ dist
 .pnp.*
 
 specta/_version.py
+build/
+demo/_output
+demo/.jupyterlite.doit.db
+lib/
+__pycache__
