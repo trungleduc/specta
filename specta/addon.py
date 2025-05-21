@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from jupyterlite_core.addons.base import BaseAddon
 
 

@@ -44,3 +44,8 @@ ignore = ["W002"]
 
 [project.entry-points."jupyterlite.addon.v0"]
 specta = "specta.addon:SpectaAddon"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["specta"]
