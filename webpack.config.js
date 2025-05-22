@@ -59,6 +59,8 @@ const extras = Build.ensureAssets({
 
 if (process.env.NODE_ENV === 'production') {
   baseConfig.mode = 'production';
+} else {
+  baseConfig.mode = 'development';
 }
 
 // Make a bootstrap entrypoint
@@ -71,10 +73,9 @@ fs.copySync('./jupyterlite-script/publicpath.js', publicPath);
 const allEntryPoints = {};
 allEntryPoints[`${NAME}/bundle`] = entryPoint;
 allEntryPoints[`${NAME}/publicpath`] = publicPath;
-console.log('#############, allEntryPoints', allEntryPoints);
+
 module.exports = [
   merge(baseConfig, {
-    mode: 'development',
     devtool: 'source-map',
     resolve: {
       fallback: {
@@ -89,7 +90,7 @@ module.exports = [
         name: ['_JUPYTERLAB', 'CORE_OUTPUT']
       },
       filename: '[name].js',
-      chunkFilename: 'specta_[name].js',
+      chunkFilename: '[name].js',
       assetModuleFilename: 'specta_[name][ext][query]',
     },
     module: {

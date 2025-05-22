@@ -1,4 +1,6 @@
+import os
 from pathlib import Path
+import shutil
 
 from jupyterlite_core.addons.base import BaseAddon
 
@@ -23,32 +25,16 @@ class SpectaAddon(BaseAddon):
         """Post-build hook"""
         self.log.info("Running post-build hook for Specta")
 
-        # Copy static assets
-        yield dict(
-            name="specta:copy:specta:build",
-            actions=[
-                (
-                    self.copy_one,
-                    [
-                        self.static_path / "build" / "specta",
-                        self.manager.output_dir / "build" / "specta",
-                    ],
-                )
-            ],
-        )
+        src = self.static_path / "build"
+        dest = self.manager.output_dir / "build"
 
-        yield dict(
-            name="specta:copy:specta:assets",
-            actions=[
-                (
-                    self.copy_one,
-                    [
-                        self.static_path / "build" / "specta_build_index_js.js",
-                        self.manager.output_dir / "build" / "specta_build_index_js.js",
-                    ],
-                )
-            ],
-        )
+        for item in os.listdir(src):
+            s = os.path.join(src, item)
+            d = os.path.join(dest, item)
+            if os.path.isdir(s):
+                shutil.copytree(s, d, dirs_exist_ok=True)
+            else:
+                shutil.copy2(s, d)        
 
         for f in ["index.html", "jupyter-lite.json", "jupyter-lite.ipynb"]:
             yield dict(
