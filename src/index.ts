@@ -1,15 +1,31 @@
+import '@voila-dashboards/voila/style/index.js';
 import '@voila-dashboards/voila/lib/sharedscope';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
+// import { IKernelSpecs } from '@jupyterlite/kernel';
+// import { IServiceWorkerManager } from '@jupyterlite/server';
 import {
   activePlugins,
   createModule,
-  loadComponent
+  loadComponent,
+  themesManagerPlugin
 } from '@voila-dashboards/voila';
 
+import { PluginRegistry } from '@lumino/coreutils';
+import { ServiceManager } from '@jupyterlab/services';
+
+const servicesExtensions = [import('@jupyterlite/services-extension')];
+
+/**
+ * The main function
+ */
 export async function main() {
   const mods = [
     // @jupyterlab plugins
+    require('@jupyterlab/codemirror-extension').default.filter(
+      (p: any) => p.id === '@jupyterlab/codemirror-extension:languages'
+    ),
     require('@jupyterlab/markedparser-extension'),
+    require('@jupyterlab/services-extension'),
     require('@jupyterlab/markdownviewer-extension'),
     require('@jupyterlab/mathjax-extension'),
     require('@jupyterlab/rendermime-extension'),
@@ -17,7 +33,8 @@ export async function main() {
     require('@jupyterlab/theme-dark-extension'),
     require('@jupyter-widgets/jupyterlab-manager/lib/plugin').default.filter(
       (p: any) => p.id !== '@jupyter-widgets/jupyterlab-manager:plugin'
-    )
+    ),
+    themesManagerPlugin
   ];
 
   const mimeExtensions = [
@@ -111,6 +128,12 @@ export async function main() {
     });
 
   const litePluginsToRegister: any[] = [];
+  const baseServerExtensions = await Promise.all(servicesExtensions);
+  baseServerExtensions.forEach(p => {
+    for (const plugin of activePlugins(p, [])) {
+      litePluginsToRegister.push(plugin);
+    }
+  });
 
   // Add the serverlite federated extensions.
   const federatedLiteExtensions = await Promise.allSettled(
@@ -125,6 +148,42 @@ export async function main() {
       console.error(p.reason);
     }
   });
+  console.log('litePluginsToRegister', litePluginsToRegister);
+  // 1. Create a plugin registry
+  const pluginRegistry = new PluginRegistry();
 
-  console.log('DONE');
+  // 2. Register the plugins
+  pluginRegistry.registerPlugins(litePluginsToRegister);
+
+  // 3. Get and resolve the service manager and connection status plugins
+  const IServiceManager = require('@jupyterlab/services').IServiceManager;
+  console.log('IServiceManager', IServiceManager);
+  const serviceManager = (await pluginRegistry.resolveRequiredService(
+    IServiceManager
+  )) as ServiceManager;
+  console.log('serviceManager', serviceManager);
+  // const kernelspecs = await pluginRegistry.resolveRequiredService(IKernelSpecs);
+
+  // const app = new VoiciApp({
+  //   serviceManager,
+  //   // kernelspecs,
+  //   mimeExtensions,
+  //   shell: new VoilaShell()
+  // });
+
+  // app.registerPluginModules(mods);
+
+  // await app.start();
+
+  // const serviceWorkerManager = await pluginRegistry.resolveOptionalService(IServiceWorkerManager);
+  // if (serviceWorkerManager) {
+  //   try {
+  //     await serviceWorkerManager.ready;
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
+
+  // await app.renderWidgets();
+  // window.jupyterapp = app;
 }
