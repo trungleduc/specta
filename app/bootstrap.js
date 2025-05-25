@@ -45,11 +45,15 @@ function hideAppLoadingIndicator() {
   const indicator = document.getElementById('jupyterlite-loading-indicator');
   if (indicator) {
     indicator.classList.add('hidden');
-    indicator.addEventListener('animationend', () => {
-      indicator.remove();
-      // Remove theme classes after the loading indicator is removed
-      document.body.classList.remove('jp-mod-dark', 'jp-mod-light');
-    }, { once: true });
+    indicator.addEventListener(
+      'animationend',
+      () => {
+        indicator.remove();
+        // Remove theme classes after the loading indicator is removed
+        document.body.classList.remove('jp-mod-dark', 'jp-mod-light');
+      },
+      { once: true }
+    );
   }
 }
 
@@ -160,7 +164,10 @@ void (async function bootstrap() {
   let labExtensionUrl = getOption('fullLabextensionsUrl');
   const extensions = await Promise.allSettled(
     extension_data.map(async data => {
-      await loadComponent(`${labExtensionUrl}/${data.name}/${data.load}`, data.name);
+      await loadComponent(
+        `${labExtensionUrl}/${data.name}/${data.load}`,
+        data.name
+      );
     })
   );
 

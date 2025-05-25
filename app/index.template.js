@@ -171,12 +171,7 @@ export async function main() {
     serviceManager,
     availablePlugins: allPlugins
   })
-  // const app = new {{ appClassName }}({
-  //   pluginRegistry,
-  //   mimeExtensions,
-  //   serviceManager,
-  //   availablePlugins: allPlugins
-  // });
+
   app.name = PageConfig.getOption('appName') || 'Specta';
 
   // Expose global app instance when in dev mode or when toggled explicitly.

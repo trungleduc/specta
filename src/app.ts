@@ -18,7 +18,6 @@ export class SpectaApp extends JupyterFrontEnd<SpectaShell> {
         this.registerPlugin(plugin);
       }
     }
-    console.log('Hello World!');
   }
 
   /**

@@ -249,7 +249,7 @@ namespace Private {
           {
             const widget = (msg as Widget.ChildMessage).child;
             // If we already know about this widget, we're done
-            if (this._items.find((v) => v.widget === widget)) {
+            if (this._items.find(v => v.widget === widget)) {
               break;
             }
 
@@ -261,7 +261,7 @@ namespace Private {
         case 'child-removed':
           {
             const widget = (msg as Widget.ChildMessage).child;
-            ArrayExt.removeFirstWhere(this._items, (v) => v.widget === widget);
+            ArrayExt.removeFirstWhere(this._items, v => v.widget === widget);
           }
           break;
         default:

@@ -35,4 +35,3 @@ function getOption(name) {
 
 // eslint-disable-next-line no-undef
 __webpack_public_path__ = getOption('fullStaticUrl') + '/';
-console.log('__webpack_public_path__', __webpack_public_path__);

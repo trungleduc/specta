@@ -27,7 +27,10 @@
         "clean": "rimraf specta/build && rimraf specta/static/build",
         "build:lib": "tsc",
         "build": "npm run clean && npm run build:lib && cd app && webpack",
-        "build:demo": "cd  demo && rm -rf .jupyterlite.doit.db _output && jupyter lite build ."
+        "build:demo": "cd  demo && rm -rf .jupyterlite.doit.db _output && jupyter lite build .",
+        "lint": "npm run lint:prettier && npm run lint:eslint",
+        "lint:prettier": "prettier --no-error-on-unmatched-pattern --write \"**/*{.ts,.tsx,.jsx,.css,.json,.md,.yml}\"",
+        "lint:eslint": "eslint --ext .ts,.tsx ."
     },
     "dependencies": {
         "@jupyterlab/application": "^4.4.2",
