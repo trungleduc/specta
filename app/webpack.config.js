@@ -180,6 +180,10 @@ for (const [name, data] of Object.entries(liteAppData)) {
       disabledExtensions
     })
   );
+
+  // Copy source to build directory
+  fs.copySync('../lib', buildDir);
+
   // Create the bootstrap file that loads federated extensions and calls the
   // initialization logic in index.js
   const entryPoint = `./${name}/build/bootstrap.js`;

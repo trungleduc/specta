@@ -1,12 +1,14 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
 
-// import { {{ appClassName }} } from '{{ appModuleName }}';
+import { SpectaApp } from './app';
 
 // The webpack public path needs to be set before loading the CSS assets.
 import { PageConfig } from '@jupyterlab/coreutils';
 
 import { PluginRegistry } from '@lumino/coreutils';
+
+import { pathsPlugin, translatorPlugin } from '@voila-dashboards/voila';
 
 import './style.js';
 
@@ -34,7 +36,7 @@ async function createModule(scope, module) {
  */
 export async function main() {
   const allPlugins = [];
-  const pluginsToRegister = [];
+  const pluginsToRegister = [ pathsPlugin, translatorPlugin ];
   const federatedExtensionPromises = [];
   const federatedMimeExtensionPromises = [];
   const federatedStylePromises = [];
@@ -161,25 +163,31 @@ export async function main() {
   // 3. Get and resolve the service manager and connection status plugins
   const IServiceManager = require('@jupyterlab/services').IServiceManager;
   const serviceManager = await pluginRegistry.resolveRequiredService(IServiceManager);
-
-  // create the application
+  console.log('Service manager:', serviceManager);
+  //create the application
+  const app = new SpectaApp({
+    pluginRegistry,
+    mimeExtensions,
+    serviceManager,
+    availablePlugins: allPlugins
+  })
   // const app = new {{ appClassName }}({
   //   pluginRegistry,
   //   mimeExtensions,
   //   serviceManager,
   //   availablePlugins: allPlugins
   // });
-  // app.name = PageConfig.getOption('appName') || 'JupyterLite';
+  app.name = PageConfig.getOption('appName') || 'Specta';
 
   // Expose global app instance when in dev mode or when toggled explicitly.
   const exposeAppInBrowser =
     (PageConfig.getOption('exposeAppInBrowser') || '').toLowerCase() === 'true';
 
-  // if (exposeAppInBrowser) {
-  //   window.jupyterapp = app;
-  // }
+  if (exposeAppInBrowser) {
+    window.jupyterapp = app;
+  }
 
   // 4. Start the application, which will activate the other plugins
-  // await app.start();
+  await app.start();
   // await app.restored;
 }
