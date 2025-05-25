@@ -16,7 +16,7 @@ class SpectaAddon(BaseAddon):
 
     @property
     def static_path(self):
-        return Path(__file__).resolve().parent / "static"
+        return Path(__file__).resolve().parent.parent / "app"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,18 +34,26 @@ class SpectaAddon(BaseAddon):
             if os.path.isdir(s):
                 shutil.copytree(s, d, dirs_exist_ok=True)
             else:
-                shutil.copy2(s, d)        
+                shutil.copy2(s, d)
 
-        for f in ["index.html", "jupyter-lite.json", "jupyter-lite.ipynb"]:
-            yield dict(
-                name=f"specta:copy:specta:{f}",
-                actions=[
-                    (
-                        self.copy_one,
-                        [
-                            self.static_path / f,
-                            self.manager.output_dir / "specta" / f,
-                        ],
-                    )
-                ],
-            )
+        yield dict(
+            name="specta:copy:static",
+            actions=[
+                (
+                    self.copy_one,
+                    [
+                        self.static_path / "specta",
+                        self.manager.output_dir / "specta",
+                    ],
+                )
+            ],
+        )
+        yield dict(
+            name="specta:delete:build",
+            actions=[
+                (
+                    self.delete_one,
+                    [self.manager.output_dir / "specta" / "build"],
+                )
+            ],
+        )

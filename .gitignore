@@ -136,6 +136,8 @@ dist
 .pnp.*
 
 specta/_version.py
+specta/static
+app/specta/index.html
 build/
 demo/_output
 demo/.jupyterlite.doit.db
