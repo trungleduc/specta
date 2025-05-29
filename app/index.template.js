@@ -10,6 +10,8 @@ import { PluginRegistry } from '@lumino/coreutils';
 
 import { pathsPlugin, translatorPlugin } from '@voila-dashboards/voila';
 
+import spectaPlugins from './plugins';
+import './sharedscope.js'
 import './style.js';
 
 // custom list of disabled plugins
@@ -36,7 +38,7 @@ async function createModule(scope, module) {
  */
 export async function main() {
   const allPlugins = [];
-  const pluginsToRegister = [ pathsPlugin, translatorPlugin ];
+  const pluginsToRegister = [ pathsPlugin, translatorPlugin, ...spectaPlugins ];
   const federatedExtensionPromises = [];
   const federatedMimeExtensionPromises = [];
   const federatedStylePromises = [];
