@@ -41,6 +41,7 @@
         "@jupyterlab/docmanager-extension": "^4.4.2",
         "@jupyterlab/apputils-extension": "^4.4.2",
         "@jupyterlab/coreutils": "^6.4.2",
+        "@jupyterlab/console": "^4.4.2",
         "@jupyterlab/docregistry": "^4.4.2",
         "@jupyterlab/docmanager": "^4.4.2",
         "@jupyterlab/json-extension": "^4.4.2",

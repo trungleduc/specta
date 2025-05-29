@@ -11,8 +11,10 @@ import { PluginRegistry } from '@lumino/coreutils';
 import { pathsPlugin, translatorPlugin } from '@voila-dashboards/voila';
 
 import spectaPlugins from './plugins';
+
 import './sharedscope.js'
 import './style.js';
+import './style/style.css';
 
 // custom list of disabled plugins
 const disabled = [
@@ -165,7 +167,7 @@ export async function main() {
   // 3. Get and resolve the service manager and connection status plugins
   const IServiceManager = require('@jupyterlab/services').IServiceManager;
   const serviceManager = await pluginRegistry.resolveRequiredService(IServiceManager);
-  console.log('Service manager:', serviceManager);
+
   //create the application
   const app = new SpectaApp({
     pluginRegistry,

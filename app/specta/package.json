@@ -13,6 +13,7 @@
         "@jupyterlab/apputils": "~4.5.2",
         "@jupyterlab/attachments": "~4.4.2",
         "@jupyterlab/codeeditor": "~4.4.2",
+        "@jupyterlab/console": "~4.4.2",
         "@jupyterlab/codemirror": "~4.4.2",
         "@jupyterlab/codemirror-extension": "~4.4.2",
         "@jupyterlab/coreutils": "~6.4.2",
@@ -83,6 +84,7 @@
     "dependencies": {
         "@jupyterlab/attachments": "~4.4.2",
         "@jupyterlab/logconsole": "~4.4.2",
+        "@jupyterlab/console": "~4.4.2",
         "@jupyterlab/codemirror-extension": "~4.4.2",
         "@jupyterlab/docmanager-extension": "~4.4.2",
         "@jupyterlab/javascript-extension": "~4.4.2",

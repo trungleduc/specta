@@ -5,6 +5,7 @@ import { Panel } from '@lumino/widgets';
 
 import { SpectaCellOutput } from './specta_cell_output';
 import { AppModel } from './specta_model';
+import { hideAppLoadingIndicator } from './tool';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -13,7 +14,7 @@ export class AppWidget extends Panel {
     this.title.label = options.label;
     this.title.closable = true;
     this._model = options.model;
-
+    this.node.style.padding = '5px';
     this._host = new Panel();
     this._host.addClass('specta-output-host');
     this.addWidget(this._host);
@@ -72,17 +73,20 @@ export class AppWidget extends Panel {
       if (src.length === 0) {
         continue;
       }
+
       const el = this._model.createCell(cell);
       await this._model.executeCell(
         cell,
         el.cellOutput as SimplifiedOutputArea
       );
       const outputNode = el.cellOutput.node;
+
       if (outputNode.childNodes.length > 0) {
         this.addGridItem(el);
       }
     }
     this.node.removeChild(this._spinner);
+    hideAppLoadingIndicator();
   }
 
   protected onCloseRequest(msg: Message): void {

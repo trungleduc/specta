@@ -183,6 +183,7 @@ for (const [name, data] of Object.entries(liteAppData)) {
 
   // Copy source to build directory
   fs.copySync('../lib', buildDir);
+  fs.copySync('../style', path.join(buildDir, 'style'));
 
   // Create the bootstrap file that loads federated extensions and calls the
   // initialization logic in index.js
@@ -215,6 +216,10 @@ for (const [name, data] of Object.entries(liteAppData)) {
     })
   );
 }
+const shared = Object.values(liteAppData).reduce(
+  (memo, data) => createShared(data, memo),
+  {}
+);
 
 module.exports = [
   merge(baseConfig, {
@@ -287,10 +292,7 @@ module.exports = [
           name: ['_JUPYTERLAB', 'CORE_LIBRARY_FEDERATION']
         },
         name: 'CORE_FEDERATION',
-        shared: Object.values(liteAppData).reduce(
-          (memo, data) => createShared(data, memo),
-          {}
-        )
+        shared
       }),
       ...allHtmlPlugins
     ]

@@ -6,7 +6,7 @@ import {
   Notebook
 } from '@jupyterlab/notebook';
 import { ServiceManager } from '@jupyterlab/services';
-import { UUID } from '@lumino/coreutils';
+// import { UUID } from '@lumino/coreutils';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 
 import { CustomContext } from './custom_context';
@@ -19,7 +19,7 @@ export async function createNotebookContext(options: {
     disableDocumentWideUndoRedo: false
   });
   const manager = options.manager;
-  const path = UUID.uuid4() + '.ipynb';
+  const path = 'demo.ipynb';
 
   await manager.ready;
 
@@ -31,12 +31,12 @@ export async function createNotebookContext(options: {
       shouldStart: true,
       canStart: true,
       shutdownOnDispose: true,
-      name: manager.kernelspecs.specs?.default
+      name: 'xpython'
     }
   });
 
-  // await context.model.initialize();
   await context.sessionContext.initialize();
+
   await context.sessionContext.session?.kernel?.info;
   return context;
 }

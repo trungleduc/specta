@@ -57,8 +57,7 @@ const opener: JupyterFrontEndPlugin<void> = {
     const spectaPanel = await notebookGridFactory.createNew({
       content: notebook
     });
-
-    console.log(spectaPanel, labShell);
+    app.shell.add(spectaPanel, 'main');
   }
 };
 
