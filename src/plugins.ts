@@ -3,17 +3,30 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { IDocumentManager } from '@jupyterlab/docmanager';
+import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { IEditorServices } from '@jupyterlab/codeeditor';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
-
+import { IKernelSpecs } from '@jupyterlite/kernel';
+import { SpectaWidgetFactory } from './specta_widget_factory';
 const opener: JupyterFrontEndPlugin<void> = {
-  id: '@jupyterlite/application-extension:opener',
+  id: 'specta/application-extension:opener',
   autoStart: true,
-  requires: [IDocumentManager],
+  requires: [
+    IKernelSpecs,
+    IRenderMimeRegistry,
+    INotebookTracker,
+    IEditorServices,
+    NotebookPanel.IContentFactory
+  ],
   optional: [ILabShell, ISettingRegistry],
   activate: async (
     app: JupyterFrontEnd,
-    docManager: IDocumentManager,
+    kernelSpecs: IKernelSpecs,
+    rendermime: IRenderMimeRegistry,
+    tracker: INotebookTracker,
+    editorServices: IEditorServices,
+    contentFactory: NotebookPanel.IContentFactory,
     labShell: ILabShell | null,
     settingRegistry: ISettingRegistry | null
   ): Promise<void> => {
@@ -23,41 +36,29 @@ const opener: JupyterFrontEndPlugin<void> = {
     if (!path) {
       return;
     }
+    await serviceManager.ready;
     const sessionManager = serviceManager.sessions;
-
-    const connection = await sessionManager.startNew({
-      // TODO Get these name and path information from the exporter
-      name: '',
-      path: '',
-      type: 'notebook',
-      kernel: {
-        name: 'xpython'
-      }
-    });
-    const kernel = connection.kernel;
-    if (!kernel) {
-      console.error('Can not start kernel');
-      return;
-    }
+    await sessionManager.ready;
 
     const content = await serviceManager.contents.get(path, {
       content: true
     });
-    console.log(content, kernel);
+    const notebook = content.content;
 
-    kernel.connectionStatusChanged.connect(async (_, status) => {
-      if (status === 'connected') {
-        if (!connection.kernel) {
-          return;
-        }
-
-        kernel.statusChanged.connect(async (kernelConnection, status) => {
-          if (status === 'idle') {
-            console.log('Kernel is idle');
-          }
-        });
-      }
+    const notebookGridFactory = new SpectaWidgetFactory({
+      manager: app.serviceManager,
+      rendermime,
+      tracker,
+      contentFactory,
+      mimeTypeService: editorServices.mimeTypeService,
+      editorServices
     });
+
+    const spectaPanel = await notebookGridFactory.createNew({
+      content: notebook
+    });
+
+    console.log(spectaPanel, labShell);
   }
 };
 
