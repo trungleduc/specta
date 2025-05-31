@@ -9,8 +9,7 @@ import {
   IEditorMimeTypeService,
   IEditorServices
 } from '@jupyterlab/codeeditor';
-import { Context } from '@jupyterlab/docregistry';
-import * as nbformat from '@jupyterlab/nbformat';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 import {
   CellList,
   INotebookModel,
@@ -23,16 +22,13 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ServiceManager } from '@jupyterlab/services';
 import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
 
-import {
-  createNotebookContext,
-  createNotebookPanel
-} from './create_notebook_panel';
+import { createNotebookPanel } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
 
 export const VIEW = 'grid_default';
 export class AppModel {
   constructor(private options: AppModel.IOptions) {
-    this._notebook = options.notebook;
+    this._context = options.context;
   }
   /**
    * Whether the handler is disposed.
@@ -49,9 +45,6 @@ export class AppModel {
     this._context?.dispose();
     this._notebookPanel?.dispose();
   }
-  get notebook(): nbformat.INotebookContent {
-    return this._notebook;
-  }
 
   get rendermime(): IRenderMimeRegistry {
     return this.options.rendermime;
@@ -61,31 +54,30 @@ export class AppModel {
     return this._context?.model.cells;
   }
 
-  get context(): Context<INotebookModel> | undefined {
+  get context(): DocumentRegistry.IContext<INotebookModel> {
     return this._context;
   }
   get panel(): NotebookPanel | undefined {
     return this._notebookPanel;
   }
   public async initialize(): Promise<void> {
-    this._context = await createNotebookContext({
-      manager: this.options.manager
-    });
-    this._context.model.fromJSON(this.options.notebook);
+    await this._context?.sessionContext.ready;
+
     this._notebookPanel = createNotebookPanel({
       context: this._context,
       rendermime: this.options.rendermime,
       editorServices: this.options.editorServices
     });
-    // TODO Shameless hack, need to do better!
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    this.options.tracker.widgetAdded.emit(this._notebookPanel);
+
+    (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
   }
 
   createCell(cellModel: ICellModel): SpectaCellOutput {
     let item: SpectaCellOutput;
-
+    const cellModelJson = cellModel.toJSON();
+    const info = {
+      cellModel: cellModelJson
+    };
     switch (cellModel.type) {
       case 'code': {
         const outputareamodel = new OutputAreaModel({ trusted: true });
@@ -93,7 +85,7 @@ export class AppModel {
           model: outputareamodel,
           rendermime: this.options.rendermime
         });
-        item = new SpectaCellOutput(cellModel.id, out);
+        item = new SpectaCellOutput(cellModel.id, out, info);
         break;
       }
       case 'markdown': {
@@ -107,7 +99,7 @@ export class AppModel {
         markdownCell.rendered = true;
         Private.removeElements(markdownCell.node, 'jp-Collapser');
         Private.removeElements(markdownCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, markdownCell);
+        item = new SpectaCellOutput(cellModel.id, markdownCell, info);
         break;
       }
       default: {
@@ -119,7 +111,7 @@ export class AppModel {
         rawCell.inputHidden = false;
         Private.removeElements(rawCell.node, 'jp-Collapser');
         Private.removeElements(rawCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, rawCell);
+        item = new SpectaCellOutput(cellModel.id, rawCell, info);
         break;
       }
     }
@@ -143,15 +135,14 @@ export class AppModel {
     return rep;
   }
 
-  private _notebook: nbformat.INotebookContent;
   private _notebookPanel?: NotebookPanel;
-  private _context?: Context<INotebookModel>;
+  private _context: DocumentRegistry.IContext<INotebookModel>;
   private _isDisposed = false;
 }
 
 export namespace AppModel {
   export interface IOptions {
-    notebook: nbformat.INotebookContent;
+    context: DocumentRegistry.IContext<INotebookModel>;
     manager: ServiceManager.IManager;
     rendermime: IRenderMimeRegistry;
     tracker: INotebookTracker;

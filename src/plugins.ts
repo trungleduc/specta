@@ -3,17 +3,21 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+import { WidgetTracker } from '@jupyterlab/apputils';
+import { IEditorServices } from '@jupyterlab/codeeditor';
+import { IDocumentManager } from '@jupyterlab/docmanager';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { IEditorServices } from '@jupyterlab/codeeditor';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
-import { IKernelSpecs } from '@jupyterlite/kernel';
-import { SpectaWidgetFactory } from './specta_widget_factory';
+import { Widget } from '@lumino/widgets';
+
+import { registerDocumentFactory } from './tool';
+
 const opener: JupyterFrontEndPlugin<void> = {
   id: 'specta/application-extension:opener',
   autoStart: true,
   requires: [
-    IKernelSpecs,
+    IDocumentManager,
     IRenderMimeRegistry,
     INotebookTracker,
     IEditorServices,
@@ -22,42 +26,35 @@ const opener: JupyterFrontEndPlugin<void> = {
   optional: [ILabShell, ISettingRegistry],
   activate: async (
     app: JupyterFrontEnd,
-    kernelSpecs: IKernelSpecs,
+    docManager: IDocumentManager,
     rendermime: IRenderMimeRegistry,
     tracker: INotebookTracker,
     editorServices: IEditorServices,
-    contentFactory: NotebookPanel.IContentFactory,
-    labShell: ILabShell | null,
-    settingRegistry: ISettingRegistry | null
+    contentFactory: NotebookPanel.IContentFactory
   ): Promise<void> => {
-    const { serviceManager } = app;
     const urlParams = new URLSearchParams(window.location.search);
     const path = urlParams.get('path');
     if (!path) {
       return;
     }
-    await serviceManager.ready;
-    const sessionManager = serviceManager.sessions;
-    await sessionManager.ready;
+    const namespace = 'specta-standalone';
+    const spectaTracker = new WidgetTracker<Widget>({ namespace });
 
-    const content = await serviceManager.contents.get(path, {
-      content: true
-    });
-    const notebook = content.content;
-
-    const notebookGridFactory = new SpectaWidgetFactory({
-      manager: app.serviceManager,
+    registerDocumentFactory({
+      factoryName: 'specta-standalone',
+      app,
       rendermime,
       tracker,
+      editorServices,
       contentFactory,
-      mimeTypeService: editorServices.mimeTypeService,
-      editorServices
+      spectaTracker
     });
 
-    const spectaPanel = await notebookGridFactory.createNew({
-      content: notebook
-    });
-    app.shell.add(spectaPanel, 'main');
+    const widget = docManager.openOrReveal(path, 'specta-standalone');
+    if (widget) {
+      app.shell.add(widget, 'main');
+      return;
+    }
   }
 };
 
