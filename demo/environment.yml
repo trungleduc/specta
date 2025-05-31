@@ -5,3 +5,4 @@ channels:
 dependencies:
   - xeus-python
   - ipywidgets
+  - ipecharts
