@@ -77,15 +77,16 @@ export class AppModel {
       rendermime: this.options.rendermime,
       editorServices: this.options.editorServices
     });
-    // TODO Shameless hack, need to do better!
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    this.options.tracker.widgetAdded.emit(this._notebookPanel);
+
+    (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
   }
 
   createCell(cellModel: ICellModel): SpectaCellOutput {
     let item: SpectaCellOutput;
-
+    const cellModelJson = cellModel.toJSON();
+    const info = {
+      cellModel: cellModelJson
+    };
     switch (cellModel.type) {
       case 'code': {
         const outputareamodel = new OutputAreaModel({ trusted: true });
@@ -93,7 +94,7 @@ export class AppModel {
           model: outputareamodel,
           rendermime: this.options.rendermime
         });
-        item = new SpectaCellOutput(cellModel.id, out);
+        item = new SpectaCellOutput(cellModel.id, out, info);
         break;
       }
       case 'markdown': {
@@ -103,11 +104,12 @@ export class AppModel {
           contentFactory: this.options.contentFactory,
           editorConfig: this.options.editorConfig.markdown
         });
+        console.log(markdownCell, cellModel.toJSON());
         markdownCell.inputHidden = false;
         markdownCell.rendered = true;
         Private.removeElements(markdownCell.node, 'jp-Collapser');
         Private.removeElements(markdownCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, markdownCell);
+        item = new SpectaCellOutput(cellModel.id, markdownCell, info);
         break;
       }
       default: {
@@ -119,7 +121,7 @@ export class AppModel {
         rawCell.inputHidden = false;
         Private.removeElements(rawCell.node, 'jp-Collapser');
         Private.removeElements(rawCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, rawCell);
+        item = new SpectaCellOutput(cellModel.id, rawCell, info);
         break;
       }
     }
@@ -169,6 +171,7 @@ namespace Private {
    */
   export function removeElements(node: HTMLElement, className: string): void {
     const elements = node.getElementsByClassName(className);
+    console.log('removing', node, className, elements);
     for (let i = 0; i < elements.length; i++) {
       elements[i].remove();
     }

@@ -80,8 +80,12 @@ export class AppWidget extends Panel {
         el.cellOutput as SimplifiedOutputArea
       );
       const outputNode = el.cellOutput.node;
-
-      if (outputNode.childNodes.length > 0) {
+      const cellModel = el.info.cellModel;
+      if (cellModel?.cell_type === 'code') {
+        if (outputNode.childNodes.length > 0) {
+          this.addGridItem(el);
+        }
+      } else {
         this.addGridItem(el);
       }
     }
