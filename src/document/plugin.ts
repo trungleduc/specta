@@ -1,21 +1,16 @@
-import { WidgetTracker, IWidgetTracker } from '@jupyterlab/apputils';
-import { Widget } from '@lumino/widgets';
-import { Token } from '@lumino/coreutils';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import {
-  NotebookModelFactory,
-  INotebookTracker,
-  NotebookPanel
-} from '@jupyterlab/notebook';
-import { NotebookGridWidgetFactory } from './factory';
-import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { IWidgetTracker, WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
-import { SpectaWidgetFactory } from '../specta_widget_factory';
+import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { Token } from '@lumino/coreutils';
+import { Widget } from '@lumino/widgets';
 
-const FACTORY = 'Specta';
+import { registerDocumentFactory } from '../tool';
+
 export const ISpectaDocTracker = new Token<IWidgetTracker<Widget>>(
   'exampleDocTracker'
 );
@@ -27,47 +22,19 @@ const activate = (
   contentFactory: NotebookPanel.IContentFactory
 ): IWidgetTracker => {
   const namespace = 'specta';
-  const newTracker = new WidgetTracker<Widget>({ namespace });
-  const spectaWidgetFactory = new SpectaWidgetFactory({
-    manager: app.serviceManager,
+  const spectaTracker = new WidgetTracker<Widget>({ namespace });
+
+  registerDocumentFactory({
+    factoryName: 'specta',
+    app,
     rendermime,
     tracker,
+    editorServices,
     contentFactory,
-    mimeTypeService: editorServices.mimeTypeService,
-    editorServices
-  });
-  const widgetFactory = new NotebookGridWidgetFactory({
-    name: FACTORY,
-    modelName: 'notebook',
-    fileTypes: ['ipynb'],
-    spectaWidgetFactory,
-    preferKernel: true,
-    canStartKernel: true,
-    autoStartDefault: true
+    spectaTracker
   });
 
-  // Registering the widget factory
-  app.docRegistry.addWidgetFactory(widgetFactory);
-
-  // Creating and registering the model factory for our custom DocumentModel
-  const modelFactory = new NotebookModelFactory({});
-  app.docRegistry.addModelFactory(modelFactory);
-  // register the filetype
-  app.docRegistry.addFileType({
-    name: 'ipynb',
-    displayName: 'IPYNB',
-    mimeTypes: ['text/json'],
-    extensions: ['.ipynb', '.IPYNB'],
-    fileFormat: 'json',
-    contentType: 'notebook'
-  });
-  widgetFactory.widgetCreated.connect((sender, widget) => {
-    widget.context.pathChanged.connect(() => {
-      newTracker.save(widget);
-    });
-    newTracker.add(widget);
-  });
-  return newTracker;
+  return spectaTracker;
 };
 
 export const spectaDocument: JupyterFrontEndPlugin<IWidgetTracker> = {

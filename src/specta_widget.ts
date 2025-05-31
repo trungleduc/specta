@@ -5,7 +5,6 @@ import { Panel } from '@lumino/widgets';
 
 import { SpectaCellOutput } from './specta_cell_output';
 import { AppModel } from './specta_model';
-import { hideAppLoadingIndicator } from './tool';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -90,7 +89,6 @@ export class AppWidget extends Panel {
       }
     }
     this.node.removeChild(this._spinner);
-    hideAppLoadingIndicator();
   }
 
   protected onCloseRequest(msg: Message): void {

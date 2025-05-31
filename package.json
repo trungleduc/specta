@@ -17,8 +17,8 @@
         "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
         "dist/**/*.{js,js.map,.txt}"
     ],
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "main": "lib/extension_index.js",
+    "types": "lib/extension_index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/trungleduc/specta.git"
