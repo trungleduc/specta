@@ -1,4 +1,4 @@
-import { Context } from '@jupyterlab/docregistry';
+import { Context, DocumentRegistry } from '@jupyterlab/docregistry';
 import {
   INotebookModel,
   NotebookModelFactory,
@@ -55,7 +55,7 @@ export function createNotebook(options: {
 }
 
 export function createNotebookPanel(options: {
-  context: Context<INotebookModel>;
+  context: DocumentRegistry.IContext<INotebookModel>;
   rendermime: IRenderMimeRegistry;
   editorServices: IEditorServices;
 }): NotebookPanel {

@@ -26,11 +26,17 @@
     "scripts": {
         "clean": "rimraf specta/build && rimraf specta/static/build",
         "build:lib": "tsc",
+        "build:labextension": "jupyter labextension build .",
+        "build:labextension:dev": "jupyter labextension build --development True .",
         "build": "npm run clean && npm run build:lib && cd app && webpack",
+        "build:dev": "npm run clean && npm run build:lib && cd app && webpack",
+        "build:all": "npm run build && npm run build:labextension",
+        "build:all:dev": "npm run build:dev && npm run build:labextension:dev",
         "build:demo": "cd  demo && rm -rf .jupyterlite.doit.db _output && jupyter lite build .",
         "lint": "npm run lint:prettier && npm run lint:eslint",
         "lint:prettier": "prettier --no-error-on-unmatched-pattern --write \"**/*{.ts,.tsx,.jsx,.css,.json,.md,.yml}\"",
-        "lint:eslint": "eslint --ext .ts,.tsx ."
+        "lint:eslint": "eslint --ext .ts,.tsx .",
+        "install:extension": "npm run build:lib && npm run build:labextension:dev"
     },
     "dependencies": {
         "@jupyterlab/application": "^4.4.2",
@@ -213,5 +219,9 @@
         "apps": [
             "specta"
         ]
+    },
+    "jupyterlab": {
+        "extension": true,
+        "outputDir": "specta/labextension"
     }
 }

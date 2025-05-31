@@ -39,7 +39,7 @@ async function createModule(scope, module) {
  * The main entry point for the application.
  */
 export async function main() {
-  const allPlugins = [];
+  const allPlugins = [];  
   const pluginsToRegister = [ pathsPlugin, translatorPlugin, ...spectaPlugins ];
   const federatedExtensionPromises = [];
   const federatedMimeExtensionPromises = [];

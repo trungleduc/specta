@@ -9,8 +9,7 @@ import {
   IEditorMimeTypeService,
   IEditorServices
 } from '@jupyterlab/codeeditor';
-import { Context } from '@jupyterlab/docregistry';
-import * as nbformat from '@jupyterlab/nbformat';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 import {
   CellList,
   INotebookModel,
@@ -23,16 +22,13 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ServiceManager } from '@jupyterlab/services';
 import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
 
-import {
-  createNotebookContext,
-  createNotebookPanel
-} from './create_notebook_panel';
+import { createNotebookPanel } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
 
 export const VIEW = 'grid_default';
 export class AppModel {
   constructor(private options: AppModel.IOptions) {
-    this._notebook = options.notebook;
+    this._context = options.context;
   }
   /**
    * Whether the handler is disposed.
@@ -49,9 +45,6 @@ export class AppModel {
     this._context?.dispose();
     this._notebookPanel?.dispose();
   }
-  get notebook(): nbformat.INotebookContent {
-    return this._notebook;
-  }
 
   get rendermime(): IRenderMimeRegistry {
     return this.options.rendermime;
@@ -61,17 +54,15 @@ export class AppModel {
     return this._context?.model.cells;
   }
 
-  get context(): Context<INotebookModel> | undefined {
+  get context(): DocumentRegistry.IContext<INotebookModel> {
     return this._context;
   }
   get panel(): NotebookPanel | undefined {
     return this._notebookPanel;
   }
   public async initialize(): Promise<void> {
-    this._context = await createNotebookContext({
-      manager: this.options.manager
-    });
-    this._context.model.fromJSON(this.options.notebook);
+    await this._context?.sessionContext.ready;
+
     this._notebookPanel = createNotebookPanel({
       context: this._context,
       rendermime: this.options.rendermime,
@@ -104,7 +95,6 @@ export class AppModel {
           contentFactory: this.options.contentFactory,
           editorConfig: this.options.editorConfig.markdown
         });
-        console.log(markdownCell, cellModel.toJSON());
         markdownCell.inputHidden = false;
         markdownCell.rendered = true;
         Private.removeElements(markdownCell.node, 'jp-Collapser');
@@ -145,15 +135,14 @@ export class AppModel {
     return rep;
   }
 
-  private _notebook: nbformat.INotebookContent;
   private _notebookPanel?: NotebookPanel;
-  private _context?: Context<INotebookModel>;
+  private _context: DocumentRegistry.IContext<INotebookModel>;
   private _isDisposed = false;
 }
 
 export namespace AppModel {
   export interface IOptions {
-    notebook: nbformat.INotebookContent;
+    context: DocumentRegistry.IContext<INotebookModel>;
     manager: ServiceManager.IManager;
     rendermime: IRenderMimeRegistry;
     tracker: INotebookTracker;
@@ -171,7 +160,6 @@ namespace Private {
    */
   export function removeElements(node: HTMLElement, className: string): void {
     const elements = node.getElementsByClassName(className);
-    console.log('removing', node, className, elements);
     for (let i = 0; i < elements.length; i++) {
       elements[i].remove();
     }

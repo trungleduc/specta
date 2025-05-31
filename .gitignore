@@ -137,6 +137,7 @@ dist
 
 specta/_version.py
 specta/static
+specta/labextension
 app/specta/index.html
 build/
 demo/_output
