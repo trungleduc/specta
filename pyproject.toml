@@ -1,6 +1,10 @@
 [build-system]
 build-backend = "hatchling.build"
-requires = ["hatchling>=1.5.0,<2", "hatch-nodejs-version>=0.3.2"]
+requires = [
+  "hatchling>=1.5.0,<2",
+  "hatch-nodejs-version>=0.3.2",
+  "jupyterlab>=4.0.0,<5",
+]
 
 [project]
 name = "specta"
@@ -38,6 +42,29 @@ exclude = [".github"]
 
 [tool.hatch.build.hooks.version]
 path = "specta/_version.py"
+
+[tool.hatch.build.targets.wheel.shared-data]
+"specta/labextension" = "share/jupyter/labextensions/specta"
+"install.json" = "share/jupyter/labextensions/specta/install.json"
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = ["hatch-jupyter-builder>=0.5"]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+  "specta/labextension/static/style.js",
+  "specta/labextension/package.json",
+]
+skip-if-exists = ["specta/labextension/static/style.js"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:all"
+npm = ["npm"]
+
+[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_cmd = "install:extension"
+npm = ["npm"]
+source_dir = "src"
+build_dir = "specta/labextension"
 
 [tool.check-wheel-contents]
 ignore = ["W002"]

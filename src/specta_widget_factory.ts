@@ -5,9 +5,10 @@ import {
 import {
   INotebookTracker,
   NotebookPanel,
-  StaticNotebook
+  StaticNotebook,
+  INotebookModel
 } from '@jupyterlab/notebook';
-import * as nbformat from '@jupyterlab/nbformat';
+import { DocumentRegistry } from '@jupyterlab/docregistry';
 
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ServiceManager } from '@jupyterlab/services';
@@ -21,12 +22,12 @@ export class SpectaWidgetFactory {
   }
 
   async createNew(options: {
-    content: nbformat.INotebookContent;
+    context: DocumentRegistry.IContext<INotebookModel>;
   }): Promise<AppWidget> {
-    const { content } = options;
+    const { context } = options;
 
     const model = new AppModel({
-      notebook: content,
+      context,
       manager: this._options.manager,
       rendermime: this._options.rendermime,
       tracker: this._options.tracker,

@@ -1,6 +1,12 @@
 import { Panel, Widget } from '@lumino/widgets';
+import * as nbformat from '@jupyterlab/nbformat';
+
+export interface ICellInfo {
+  hidden?: boolean;
+  cellModel?: nbformat.ICell;
+}
 export class SpectaCellOutput extends Panel {
-  constructor(cellIdentity: string, cell: Widget, info?: any) {
+  constructor(cellIdentity: string, cell: Widget, info: ICellInfo) {
     super();
     this.removeClass('lm-Widget');
     this.removeClass('p-Widget');
@@ -20,10 +26,10 @@ export class SpectaCellOutput extends Panel {
     return this._cellOutput;
   }
 
-  get info(): any {
+  get info(): ICellInfo {
     return this._info;
   }
 
-  private _info: any = {};
+  private _info: ICellInfo = {};
   private _cellOutput: Widget;
 }

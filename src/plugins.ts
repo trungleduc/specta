@@ -9,6 +9,7 @@ import { IEditorServices } from '@jupyterlab/codeeditor';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { IKernelSpecs } from '@jupyterlite/kernel';
 import { SpectaWidgetFactory } from './specta_widget_factory';
+import { spectaDocument } from './document/plugin';
 const opener: JupyterFrontEndPlugin<void> = {
   id: 'specta/application-extension:opener',
   autoStart: true,
@@ -45,7 +46,7 @@ const opener: JupyterFrontEndPlugin<void> = {
     });
     const notebook = content.content;
 
-    const notebookGridFactory = new SpectaWidgetFactory({
+    const spectaWidgetFactory = new SpectaWidgetFactory({
       manager: app.serviceManager,
       rendermime,
       tracker,
@@ -53,12 +54,12 @@ const opener: JupyterFrontEndPlugin<void> = {
       mimeTypeService: editorServices.mimeTypeService,
       editorServices
     });
-
-    const spectaPanel = await notebookGridFactory.createNew({
-      content: notebook
-    });
-    app.shell.add(spectaPanel, 'main');
+    console.log('Creating notebook', notebook, spectaWidgetFactory);
+    // const spectaPanel = await spectaWidgetFactory.createNew({
+    //   content: notebook
+    // });
+    // app.shell.add(spectaPanel, 'main');
   }
 };
 
-export default [opener];
+export default [opener, spectaDocument];
