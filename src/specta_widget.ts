@@ -5,6 +5,7 @@ import { Panel } from '@lumino/widgets';
 
 import { SpectaCellOutput } from './specta_cell_output';
 import { AppModel } from './specta_model';
+import { hideAppLoadingIndicator } from './tool';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -17,13 +18,6 @@ export class AppWidget extends Panel {
     this._host = new Panel();
     this._host.addClass('specta-output-host');
     this.addWidget(this._host);
-
-    this._spinner = document.createElement('div');
-    this._spinner.classList.add('jp-al-Spinner');
-    const spinner = document.createElement('div');
-    spinner.className = 'jp-al-SpinnerContent';
-    this._spinner.appendChild(spinner);
-    this.node.appendChild(this._spinner);
 
     this.node.style.overflow = 'auto';
 
@@ -88,7 +82,7 @@ export class AppWidget extends Panel {
         this.addGridItem(el);
       }
     }
-    this.node.removeChild(this._spinner);
+    hideAppLoadingIndicator();
   }
 
   protected onCloseRequest(msg: Message): void {
@@ -103,8 +97,6 @@ export class AppWidget extends Panel {
   private _host: Panel;
 
   private _gridElements: SpectaCellOutput[] = [];
-
-  private _spinner: HTMLElement;
 }
 
 export namespace AppWidget {

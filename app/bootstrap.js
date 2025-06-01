@@ -39,40 +39,15 @@ function getOption(name) {
 }
 
 /**
- * Hide the loading indicator once the app is fully loaded
- */
-function hideAppLoadingIndicator() {
-  const indicator = document.getElementById('jupyterlite-loading-indicator');
-  if (indicator) {
-    indicator.classList.add('hidden');
-    indicator.addEventListener('animationend', () => {
-      indicator.remove();
-      // Remove theme classes after the loading indicator is removed
-      document.body.classList.remove('jp-mod-dark', 'jp-mod-light');
-    }, { once: true });
-  }
-}
-
-
-/**
  * Apply theme to loading indicator based on saved settings in IndexedDB
  */
 async function applyThemeToAppLoadingIndicator() {
-  const indicator = document.getElementById('jupyterlite-loading-indicator');
-  if (!indicator) {
+  const spinner = document.getElementById('specta-loader-spinner');
+  if (!spinner) {
     return;
   }
 
-  // Hide the indicator by default
-  indicator.classList.add('hidden');
-
-  const showLoadingIndicator = getOption('showLoadingIndicator');
-  // Only show the indicator if explicitly set to true
-  if (showLoadingIndicator === true) {
-    indicator.classList.remove('hidden');
-  } else {
-    return;
-  }
+  spinner.classList.remove('hidden');
 
   try {
     const baseUrl = getOption('baseUrl');
@@ -179,6 +154,4 @@ void (async function bootstrap() {
   // container, we can import the main function.
   let main = (await import('./index.js')).main;
   await main();
-  
-  hideAppLoadingIndicator();
 })();

@@ -53,37 +53,52 @@
         color: #fff;
       }
 
-      #jupyterlite-loading-indicator {
+      #specta-loader-host {
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        z-index: 1000;
-        opacity: 0; /* Hidden by default */
-        transition: opacity 0.5s ease-out;
-        display: none; /* Hidden by default */
-      }
-
-      #jupyterlite-loading-indicator.hidden {
-        animation: fadeOut 0.5s ease-out forwards;
-        pointer-events: none;
-      }
-
-      /* Show the indicator when needed */
-      #jupyterlite-loading-indicator:not(.hidden) {
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        background-color: #fff;
+        color: #000;
         opacity: 1;
-        display: block;
+        transition: opacity 0.5s ease-out;
       }
 
-      .jupyterlite-loading-indicator-spinner {
-        width: 60px;
-        height: 60px;
-        margin: 0 auto 20px;
-        border: 6px solid rgba(0, 0, 0, 0.1);
-        border-top: 6px solid #ffdc00; /* Bright yellow color */
+      body.jp-mod-dark #specta-loader-host {
+        background-color: #111;
+        color: #fff;
+      }
+
+      .specta-loader {
+        position: fixed;
+        width: 150px;
+        height: 150px;
+        top: calc(50% - 75px);
+        left: calc(50% - 75px);
+      }
+
+      .specta-loader:before,
+      .specta-loader:after {
+        content: '';
         border-radius: 50%;
-        animation: jupyter-spin 1s linear infinite;
+        position: absolute;
+        inset: 0;
+        box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3) inset;
+      }
+      .specta-loader:after {
+        box-shadow: 0 2px 0 #ff3d00 inset;
+        animation: rotate 2s linear infinite;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       body.jp-mod-dark .jupyterlite-loading-indicator-spinner {
@@ -96,6 +111,9 @@
           -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
           sans-serif;
         font-size: 16px;
+        position: absolute;
+        top: calc(50% - 11px);
+        left: calc(50% - 52px);
       }
 
       /* Adjust text color based on theme */
@@ -128,11 +146,9 @@
   </head>
   {{#unless (ispage name 'tree')}}
   <body class="jp-ThemedContainer" data-notebook="{{ name }}">
-    <div id="jupyterlite-loading-indicator" class="hidden">
-      <div class="jupyterlite-loading-indicator-spinner"></div>
-      <div class="jupyterlite-loading-indicator-text">
-        Loading JupyterLite...
-      </div>
+    <div id="specta-loader-host">
+      <div id="specta-loader-spinner" class="specta-loader"></div>
+      <div class="jupyterlite-loading-indicator-text">Loading Specta</div>
     </div>
     <noscript>
       <div style="text-align: center; padding: 20px">
