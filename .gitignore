@@ -136,7 +136,7 @@ dist
 .pnp.*
 
 specta/_version.py
-specta/static
+specta/app_static
 specta/labextension
 app/specta/index.html
 build/

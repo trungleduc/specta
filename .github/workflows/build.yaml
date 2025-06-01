@@ -34,7 +34,7 @@ jobs:
         run: |
           set -eux
           npm install
-          npm run build
+          npm run build:all:dev
           python -m pip install -e .
 
       - name: Build the lite site

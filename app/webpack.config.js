@@ -126,7 +126,15 @@ function createShared(packageData, shared = null) {
   return shared;
 }
 
-const topLevelBuild = path.resolve('build');
+const topLevelBuild = path.resolve('../specta/app_static/build');
+const spectaAssets = path.resolve('../specta/app_static/specta');
+if (!fs.existsSync(spectaAssets)) {
+  fs.mkdirSync(spectaAssets, { recursive: true });
+}
+
+['jupyter-lite.json', 'jupyter-lite.ipynb', 'package.json'].forEach(f => {
+  fs.copyFileSync(path.resolve('./specta', f), path.join(spectaAssets, f));
+});
 
 const allAssetConfig = [];
 const allEntryPoints = {};
@@ -221,10 +229,11 @@ const shared = Object.values(liteAppData).reduce(
   {}
 );
 
+const isProduction = process.env.NODE_ENV === 'production';
 module.exports = [
   merge(baseConfig, {
-    mode: 'development',
-    devtool: 'source-map',
+    mode: isProduction ? 'production' : 'development',
+    devtool: isProduction ? false : 'source-map',
     entry: allEntryPoints,
     resolve: {
       fallback: {
