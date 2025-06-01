@@ -35,26 +35,32 @@ source = "nodejs"
 fields = ["description", "authors", "urls"]
 
 [tool.hatch.build.targets.sdist]
+artifacts = ["specta/labextension", "specta/app_static"]
 exclude = [".github"]
 
 [tool.hatch.build.targets.wheel]
+artifacts = [ "specta/app_static"]
 exclude = [".github"]
-
-[tool.hatch.build.hooks.version]
-path = "specta/_version.py"
 
 [tool.hatch.build.targets.wheel.shared-data]
 "specta/labextension" = "share/jupyter/labextensions/specta"
 "install.json" = "share/jupyter/labextensions/specta/install.json"
 
+[tool.hatch.build.hooks.version]
+path = "specta/_version.py"
+
 [tool.hatch.build.hooks.jupyter-builder]
 dependencies = ["hatch-jupyter-builder>=0.5"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
+  "specta/app_static/specta/index.html",
   "specta/labextension/static/style.js",
   "specta/labextension/package.json",
 ]
-skip-if-exists = ["specta/labextension/static/style.js"]
+skip-if-exists = [
+  "specta/labextension/static/style.js",
+  "specta/app_static/specta/index.html",
+]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 build_cmd = "build:all"
@@ -65,6 +71,15 @@ build_cmd = "install:extension"
 npm = ["npm"]
 source_dir = "src"
 build_dir = "specta/labextension"
+
+[tool.jupyter-releaser.options]
+version_cmd = "hatch version"
+
+[tool.jupyter-releaser.hooks]
+before-build-npm = [
+    "npm install"
+]
+before-build-python = ["npm clean"]
 
 [tool.check-wheel-contents]
 ignore = ["W002"]

@@ -16,7 +16,7 @@ class SpectaAddon(BaseAddon):
 
     @property
     def static_path(self):
-        return Path(__file__).resolve().parent.parent / "app"
+        return Path(__file__).resolve().parent / "app_static"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -48,12 +48,4 @@ class SpectaAddon(BaseAddon):
                 )
             ],
         )
-        yield dict(
-            name="specta:delete:build",
-            actions=[
-                (
-                    self.delete_one,
-                    [self.manager.output_dir / "specta" / "build"],
-                )
-            ],
-        )
+
