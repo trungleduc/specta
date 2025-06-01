@@ -1,7 +1,7 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
-import { PageConfig } from '@jupyterlab/coreutils';
+import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 import { FilterFileBrowserModel } from '@jupyterlab/filebrowser';
 import {
   INotebookTracker,
@@ -87,7 +87,7 @@ export function createFileBrowser(options: { docManager: IDocumentManager }) {
     if (!appUrl.endsWith('/')) {
       appUrl = `${appUrl}/`;
     }
-    const url = new URL(appUrl, baseUrl);
+    const url = new URL(URLExt.join(baseUrl, appUrl));
     url.searchParams.set('path', path);
     const queries = PageConfig.getOption('query').split('&').filter(Boolean);
     queries.forEach(query => {
