@@ -10,7 +10,7 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import { spectaDocument } from './document/plugin';
-import { createFileBrowser } from './tool';
+import { createFileBrowser, hideAppLoadingIndicator } from './tool';
 
 const spectaOpener: JupyterFrontEndPlugin<void> = {
   id: 'specta/application-extension:opener',
@@ -38,6 +38,7 @@ const spectaOpener: JupyterFrontEndPlugin<void> = {
     if (!path) {
       const browser = createFileBrowser({ docManager });
       app.shell.add(browser, 'main', { rank: 100 });
+      hideAppLoadingIndicator();
     } else {
       const widget = docManager.openOrReveal(path, 'specta');
       if (widget) {

@@ -108,3 +108,16 @@ export function createFileBrowser(options: { docManager: IDocumentManager }) {
   browser.addClass('specta-file-browser');
   return browser;
 }
+
+export function hideAppLoadingIndicator() {
+  const indicator = document.getElementById('specta-loader-host');
+  const spinner = document.getElementById('specta-loader-spinner');
+  if (indicator && spinner) {
+    indicator.style.opacity = '0';
+    setTimeout(() => {
+      spinner.remove();
+      indicator.remove();
+      document.body.classList.remove('jp-mod-dark', 'jp-mod-light');
+    }, 1000);
+  }
+}
