@@ -1,7 +1,25 @@
-#jp-main-content-panel {
+#jp-main-content-panel .jp-MainAreaWidget {
   background: var(--jp-layout-color1);
 }
 
 #jp-main-content-panel jp-toolbar {
   display: none;
+}
+
+.specta-file-browser {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  background: var(--jp-layout-color3);
+}
+
+.specta-file-browser jp-toolbar {
+  display: block !important;
+  margin: 0 !important;
+  padding-left: 10px !important;
+}
+
+.specta-file-browser .jp-SidePanel-content {
+  background: var(--jp-layout-color1);
+  box-shadow: var(--jp-elevation-z4);
 }
