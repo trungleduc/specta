@@ -48,7 +48,8 @@ export function registerDocumentFactory(options: {
     spectaWidgetFactory,
     preferKernel: true,
     canStartKernel: true,
-    autoStartDefault: true
+    autoStartDefault: true,
+    shutdownOnClose: true
   });
 
   // Registering the widget factory
