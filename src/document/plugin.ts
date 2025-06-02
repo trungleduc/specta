@@ -10,6 +10,7 @@ import { Token } from '@lumino/coreutils';
 import { Widget } from '@lumino/widgets';
 
 import { registerDocumentFactory } from '../tool';
+import { ISpectaLayoutRegistry } from '../token';
 
 export const ISpectaDocTracker = new Token<IWidgetTracker<Widget>>(
   'exampleDocTracker'
@@ -19,7 +20,8 @@ const activate = (
   rendermime: IRenderMimeRegistry,
   tracker: INotebookTracker,
   editorServices: IEditorServices,
-  contentFactory: NotebookPanel.IContentFactory
+  contentFactory: NotebookPanel.IContentFactory,
+  spectaLayoutRegistry: ISpectaLayoutRegistry
 ): IWidgetTracker => {
   const namespace = 'specta';
   const spectaTracker = new WidgetTracker<Widget>({ namespace });
@@ -31,7 +33,8 @@ const activate = (
     tracker,
     editorServices,
     contentFactory,
-    spectaTracker
+    spectaTracker,
+    spectaLayoutRegistry
   });
 
   return spectaTracker;
@@ -44,7 +47,8 @@ export const spectaDocument: JupyterFrontEndPlugin<IWidgetTracker> = {
     IRenderMimeRegistry,
     INotebookTracker,
     IEditorServices,
-    NotebookPanel.IContentFactory
+    NotebookPanel.IContentFactory,
+    ISpectaLayoutRegistry
   ],
   activate,
   provides: ISpectaDocTracker

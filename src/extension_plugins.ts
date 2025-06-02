@@ -1,28 +1,19 @@
 import {
-  ILabShell,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { IEditorServices } from '@jupyterlab/codeeditor';
 import { IDocumentManager } from '@jupyterlab/docmanager';
-import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
-import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { ISettingRegistry } from '@jupyterlab/settingregistry';
+import { Signal } from '@lumino/signaling';
 
 import { spectaDocument } from './document/plugin';
+import { DefaultLayout } from './layout/default';
+import { ISpectaLayout, ISpectaLayoutRegistry } from './token';
 import { createFileBrowser, hideAppLoadingIndicator } from './tool';
 
 const spectaOpener: JupyterFrontEndPlugin<void> = {
   id: 'specta/application-extension:opener',
   autoStart: true,
-  requires: [
-    IDocumentManager,
-    IRenderMimeRegistry,
-    INotebookTracker,
-    IEditorServices,
-    NotebookPanel.IContentFactory
-  ],
-  optional: [ILabShell, ISettingRegistry],
+  requires: [IDocumentManager],
   activate: async (
     app: JupyterFrontEnd,
     docManager: IDocumentManager
@@ -48,4 +39,48 @@ const spectaOpener: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default [spectaDocument, spectaOpener];
+const spectaLayoutRegistry: JupyterFrontEndPlugin<ISpectaLayoutRegistry> = {
+  id: 'specta:layout-registry',
+  autoStart: true,
+  provides: ISpectaLayoutRegistry,
+  activate: (app: JupyterFrontEnd): ISpectaLayoutRegistry => {
+    const registry = new Map<string, ISpectaLayout>();
+    const layoutAdded = new Signal<any, string>({});
+
+    const layoutRegistry = {
+      get(name: string): ISpectaLayout | undefined {
+        return registry.get(name);
+      },
+      register(name: string, layout: ISpectaLayout): void {
+        if (registry.has(name)) {
+          throw new Error(`Layout with name ${name} already exists`);
+        }
+        registry.set(name, layout);
+        layoutAdded.emit(name);
+      },
+      allLayouts(): string[] {
+        return Array.from(registry.keys());
+      },
+      layoutAdded: layoutAdded
+    };
+
+    return layoutRegistry;
+  }
+};
+
+const spectaDefaultLayout: JupyterFrontEndPlugin<void> = {
+  id: 'specta:default-layout',
+  autoStart: true,
+  requires: [ISpectaLayoutRegistry],
+  activate: (app: JupyterFrontEnd, layoutRegistry: ISpectaLayoutRegistry) => {
+    const defaultLayout = new DefaultLayout();
+    layoutRegistry.register('default', defaultLayout);
+  }
+};
+
+export default [
+  spectaDocument,
+  spectaOpener,
+  spectaLayoutRegistry,
+  spectaDefaultLayout
+];
