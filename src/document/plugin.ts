@@ -6,15 +6,18 @@ import { IWidgetTracker, WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { Token } from '@lumino/coreutils';
 import { Widget } from '@lumino/widgets';
+import { IDocumentManager } from '@jupyterlab/docmanager';
 
-import { registerDocumentFactory } from '../tool';
-import { ISpectaLayoutRegistry } from '../token';
+import {
+  createFileBrowser,
+  hideAppLoadingIndicator,
+  isSpectaApp,
+  registerDocumentFactory
+} from '../tool';
+import { ISpectaDocTracker, ISpectaLayoutRegistry } from '../token';
+import { IKernelSpecManager } from '@jupyterlab/services';
 
-export const ISpectaDocTracker = new Token<IWidgetTracker<Widget>>(
-  'exampleDocTracker'
-);
 const activate = (
   app: JupyterFrontEnd,
   rendermime: IRenderMimeRegistry,
@@ -52,4 +55,31 @@ export const spectaDocument: JupyterFrontEndPlugin<IWidgetTracker> = {
   ],
   activate,
   provides: ISpectaDocTracker
+};
+
+export const spectaOpener: JupyterFrontEndPlugin<void> = {
+  id: 'specta/application-extension:opener',
+  autoStart: true,
+  requires: [IDocumentManager, ISpectaDocTracker, IKernelSpecManager],
+  activate: async (
+    app: JupyterFrontEnd,
+    docManager: IDocumentManager
+  ): Promise<void> => {
+    if (!isSpectaApp()) {
+      // Not a specta app, return
+      return;
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const path = urlParams.get('path');
+    if (!path) {
+      const browser = createFileBrowser({ docManager });
+      app.shell.add(browser, 'main', { rank: 100 });
+      hideAppLoadingIndicator();
+    } else {
+      const widget = docManager.openOrReveal(path, 'specta');
+      if (widget) {
+        app.shell.add(widget, 'main');
+      }
+    }
+  }
 };

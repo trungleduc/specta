@@ -127,3 +127,7 @@ export function hideAppLoadingIndicator() {
     }, 1000);
   }
 }
+
+export function isSpectaApp(): boolean {
+  return !!document.querySelector('meta[name="specta-config"]');
+}

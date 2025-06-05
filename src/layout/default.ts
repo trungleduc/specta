@@ -2,15 +2,15 @@ import { Panel } from '@lumino/widgets';
 import { SpectaCellOutput } from '../specta_cell_output';
 import * as nbformat from '@jupyterlab/nbformat';
 import { ISpectaLayout } from '../token';
-import { hideAppLoadingIndicator } from '../tool';
 
 export class DefaultLayout implements ISpectaLayout {
   async render(options: {
     host: Panel;
     items: SpectaCellOutput[];
     notebook: nbformat.INotebookContent;
+    readyCallback: () => Promise<void>;
   }): Promise<void> {
-    const { host, items } = options;
+    const { host, items, readyCallback } = options;
     for (const el of items) {
       const outputNode = el.cellOutput.node;
       const cellModel = el.info.cellModel;
@@ -27,7 +27,6 @@ export class DefaultLayout implements ISpectaLayout {
         }
       }
     }
-
-    hideAppLoadingIndicator();
+    await readyCallback();
   }
 }

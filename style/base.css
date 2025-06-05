@@ -1,0 +1,56 @@
+.specta-loader-host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: var(--jp-layout-color1);
+  color: #000;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+.specta-loader {
+  position: fixed;
+  width: 150px;
+  height: 150px;
+  top: calc(50% - 75px);
+  left: calc(50% - 75px);
+}
+
+.specta-loader:before,
+.specta-loader:after {
+  content: '';
+  border-radius: 50%;
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3) inset;
+}
+.specta-loader:after {
+  box-shadow: 0 2px 0 #ff3d00 inset;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.specta-loading-indicator-text {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  position: absolute;
+  top: calc(50% - 11px);
+  left: calc(50% - 52px);
+  color: var(--jp-ui-font-color1) !important;
+}
+
+.jp-specta-notebook-panel {
+  overflow: auto;
+}

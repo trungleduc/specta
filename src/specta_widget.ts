@@ -1,11 +1,12 @@
 import { SimplifiedOutputArea } from '@jupyterlab/outputarea';
 import { PromiseDelegate } from '@lumino/coreutils';
 import { Message } from '@lumino/messaging';
-import { Panel } from '@lumino/widgets';
+import { Panel, Widget } from '@lumino/widgets';
 
 import { SpectaCellOutput } from './specta_cell_output';
 import { AppModel } from './specta_model';
 import { ISpectaLayoutRegistry } from './token';
+import { hideAppLoadingIndicator, isSpectaApp } from './tool';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -21,6 +22,11 @@ export class AppWidget extends Panel {
     this.addWidget(this._host);
 
     this.node.style.overflow = 'auto';
+
+    if (!isSpectaApp()) {
+      // Not a specta app, add spinner
+      this.addSpinner();
+    }
 
     this._model.initialize().then(() => {
       this.render()
@@ -38,6 +44,19 @@ export class AppWidget extends Panel {
 
   get model(): AppModel {
     return this._model;
+  }
+
+  addSpinner(): void {
+    const loaderHost = (this._loaderHost = new Widget());
+    loaderHost.addClass('specta-loader-host');
+    const spinner = document.createElement('div');
+    spinner.className = 'specta-loader';
+    loaderHost.node.appendChild(spinner);
+    const text = document.createElement('div');
+    text.className = 'specta-loading-indicator-text';
+    text.textContent = 'Loading Specta';
+    loaderHost.node.appendChild(text);
+    this.addWidget(loaderHost);
   }
 
   dispose(): void {
@@ -64,11 +83,21 @@ export class AppWidget extends Panel {
       );
       outputs.push(el);
     }
-
+    const readyCallback = async () => {
+      if (this._loaderHost) {
+        this._loaderHost.node.style.opacity = '0';
+        setTimeout(() => {
+          this.layout?.removeWidget(this._loaderHost!);
+        }, 100);
+      } else {
+        hideAppLoadingIndicator();
+      }
+    };
     await this._layoutRegistry.selectedLayout.layout.render({
       host: this._host,
       items: outputs,
-      notebook: this._model.context.model.toJSON() as any
+      notebook: this._model.context.model.toJSON() as any,
+      readyCallback
     });
   }
 
@@ -84,6 +113,8 @@ export class AppWidget extends Panel {
   private _host: Panel;
 
   private _layoutRegistry: ISpectaLayoutRegistry;
+
+  private _loaderHost?: Widget;
 }
 
 export namespace AppWidget {
