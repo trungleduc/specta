@@ -23,3 +23,7 @@
   background: var(--jp-layout-color1);
   box-shadow: var(--jp-elevation-z4);
 }
+
+.jp-specta-notebook-panel {
+  overflow: auto;
+}

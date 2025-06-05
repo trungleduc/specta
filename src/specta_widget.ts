@@ -1,11 +1,12 @@
 import { SimplifiedOutputArea } from '@jupyterlab/outputarea';
 import { PromiseDelegate } from '@lumino/coreutils';
 import { Message } from '@lumino/messaging';
-import { Panel } from '@lumino/widgets';
+import { Panel, Widget } from '@lumino/widgets';
 
 import { SpectaCellOutput } from './specta_cell_output';
 import { AppModel } from './specta_model';
-import { hideAppLoadingIndicator } from './tool';
+import { ISpectaLayoutRegistry } from './token';
+import { hideAppLoadingIndicator, isSpectaApp } from './tool';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -14,12 +15,18 @@ export class AppWidget extends Panel {
     this.title.label = options.label;
     this.title.closable = true;
     this._model = options.model;
+    this._layoutRegistry = options.layoutRegistry;
     this.node.style.padding = '5px';
     this._host = new Panel();
     this._host.addClass('specta-output-host');
     this.addWidget(this._host);
 
     this.node.style.overflow = 'auto';
+
+    if (!isSpectaApp()) {
+      // Not a specta app, add spinner
+      this.addSpinner();
+    }
 
     this._model.initialize().then(() => {
       this.render()
@@ -38,8 +45,18 @@ export class AppWidget extends Panel {
   get model(): AppModel {
     return this._model;
   }
-  get gridWidgets(): Array<SpectaCellOutput> {
-    return this._gridElements;
+
+  addSpinner(): void {
+    const loaderHost = (this._loaderHost = new Widget());
+    loaderHost.addClass('specta-loader-host');
+    const spinner = document.createElement('div');
+    spinner.className = 'specta-loader';
+    loaderHost.node.appendChild(spinner);
+    const text = document.createElement('div');
+    text.className = 'specta-loading-indicator-text';
+    text.textContent = 'Loading Specta';
+    loaderHost.node.appendChild(text);
+    this.addWidget(loaderHost);
   }
 
   dispose(): void {
@@ -49,18 +66,10 @@ export class AppWidget extends Panel {
     this._model.dispose();
     super.dispose();
   }
-  addGridItem(out: SpectaCellOutput): void {
-    this._gridElements.push(out);
-    const info = out.info;
-
-    if (info && info.hidden) {
-      return;
-    }
-    this._host.addWidget(out);
-  }
 
   async render(): Promise<void> {
     const cellList = this._model.cells ?? [];
+    const outputs: SpectaCellOutput[] = [];
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
       if (src.length === 0) {
@@ -72,17 +81,24 @@ export class AppWidget extends Panel {
         cell,
         el.cellOutput as SimplifiedOutputArea
       );
-      const outputNode = el.cellOutput.node;
-      const cellModel = el.info.cellModel;
-      if (cellModel?.cell_type === 'code') {
-        if (outputNode.childNodes.length > 0) {
-          this.addGridItem(el);
-        }
-      } else {
-        this.addGridItem(el);
-      }
+      outputs.push(el);
     }
-    hideAppLoadingIndicator();
+    const readyCallback = async () => {
+      if (this._loaderHost) {
+        this._loaderHost.node.style.opacity = '0';
+        setTimeout(() => {
+          this.layout?.removeWidget(this._loaderHost!);
+        }, 100);
+      } else {
+        hideAppLoadingIndicator();
+      }
+    };
+    await this._layoutRegistry.selectedLayout.layout.render({
+      host: this._host,
+      items: outputs,
+      notebook: this._model.context.model.toJSON() as any,
+      readyCallback
+    });
   }
 
   protected onCloseRequest(msg: Message): void {
@@ -96,7 +112,9 @@ export class AppWidget extends Panel {
 
   private _host: Panel;
 
-  private _gridElements: SpectaCellOutput[] = [];
+  private _layoutRegistry: ISpectaLayoutRegistry;
+
+  private _loaderHost?: Widget;
 }
 
 export namespace AppWidget {
@@ -104,5 +122,6 @@ export namespace AppWidget {
     id: string;
     label: string;
     model: AppModel;
+    layoutRegistry: ISpectaLayoutRegistry;
   }
 }

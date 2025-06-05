@@ -1,5 +1,5 @@
 {
-    "name": "specta",
+    "name": "jupyter-specta",
     "version": "0.1.0",
     "description": "",
     "keywords": [],
@@ -19,6 +19,7 @@
     ],
     "main": "lib/extension_plugins.js",
     "types": "lib/extension_plugins.d.ts",
+    "style": "style/index.css",
     "repository": {
         "type": "git",
         "url": "https://github.com/trungleduc/specta.git"

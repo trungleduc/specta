@@ -15,6 +15,7 @@ import { ServiceManager } from '@jupyterlab/services';
 import { AppModel } from './specta_model';
 import { AppWidget } from './specta_widget';
 import { UUID } from '@lumino/coreutils';
+import { ISpectaLayoutRegistry } from './token';
 
 export class SpectaWidgetFactory {
   constructor(options: SpectaWidgetFactory.IOptions) {
@@ -25,7 +26,6 @@ export class SpectaWidgetFactory {
     context: DocumentRegistry.IContext<INotebookModel>;
   }): Promise<AppWidget> {
     const { context } = options;
-
     const model = new AppModel({
       context,
       manager: this._options.manager,
@@ -41,7 +41,8 @@ export class SpectaWidgetFactory {
     const panel = new AppWidget({
       id: UUID.uuid4(),
       label: '',
-      model
+      model,
+      layoutRegistry: this._options.spectaLayoutRegistry
     });
 
     return panel;
@@ -57,5 +58,6 @@ export namespace SpectaWidgetFactory {
     contentFactory: NotebookPanel.IContentFactory;
     mimeTypeService: IEditorMimeTypeService;
     editorServices: IEditorServices;
+    spectaLayoutRegistry: ISpectaLayoutRegistry;
   }
 }
