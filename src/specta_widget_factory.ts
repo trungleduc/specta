@@ -26,7 +26,6 @@ export class SpectaWidgetFactory {
     context: DocumentRegistry.IContext<INotebookModel>;
   }): Promise<AppWidget> {
     const { context } = options;
-
     const model = new AppModel({
       context,
       manager: this._options.manager,
@@ -42,7 +41,8 @@ export class SpectaWidgetFactory {
     const panel = new AppWidget({
       id: UUID.uuid4(),
       label: '',
-      model
+      model,
+      layoutRegistry: this._options.spectaLayoutRegistry
     });
 
     return panel;

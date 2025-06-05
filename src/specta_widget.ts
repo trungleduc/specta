@@ -5,7 +5,7 @@ import { Panel } from '@lumino/widgets';
 
 import { SpectaCellOutput } from './specta_cell_output';
 import { AppModel } from './specta_model';
-import { hideAppLoadingIndicator } from './tool';
+import { ISpectaLayoutRegistry } from './token';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -14,6 +14,7 @@ export class AppWidget extends Panel {
     this.title.label = options.label;
     this.title.closable = true;
     this._model = options.model;
+    this._layoutRegistry = options.layoutRegistry;
     this.node.style.padding = '5px';
     this._host = new Panel();
     this._host.addClass('specta-output-host');
@@ -38,9 +39,6 @@ export class AppWidget extends Panel {
   get model(): AppModel {
     return this._model;
   }
-  get gridWidgets(): Array<SpectaCellOutput> {
-    return this._gridElements;
-  }
 
   dispose(): void {
     if (this.isDisposed) {
@@ -49,18 +47,10 @@ export class AppWidget extends Panel {
     this._model.dispose();
     super.dispose();
   }
-  addGridItem(out: SpectaCellOutput): void {
-    this._gridElements.push(out);
-    const info = out.info;
-
-    if (info && info.hidden) {
-      return;
-    }
-    this._host.addWidget(out);
-  }
 
   async render(): Promise<void> {
     const cellList = this._model.cells ?? [];
+    const outputs: SpectaCellOutput[] = [];
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
       if (src.length === 0) {
@@ -72,17 +62,14 @@ export class AppWidget extends Panel {
         cell,
         el.cellOutput as SimplifiedOutputArea
       );
-      const outputNode = el.cellOutput.node;
-      const cellModel = el.info.cellModel;
-      if (cellModel?.cell_type === 'code') {
-        if (outputNode.childNodes.length > 0) {
-          this.addGridItem(el);
-        }
-      } else {
-        this.addGridItem(el);
-      }
+      outputs.push(el);
     }
-    hideAppLoadingIndicator();
+
+    await this._layoutRegistry.selectedLayout.layout.render({
+      host: this._host,
+      items: outputs,
+      notebook: this._model.context.model.toJSON() as any
+    });
   }
 
   protected onCloseRequest(msg: Message): void {
@@ -96,7 +83,7 @@ export class AppWidget extends Panel {
 
   private _host: Panel;
 
-  private _gridElements: SpectaCellOutput[] = [];
+  private _layoutRegistry: ISpectaLayoutRegistry;
 }
 
 export namespace AppWidget {
@@ -104,5 +91,6 @@ export namespace AppWidget {
     id: string;
     label: string;
     model: AppModel;
+    layoutRegistry: ISpectaLayoutRegistry;
   }
 }

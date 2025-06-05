@@ -3,17 +3,16 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { IDocumentManager } from '@jupyterlab/docmanager';
-import { Signal } from '@lumino/signaling';
 
-import { spectaDocument } from './document/plugin';
-import { DefaultLayout } from './layout/default';
-import { ISpectaLayout, ISpectaLayoutRegistry } from './token';
+import { ISpectaDocTracker, spectaDocument } from './document/plugin';
+import { ISpectaLayoutRegistry } from './token';
 import { createFileBrowser, hideAppLoadingIndicator } from './tool';
+import { SpectaLayoutRegistry } from './layout/layout_registry';
 
 const spectaOpener: JupyterFrontEndPlugin<void> = {
   id: 'specta/application-extension:opener',
   autoStart: true,
-  requires: [IDocumentManager],
+  requires: [IDocumentManager, ISpectaDocTracker],
   activate: async (
     app: JupyterFrontEnd,
     docManager: IDocumentManager
@@ -44,43 +43,10 @@ const spectaLayoutRegistry: JupyterFrontEndPlugin<ISpectaLayoutRegistry> = {
   autoStart: true,
   provides: ISpectaLayoutRegistry,
   activate: (app: JupyterFrontEnd): ISpectaLayoutRegistry => {
-    const registry = new Map<string, ISpectaLayout>();
-    const layoutAdded = new Signal<any, string>({});
-
-    const layoutRegistry = {
-      get(name: string): ISpectaLayout | undefined {
-        return registry.get(name);
-      },
-      register(name: string, layout: ISpectaLayout): void {
-        if (registry.has(name)) {
-          throw new Error(`Layout with name ${name} already exists`);
-        }
-        registry.set(name, layout);
-        layoutAdded.emit(name);
-      },
-      allLayouts(): string[] {
-        return Array.from(registry.keys());
-      },
-      layoutAdded: layoutAdded
-    };
+    const layoutRegistry = new SpectaLayoutRegistry();
 
     return layoutRegistry;
   }
 };
 
-const spectaDefaultLayout: JupyterFrontEndPlugin<void> = {
-  id: 'specta:default-layout',
-  autoStart: true,
-  requires: [ISpectaLayoutRegistry],
-  activate: (app: JupyterFrontEnd, layoutRegistry: ISpectaLayoutRegistry) => {
-    const defaultLayout = new DefaultLayout();
-    layoutRegistry.register('default', defaultLayout);
-  }
-};
-
-export default [
-  spectaDocument,
-  spectaOpener,
-  spectaLayoutRegistry,
-  spectaDefaultLayout
-];
+export default [spectaDocument, spectaOpener, spectaLayoutRegistry];
