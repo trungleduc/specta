@@ -39,7 +39,7 @@ artifacts = ["specta/labextension", "specta/app_static"]
 exclude = [".github"]
 
 [tool.hatch.build.targets.wheel]
-artifacts = [ "specta/app_static"]
+artifacts = ["specta/app_static"]
 exclude = [".github"]
 
 [tool.hatch.build.targets.wheel.shared-data]
@@ -77,9 +77,11 @@ version_cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
 before-build-npm = [
-    "npm install"
+  "python -m pip install 'jupyterlab>=4.0.0,<5'",
+  "npm install",
+  "npm run build:all",
 ]
-before-build-python = ["npm clean"]
+before-build-python = ["npm run clean"]
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
