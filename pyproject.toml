@@ -76,8 +76,12 @@ build_dir = "specta/labextension"
 version_cmd = "hatch version"
 
 [tool.jupyter-releaser.hooks]
-before-build-npm = ["npm install", "npm run build:all"]
-before-build-python = ["npm clean"]
+before-build-npm = [
+  "python -m pip install 'jupyterlab>=4.0.0,<5'",
+  "npm install",
+  "npm run build:all",
+]
+before-build-python = ["npm run clean"]
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
