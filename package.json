@@ -29,7 +29,7 @@
         "build:lib": "tsc",
         "build:labextension": "jupyter labextension build .",
         "build:labextension:dev": "jupyter labextension build --development True .",
-        "build:app": "npm run clean && npm run build:lib && cd app && NODE_OPTIONS=--max-old-space-size=4096 webpack --mode production",
+        "build:app": "npm run clean && npm run build:lib && cd app && NODE_OPTIONS=--max-old-space-size=4096 NODE_ENV=production webpack --mode production",
         "build:app:dev": "npm run clean && npm run build:lib && cd app && webpack",
         "build:all": "npm run build:app && npm run build:labextension",
         "build:all:dev": "npm run build:app:dev && npm run build:labextension:dev",
