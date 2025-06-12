@@ -11,4 +11,4 @@ except ImportError:
 
 
 def _jupyter_labextension_paths():
-    return [{"src": "labextension", "dest": "specta"}]
+    return [{"src": "labextension", "dest": "jupyter-specta"}]

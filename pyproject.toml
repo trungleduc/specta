@@ -43,8 +43,8 @@ artifacts = ["specta/app_static"]
 exclude = [".github"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"specta/labextension" = "share/jupyter/labextensions/specta"
-"install.json" = "share/jupyter/labextensions/specta/install.json"
+"specta/labextension" = "share/jupyter/labextensions/jupyter-specta"
+"install.json" = "share/jupyter/labextensions/jupyter-specta/install.json"
 
 [tool.hatch.build.hooks.version]
 path = "specta/_version.py"
