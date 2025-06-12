@@ -2,6 +2,12 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.2
+
+No merged PRs
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.1
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/7e00ba6e3174730aecb46c261bcdc60fc89eafde...490817b85bc7c39394f0ba0e790806a80d4f1391))
@@ -21,5 +27,3 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-05-17&to=2025-06-11&type=c))
 
 [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-05-17..2025-06-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
