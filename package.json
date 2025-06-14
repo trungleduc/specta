@@ -96,12 +96,15 @@
         "@lumino/signaling": "^2.0.0",
         "@lumino/virtualdom": "^2.0.0",
         "@lumino/widgets": "^2.0.0",
-        "@voila-dashboards/voila": "^0.5.5"
+        "@voila-dashboards/voila": "^0.5.5",
+        "react": "^18.3.0",
+        "react-dom": "^18.3.0"
     },
     "devDependencies": {
         "@jupyterlab/builder": "~4.4.2",
         "@typescript-eslint/eslint-plugin": "^6.1.0",
         "@typescript-eslint/parser": "^6.1.0",
+        "@types/react": "^18.0.26",
         "css-loader": "^7.1.2",
         "eslint": "^8.36.0",
         "eslint-config-prettier": "^8.8.0",

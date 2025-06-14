@@ -1,9 +1,15 @@
+/* App only style */
+
 #jp-main-content-panel .jp-MainAreaWidget {
   background: var(--jp-layout-color1);
 }
 
 #jp-main-content-panel jp-toolbar {
   display: none;
+}
+
+#specta-top-panel {
+  contain: unset !important;
 }
 
 .specta-file-browser {
@@ -26,4 +32,54 @@
 
 .jp-specta-notebook-panel {
   overflow: auto;
+}
+
+.specta-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.specta-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.specta-topbar-right {
+  position: relative;
+}
+
+.specta-config-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0.25rem;
+}
+
+.specta-config-dialog {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  min-width: 200px;
+  z-index: 100;
+}
+
+.specta-config-arrow {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
 }

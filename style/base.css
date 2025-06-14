@@ -1,3 +1,5 @@
+/* Extension styles */
+
 .specta-loader-host {
   position: fixed;
   top: 0;
@@ -53,4 +55,41 @@
 
 .jp-specta-notebook-panel {
   overflow: auto;
+}
+
+div#specta-top-panel {
+  min-height: 40px;
+  display: flex;
+}
+
+.specta-topbar-element {
+  width: 100%;
+  display: flex;
+}
+
+.specta-topbar {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  width: calc(100% + 20px);
+  box-shadow:
+    rgba(0 0 0 / 20%) 0 2px 4px -1px,
+    rgba(0 0 0 / 14%) 0 4px 5px 0,
+    rgba(0 0 0 / 12%) 0 1px 10px 0;
+  padding-right: 20px;
+  padding-left: 40px;
+  gap: 10px;
+}
+
+.specta-topbar-title {
+  flex-grow: 1;
+  line-height: 50px;
+  font-size: 30px;
+}
+
+.specta-topbar-theme {
+  background: inherit;
+  border: none;
+  border-radius: 0;
+  font-size: 15px;
 }
