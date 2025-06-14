@@ -2,6 +2,9 @@ import { IThemeManager } from '@jupyterlab/apputils';
 import React, { useState, useRef, useEffect } from 'react';
 
 import { Kernel } from '@jupyterlab/services';
+import { GearIcon } from '../components/icon/gear';
+import { IconButton } from '../components/iconButton';
+import { SettingContent } from './settingDialog';
 // import { ProgressCircle } from './kernelStatus';
 
 export interface ITopbarConfig {
@@ -31,18 +34,9 @@ export function TopbarElement(props: IProps): JSX.Element {
       textColor: 'var(--jp-ui-font-color1)'
     };
   }, [props.config]);
-  const [themeOptions, setThemeOptions] = useState<string[]>([
-    ...props.themeManager.themes
-  ]);
+
   const [kernelBusy, setkernelBusy] = useState<0 | 100>(100);
   React.useEffect(() => {
-    const cb = (sender: IThemeManager, args: any) => {
-      if (args.newValue.length > 0) {
-        return;
-      }
-      setThemeOptions([...props.themeManager.themes]);
-    };
-    props.themeManager.themeChanged.connect(cb);
     const kernelCb = (sender: any, status: any) => {
       const progress = status === 'busy' ? 0 : 100;
       setkernelBusy(progress);
@@ -52,22 +46,11 @@ export function TopbarElement(props: IProps): JSX.Element {
     }
 
     return () => {
-      props.themeManager.themeChanged.disconnect(cb);
       if (props.kernelConnection) {
         props.kernelConnection.statusChanged.disconnect(kernelCb);
       }
     };
   }, [props.themeManager, props.kernelConnection]);
-
-  const onThemeChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const theme = e.currentTarget?.value;
-      if (theme) {
-        props.themeManager.setTheme(theme);
-      }
-    },
-    [props.themeManager]
-  );
 
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -88,29 +71,6 @@ export function TopbarElement(props: IProps): JSX.Element {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const themeSelect = React.useMemo(() => {
-    return (
-      <select
-        className="specta-topbar-theme"
-        onChange={onThemeChange}
-        style={{ color: config.textColor ?? 'var(--jp-ui-font-color1)' }}
-      >
-        {themeOptions.map(el => {
-          return (
-            <option
-              key={el}
-              value={el}
-              style={{
-                background: config.background ?? 'var(--jp-layout-color2)'
-              }}
-            >
-              {el}
-            </option>
-          );
-        })}
-      </select>
-    );
-  }, [themeOptions, onThemeChange, config.textColor, config.background]);
   return (
     <div
       className="specta-topbar"
@@ -128,20 +88,21 @@ export function TopbarElement(props: IProps): JSX.Element {
         </div>
       </div>
       <div className="specta-topbar-right">
-        {themeSelect}
-        <button
+        <IconButton
           ref={buttonRef}
-          className="specta-config-button"
           onClick={() => setOpen(!open)}
-        >
-          ⚙️
-        </button>
+          icon={
+            <GearIcon fill="var(--jp-ui-font-color1)" height={24} width={24} />
+          }
+        />
 
         {open && (
-          <div ref={dialogRef} className="specta-config-dialog">
+          <div
+            ref={dialogRef}
+            className="jp-Dialog-content specta-config-dialog"
+          >
             <div className="specta-config-arrow" />
-            <div>Config Option 1</div>
-            <div>Config Option 2</div>
+            <SettingContent themeManager={props.themeManager} />
           </div>
         )}
       </div>
