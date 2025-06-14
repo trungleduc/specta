@@ -96,16 +96,20 @@
         "@lumino/signaling": "^2.0.0",
         "@lumino/virtualdom": "^2.0.0",
         "@lumino/widgets": "^2.0.0",
-        "@voila-dashboards/voila": "^0.5.5"
+        "@voila-dashboards/voila": "^0.5.5",
+        "react": "^18.3.0",
+        "react-dom": "^18.3.0"
     },
     "devDependencies": {
         "@jupyterlab/builder": "~4.4.2",
         "@typescript-eslint/eslint-plugin": "^6.1.0",
         "@typescript-eslint/parser": "^6.1.0",
+        "@types/react": "^18.0.26",
         "css-loader": "^7.1.2",
         "eslint": "^8.36.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-prettier": "^5.0.0",
+        "eslint-plugin-react-hooks": "^5.0.0",
         "handlebars": "^4.7.8",
         "html-webpack-plugin": "^5.5.3",
         "ignore-loader": "^0.1.2",
@@ -140,7 +144,8 @@
             "eslint:recommended",
             "plugin:@typescript-eslint/eslint-recommended",
             "plugin:@typescript-eslint/recommended",
-            "plugin:prettier/recommended"
+            "plugin:prettier/recommended",
+            "plugin:react-hooks/recommended"
         ],
         "parser": "@typescript-eslint/parser",
         "parserOptions": {
@@ -148,9 +153,11 @@
             "sourceType": "module"
         },
         "plugins": [
-            "@typescript-eslint"
+            "@typescript-eslint",
+            "react-hooks"
         ],
         "rules": {
+            "react-hooks/exhaustive-deps": "error",
             "@typescript-eslint/naming-convention": [
                 "error",
                 {

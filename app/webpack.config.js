@@ -2,7 +2,6 @@
 // Distributed under the terms of the Modified BSD License.
 const path = require('path');
 const fs = require('fs-extra');
-const glob = require('glob');
 const webpack = require('webpack');
 const merge = require('webpack-merge').default;
 const { ModuleFederationPlugin } = webpack.container;

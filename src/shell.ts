@@ -50,7 +50,6 @@ export class SpectaShell extends Widget implements JupyterFrontEnd.IShell {
     topHandler.panel.id = 'specta-top-panel';
     topHandler.panel.node.setAttribute('role', 'banner');
     BoxLayout.setStretch(topHandler.panel, 0);
-    topHandler.panel.hide();
     rootLayout.addWidget(topHandler.panel);
 
     const hboxPanel = (this._mainPanel = new BoxPanel());
