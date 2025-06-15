@@ -1,11 +1,10 @@
 import { IThemeManager } from '@jupyterlab/apputils';
 import React, { useState, useRef, useEffect } from 'react';
 
-import { Kernel } from '@jupyterlab/services';
 import { GearIcon } from '../components/icon/gear';
 import { IconButton } from '../components/iconButton';
 import { SettingContent } from './settingDialog';
-// import { ProgressCircle } from './kernelStatus';
+import { ISpectaLayoutRegistry } from '../token';
 
 export interface ITopbarConfig {
   background?: string;
@@ -18,7 +17,7 @@ export interface ITopbarConfig {
 interface IProps {
   config?: ITopbarConfig;
   themeManager: IThemeManager;
-  kernelConnection?: Kernel.IKernelConnection;
+  layoutRegistry: ISpectaLayoutRegistry;
 }
 
 export function TopbarElement(props: IProps): JSX.Element {
@@ -34,23 +33,6 @@ export function TopbarElement(props: IProps): JSX.Element {
       textColor: 'var(--jp-ui-font-color1)'
     };
   }, [props.config]);
-
-  const [kernelBusy, setkernelBusy] = useState<0 | 100>(100);
-  React.useEffect(() => {
-    const kernelCb = (sender: any, status: any) => {
-      const progress = status === 'busy' ? 0 : 100;
-      setkernelBusy(progress);
-    };
-    if (props.kernelConnection) {
-      props.kernelConnection.statusChanged.connect(kernelCb);
-    }
-
-    return () => {
-      if (props.kernelConnection) {
-        props.kernelConnection.statusChanged.disconnect(kernelCb);
-      }
-    };
-  }, [props.themeManager, props.kernelConnection]);
 
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -102,7 +84,10 @@ export function TopbarElement(props: IProps): JSX.Element {
             className="jp-Dialog-content specta-config-dialog"
           >
             <div className="specta-config-arrow" />
-            <SettingContent themeManager={props.themeManager} />
+            <SettingContent
+              themeManager={props.themeManager}
+              layoutRegistry={props.layoutRegistry}
+            />
           </div>
         )}
       </div>

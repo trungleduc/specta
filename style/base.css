@@ -99,11 +99,7 @@ div#specta-top-panel {
 }
 
 .specta-topbar-theme {
-  background: inherit;
-  border: none;
-  border-radius: 0;
-  font-size: 1rem;
-  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1) !important;
 }
 
 .specta-icon-button {
@@ -124,6 +120,7 @@ div#specta-top-panel {
   resize: none;
   overflow: unset;
   background: var(--jp-layout-color2);
+  padding: 0 !important;
 }
 
 .specta-config-arrow {
@@ -136,4 +133,14 @@ div#specta-top-panel {
   border-right: 8px solid transparent;
   border-bottom: 8px solid var(--jp-layout-color2);
   filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.specta-divider {
+  margin: 0px;
+  flex-shrink: 0;
+  border-width: 0px 0px thin;
+  border-style: solid;
+  border-color: var(--jp-border-color1);
+  padding: auto;
+  margin-bottom: 5px;
 }
