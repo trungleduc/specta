@@ -25,6 +25,19 @@ export interface ISpectaLayoutRegistry {
     { name: string; layout: ISpectaLayout }
   >;
 }
+
+export interface ITopbarConfig {
+  background?: string;
+  textColor?: string;
+  title?: string;
+  icon?: string;
+  kernelActivity?: boolean;
+  themeToggle?: boolean;
+}
+
+export interface ISpectaAppConfig {
+  topBar?: ITopbarConfig;
+}
 export const ISpectaLayoutRegistry = new Token<ISpectaLayoutRegistry>(
   'specta:ISpectaLayoutRegistry'
 );

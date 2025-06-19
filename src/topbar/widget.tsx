@@ -4,16 +4,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { GearIcon } from '../components/icon/gear';
 import { IconButton } from '../components/iconButton';
 import { SettingContent } from './settingDialog';
-import { ISpectaLayoutRegistry } from '../token';
+import { ISpectaLayoutRegistry, ITopbarConfig } from '../token';
 
-export interface ITopbarConfig {
-  background?: string;
-  textColor?: string;
-  title?: string;
-  icon?: string;
-  kernelActivity?: boolean;
-  themeToggle?: boolean;
-}
 interface IProps {
   config?: ITopbarConfig;
   themeManager: IThemeManager;
@@ -22,15 +14,12 @@ interface IProps {
 
 export function TopbarElement(props: IProps): JSX.Element {
   const config = React.useMemo((): ITopbarConfig => {
-    if (props.config) {
-      return props.config;
-    }
     return {
-      background: 'var(--jp-layout-color2)',
-      title: 'Specta',
-      themeToggle: true,
-      kernelActivity: true,
-      textColor: 'var(--jp-ui-font-color1)'
+      background: props.config?.background ?? 'var(--jp-layout-color2)',
+      title: props.config?.title ?? 'Specta',
+      themeToggle: Boolean(props.config?.themeToggle),
+      kernelActivity: Boolean(props.config?.kernelActivity),
+      textColor: props.config?.textColor ?? 'var(--jp-ui-font-color1)'
     };
   }, [props.config]);
 
@@ -74,7 +63,7 @@ export function TopbarElement(props: IProps): JSX.Element {
           ref={buttonRef}
           onClick={() => setOpen(!open)}
           icon={
-            <GearIcon fill="var(--jp-ui-font-color1)" height={24} width={24} />
+            <GearIcon fill="var(--jp-ui-font-color2)" height={24} width={24} />
           }
         />
 
