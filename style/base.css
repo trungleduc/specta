@@ -1,3 +1,5 @@
+/* Extension styles */
+
 .specta-loader-host {
   position: fixed;
   top: 0;
@@ -53,4 +55,92 @@
 
 .jp-specta-notebook-panel {
   overflow: auto;
+}
+
+div#specta-top-panel {
+  min-height: 40px;
+  display: flex;
+}
+
+.specta-topbar-element {
+  width: 100%;
+  display: flex;
+}
+
+.specta-topbar {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  width: calc(100% + 20px);
+  box-shadow:
+    rgba(0 0 0 / 20%) 0 2px 4px -1px,
+    rgba(0 0 0 / 14%) 0 4px 5px 0,
+    rgba(0 0 0 / 12%) 0 1px 10px 0;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.specta-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.specta-topbar-right {
+  position: relative;
+}
+
+.specta-topbar-title {
+  line-height: 40px;
+  font-size: 1.5rem;
+}
+
+.specta-topbar-theme {
+  font-size: var(--jp-ui-font-size1) !important;
+}
+
+.specta-icon-button {
+  border-radius: 50% !important;
+  transition: background 0.2s ease;
+  background: transparent;
+}
+.specta-icon-button:hover {
+  background-color: var('--jp-layout-color3');
+}
+
+.specta-config-dialog {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  border-radius: 8px;
+  z-index: 100;
+  resize: none;
+  overflow: unset;
+  background: var(--jp-layout-color2);
+  padding: 0 !important;
+}
+
+.specta-config-arrow {
+  position: absolute;
+  top: -8px;
+  right: 15px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--jp-layout-color2);
+  filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.specta-divider {
+  margin: 0px;
+  flex-shrink: 0;
+  border-width: 0px 0px thin;
+  border-style: solid;
+  border-color: var(--jp-border-color1);
+  padding: auto;
+  margin-bottom: 5px;
 }
