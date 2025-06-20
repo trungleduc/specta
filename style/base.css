@@ -57,9 +57,11 @@
   overflow: auto;
 }
 
-div#specta-top-panel {
+#specta-top-panel {
   min-height: 40px;
   display: flex;
+  box-shadow: unset !important;
+  z-index: 100;
 }
 
 .specta-topbar-element {

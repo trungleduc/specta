@@ -5,7 +5,11 @@ import { Panel, Widget } from '@lumino/widgets';
 
 import { SpectaCellOutput } from './specta_cell_output';
 import { AppModel } from './specta_model';
-import { ISpectaLayoutRegistry } from './token';
+import {
+  ISpectaAppConfig,
+  ISpectaLayout,
+  ISpectaLayoutRegistry
+} from './token';
 import { hideAppLoadingIndicator, isSpectaApp } from './tool';
 
 export class AppWidget extends Panel {
@@ -15,6 +19,7 @@ export class AppWidget extends Panel {
     this.title.label = options.label;
     this.title.closable = true;
     this._model = options.model;
+    this._spectaAppConfig = options.spectaConfig;
     this._layoutRegistry = options.layoutRegistry;
     this.node.style.padding = '5px';
     this._host = new Panel();
@@ -33,6 +38,10 @@ export class AppWidget extends Panel {
         .catch(console.error)
         .then(() => window.dispatchEvent(new Event('resize')));
     });
+    this._layoutRegistry.selectedLayoutChanged.connect(
+      this._onSelectedLayoutChanged,
+      this
+    );
   }
 
   /**
@@ -69,19 +78,18 @@ export class AppWidget extends Panel {
 
   async render(): Promise<void> {
     const cellList = this._model.cells ?? [];
-    const outputs: SpectaCellOutput[] = [];
+    const layout = this._spectaAppConfig?.layout ?? 'default';
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
       if (src.length === 0) {
         continue;
       }
-
       const el = this._model.createCell(cell);
       await this._model.executeCell(
         cell,
         el.cellOutput as SimplifiedOutputArea
       );
-      outputs.push(el);
+      this._outputs.push(el);
     }
     const readyCallback = async () => {
       if (this._loaderHost) {
@@ -93,9 +101,12 @@ export class AppWidget extends Panel {
         hideAppLoadingIndicator();
       }
     };
-    await this._layoutRegistry.selectedLayout.layout.render({
+    const spectaLayout =
+      this._layoutRegistry.get(layout) ??
+      this._layoutRegistry.getDefaultLayout();
+    await spectaLayout.render({
       host: this._host,
-      items: outputs,
+      items: this._outputs,
       notebook: this._model.context.model.toJSON() as any,
       readyCallback
     });
@@ -106,6 +117,22 @@ export class AppWidget extends Panel {
     super.onCloseRequest(msg);
   }
 
+  private _onSelectedLayoutChanged(
+    sender: ISpectaLayoutRegistry,
+    args: { name: string; layout: ISpectaLayout }
+  ): void {
+    const currentEls = [...this._host.widgets];
+    currentEls.forEach(el => {
+      this._host.layout?.removeWidget(el);
+    });
+    console.log('selected layout changed', args);
+    args.layout.render({
+      host: this._host,
+      items: this._outputs,
+      notebook: this._model.context.model.toJSON() as any,
+      readyCallback: async () => {}
+    });
+  }
   private _model: AppModel;
 
   private _ready = new PromiseDelegate<void>();
@@ -115,6 +142,10 @@ export class AppWidget extends Panel {
   private _layoutRegistry: ISpectaLayoutRegistry;
 
   private _loaderHost?: Widget;
+
+  private _outputs: SpectaCellOutput[] = [];
+
+  private _spectaAppConfig: ISpectaAppConfig;
 }
 
 export namespace AppWidget {
@@ -123,5 +154,6 @@ export namespace AppWidget {
     label: string;
     model: AppModel;
     layoutRegistry: ISpectaLayoutRegistry;
+    spectaConfig: ISpectaAppConfig;
   }
 }
