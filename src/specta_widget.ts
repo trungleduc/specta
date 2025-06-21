@@ -21,7 +21,6 @@ export class AppWidget extends Panel {
     this._model = options.model;
     this._spectaAppConfig = options.spectaConfig;
     this._layoutRegistry = options.layoutRegistry;
-    this.node.style.padding = '5px';
     this._host = new Panel();
     this._host.addClass('specta-output-host');
     this.addWidget(this._host);

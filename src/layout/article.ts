@@ -1,4 +1,4 @@
-import { Panel } from '@lumino/widgets';
+import { Panel, Widget } from '@lumino/widgets';
 import { SpectaCellOutput } from '../specta_cell_output';
 import * as nbformat from '@jupyterlab/nbformat';
 import { ISpectaLayout } from '../token';
@@ -6,8 +6,16 @@ import { ISpectaLayout } from '../token';
 class HostPanel extends Panel {
   constructor() {
     super();
-    this.addClass('specta-article-host-panel');
+    this.addClass('specta-article-host-widget');
+    this._outputs = new Panel();
+    this._outputs.addClass('specta-article-outputs-panel');
+    this.addWidget(this._outputs);
   }
+
+  addOutput(widget: Widget): void {
+    this._outputs.addWidget(widget);
+  }
+  private _outputs: Panel;
 }
 export class ArticleLayout implements ISpectaLayout {
   async render(options: {
@@ -25,12 +33,12 @@ export class ArticleLayout implements ISpectaLayout {
       if (cellModel?.cell_type === 'code') {
         if (outputNode.childNodes.length > 0) {
           if (!info.hidden) {
-            hostPanel.addWidget(el);
+            hostPanel.addOutput(el);
           }
         }
       } else {
         if (!info.hidden) {
-          hostPanel.addWidget(el);
+          hostPanel.addOutput(el);
         }
       }
     }
