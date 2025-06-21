@@ -15,6 +15,7 @@ export interface ISpectaLayout {
 }
 export interface ISpectaLayoutRegistry {
   get(name: string): ISpectaLayout | undefined;
+  getDefaultLayout(): ISpectaLayout;
   register(name: string, layout: ISpectaLayout): void;
   allLayouts(): string[];
   layoutAdded: ISignal<ISpectaLayoutRegistry, string>;
@@ -37,6 +38,7 @@ export interface ITopbarConfig {
 
 export interface ISpectaAppConfig {
   topBar?: ITopbarConfig;
+  layout?: string;
 }
 export const ISpectaLayoutRegistry = new Token<ISpectaLayoutRegistry>(
   'specta:ISpectaLayoutRegistry'

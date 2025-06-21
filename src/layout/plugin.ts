@@ -4,7 +4,8 @@ import {
 } from '@jupyterlab/application';
 
 import { SpectaLayoutRegistry } from './layout_registry';
-import { ISpectaLayoutRegistry } from '../token';
+import { ISpectaAppConfig, ISpectaLayoutRegistry } from '../token';
+import { PageConfig } from '@jupyterlab/coreutils';
 
 export const spectaLayoutRegistry: JupyterFrontEndPlugin<ISpectaLayoutRegistry> =
   {
@@ -13,7 +14,11 @@ export const spectaLayoutRegistry: JupyterFrontEndPlugin<ISpectaLayoutRegistry> 
     provides: ISpectaLayoutRegistry,
     activate: (app: JupyterFrontEnd): ISpectaLayoutRegistry => {
       const layoutRegistry = new SpectaLayoutRegistry();
-
+      const spectaConfig = JSON.parse(
+        PageConfig.getOption('spectaConfig') ?? '{}'
+      ) as ISpectaAppConfig;
+      const defaultLayout = spectaConfig.layout ?? 'default';
+      layoutRegistry.setSelectedLayout(defaultLayout);
       return layoutRegistry;
     }
   };

@@ -90,7 +90,7 @@ export const SettingContent = (props: {
                     background: 'var(--jp-layout-color2)'
                   }}
                 >
-                  {el}
+                  {el.charAt(0).toUpperCase() + el.slice(1)}
                 </option>
               );
             })}

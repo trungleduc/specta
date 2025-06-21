@@ -10,11 +10,14 @@
 
 #specta-top-panel {
   contain: unset !important;
+  box-shadow: unset !important;
+  z-index: 100;
 }
 
 .specta-file-browser {
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 10px !important;
   padding: 50px 20px;
   background: var(--jp-layout-color3);
 }
