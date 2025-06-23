@@ -69,32 +69,15 @@ export class AppModel {
       (_, status) => {
         if (status === 'connected') {
           const kernel = this._context.sessionContext.session?.kernel;
-          console.log('kernel', kernel);
           if (kernel) {
             pd.resolve();
-            let executed = false;
-            // kernel.anyMessage.connect((_, { msg }) => {
-            //   console.log(
-            //     '#######',
-            //     msg.header.msg_type,
-            //     msg.header.msg_id,
-            //     msg.content
-            //   );
-            // });
-            kernel.statusChanged.connect((_, status) => {
-              if (!executed && status === 'idle') {
-                executed = true;
-                this._notebookPanel = createNotebookPanel({
-                  context: this._context,
-                  rendermime: this.options.rendermime,
-                  editorServices: this.options.editorServices
-                });
-
-                (this.options.tracker.widgetAdded as any).emit(
-                  this._notebookPanel
-                );
-              }
+            this._notebookPanel = createNotebookPanel({
+              context: this._context,
+              rendermime: this.options.rendermime,
+              editorServices: this.options.editorServices
             });
+
+            (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
           }
         }
       },
@@ -153,17 +136,21 @@ export class AppModel {
 
   async executeCell(
     cell: ICellModel,
-    output: SimplifiedOutputArea
+    outputWrapper: SpectaCellOutput
   ): Promise<IExecuteReplyMsg | undefined> {
     if (cell.type !== 'code' || !this._context) {
       return;
     }
+    const output = outputWrapper.cellOutput as SimplifiedOutputArea;
     const source = cell.sharedModel.source;
     const rep = await SimplifiedOutputArea.execute(
       source,
       output,
       this._context.sessionContext
     );
+    output.future.done.then(() => {
+      outputWrapper.removePlaceholder();
+    });
     return rep;
   }
 

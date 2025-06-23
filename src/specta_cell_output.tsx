@@ -1,5 +1,9 @@
-import { Panel, Widget } from '@lumino/widgets';
 import * as nbformat from '@jupyterlab/nbformat';
+import { ReactWidget } from '@jupyterlab/ui-components';
+import { Panel, Widget } from '@lumino/widgets';
+import React from 'react';
+
+import { RandomSkeleton } from './components/cellSkeleton';
 
 export interface ICellInfo {
   hidden?: boolean;
@@ -21,6 +25,11 @@ export class SpectaCellOutput extends Panel {
     this._cellOutput = cell;
     this.cellIdentity = cellIdentity;
     this._info = info ?? {};
+    if (info.cellModel?.cell_type === 'code') {
+      this._placeholder = ReactWidget.create(<RandomSkeleton />);
+      this._placeholder.addClass('specta-cell-placeholder');
+      this.addWidget(this._placeholder);
+    }
   }
   readonly cellIdentity: string;
 
@@ -32,6 +41,13 @@ export class SpectaCellOutput extends Panel {
     return this._info;
   }
 
+  removePlaceholder(): void {
+    if (this._placeholder) {
+      this._placeholder?.dispose();
+    }
+  }
+
   private _info: ICellInfo = {};
   private _cellOutput: Widget;
+  private _placeholder?: Widget = undefined;
 }

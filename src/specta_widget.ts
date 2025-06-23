@@ -1,4 +1,3 @@
-import { SimplifiedOutputArea } from '@jupyterlab/outputarea';
 import { PromiseDelegate } from '@lumino/coreutils';
 import { Message } from '@lumino/messaging';
 import { Panel, Widget } from '@lumino/widgets';
@@ -86,7 +85,7 @@ export class AppWidget extends Panel {
         continue;
       }
       const el = this._model.createCell(cell);
-      this._model.executeCell(cell, el.cellOutput as SimplifiedOutputArea);
+      this._model.executeCell(cell, el);
 
       this._outputs.push(el);
     }
