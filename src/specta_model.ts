@@ -24,6 +24,7 @@ import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
 
 import { createNotebookPanel } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
+import { PromiseDelegate } from '@lumino/coreutils';
 
 export const VIEW = 'grid_default';
 export class AppModel {
@@ -61,15 +62,46 @@ export class AppModel {
     return this._notebookPanel;
   }
   public async initialize(): Promise<void> {
+    const pd = new PromiseDelegate<void>();
     await this._context?.sessionContext.ready;
 
-    this._notebookPanel = createNotebookPanel({
-      context: this._context,
-      rendermime: this.options.rendermime,
-      editorServices: this.options.editorServices
-    });
+    this._context.sessionContext.connectionStatusChanged.connect(
+      (_, status) => {
+        if (status === 'connected') {
+          const kernel = this._context.sessionContext.session?.kernel;
+          console.log('kernel', kernel);
+          if (kernel) {
+            pd.resolve();
+            let executed = false;
+            // kernel.anyMessage.connect((_, { msg }) => {
+            //   console.log(
+            //     '#######',
+            //     msg.header.msg_type,
+            //     msg.header.msg_id,
+            //     msg.content
+            //   );
+            // });
+            kernel.statusChanged.connect((_, status) => {
+              if (!executed && status === 'idle') {
+                executed = true;
+                this._notebookPanel = createNotebookPanel({
+                  context: this._context,
+                  rendermime: this.options.rendermime,
+                  editorServices: this.options.editorServices
+                });
 
-    (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
+                (this.options.tracker.widgetAdded as any).emit(
+                  this._notebookPanel
+                );
+              }
+            });
+          }
+        }
+      },
+      this
+    );
+
+    return pd.promise;
   }
 
   createCell(cellModel: ICellModel): SpectaCellOutput {

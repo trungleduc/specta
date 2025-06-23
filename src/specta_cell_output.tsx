@@ -11,8 +11,10 @@ export class SpectaCellOutput extends Panel {
     this.removeClass('lm-Widget');
     this.removeClass('p-Widget');
     this.addClass('specta-cell-output');
+
     const content = new Panel();
     content.addClass('specta-cell-content');
+
     cell.addClass('specta-item-widget');
     content.addWidget(cell);
     this.addWidget(content);

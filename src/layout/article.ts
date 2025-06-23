@@ -27,14 +27,11 @@ export class ArticleLayout implements ISpectaLayout {
     const { host, items, readyCallback } = options;
     const hostPanel = new HostPanel();
     for (const el of items) {
-      const outputNode = el.cellOutput.node;
       const cellModel = el.info.cellModel;
       const info = el.info;
       if (cellModel?.cell_type === 'code') {
-        if (outputNode.childNodes.length > 0) {
-          if (!info.hidden) {
-            hostPanel.addOutput(el);
-          }
+        if (!info.hidden) {
+          hostPanel.addOutput(el);
         }
       } else {
         if (!info.hidden) {

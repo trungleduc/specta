@@ -12,14 +12,11 @@ export class DefaultLayout implements ISpectaLayout {
   }): Promise<void> {
     const { host, items, readyCallback } = options;
     for (const el of items) {
-      const outputNode = el.cellOutput.node;
       const cellModel = el.info.cellModel;
       const info = el.info;
       if (cellModel?.cell_type === 'code') {
-        if (outputNode.childNodes.length > 0) {
-          if (!info.hidden) {
-            host.addWidget(el);
-          }
+        if (!info.hidden) {
+          host.addWidget(el);
         }
       } else {
         if (!info.hidden) {

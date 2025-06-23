@@ -77,17 +77,17 @@ export class AppWidget extends Panel {
 
   async render(): Promise<void> {
     const cellList = this._model.cells ?? [];
+
     const layout = this._spectaAppConfig?.layout ?? 'default';
+
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
       if (src.length === 0) {
         continue;
       }
       const el = this._model.createCell(cell);
-      await this._model.executeCell(
-        cell,
-        el.cellOutput as SimplifiedOutputArea
-      );
+      this._model.executeCell(cell, el.cellOutput as SimplifiedOutputArea);
+
       this._outputs.push(el);
     }
     const readyCallback = async () => {
@@ -124,7 +124,6 @@ export class AppWidget extends Panel {
     currentEls.forEach(el => {
       this._host.layout?.removeWidget(el);
     });
-    console.log('selected layout changed', args);
     args.layout.render({
       host: this._host,
       items: this._outputs,
