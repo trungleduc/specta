@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 .specta-article-host-widget {
   display: flex;
   justify-content: center;
   margin: 0 24px;
   --jp-content-font-family: 'Source Serif 4', Georgia, serif;
+  --jp-code-font-family:
+    'Source Code Pro', Menlo, Monaco, 'Courier New', Courier, monospace;
 }
 
 .specta-article-host-widget {
@@ -35,7 +38,7 @@
   }
 
   h1 {
-    font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Work Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     letter-spacing: -0.014em;
     line-height: 38px;
     margin-bottom: 24px;
@@ -86,25 +89,24 @@
   }
 
   pre {
-    background-color: #f0f0f0;
-    padding: 12px;
-    border-radius: 5px;
+    background-color: var(--jp-cell-editor-background) !important;
+    padding: 32px !important;
+    border-radius: 5px !important;
+    border: 1px solid var(--jp-cell-editor-border-color) !important;
     overflow-x: auto;
-    margin: 1.2em 0;
-    font-size: 0.85em;
-    line-height: 1.4;
+    margin: 1.2em 0 !important;
+    font-size: 0.85em !important;
+    line-height: 1.4 !important;
   }
 
   pre code {
-    font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
     color: #222;
-    background-color: transparent;
+    background-color: transparent !important;
     padding: 0;
     font-size: 0.85em;
   }
 
   code {
-    font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
     background-color: #e9ecef;
     padding: 0.2em 0.4em;
     border-radius: 3px;
@@ -186,7 +188,6 @@
       margin-bottom: 32px;
       line-height: 52px;
       letter-spacing: -0.011em;
-
     }
 
     h2 {
