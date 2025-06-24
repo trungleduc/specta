@@ -10,7 +10,17 @@ export interface ICellInfo {
   cellModel?: nbformat.ICell;
 }
 export class SpectaCellOutput extends Panel {
-  constructor(cellIdentity: string, cell: Widget, info: ICellInfo) {
+  constructor({
+    cellIdentity,
+    cell,
+    sourceCell,
+    info
+  }: {
+    cellIdentity: string;
+    cell: Widget;
+    sourceCell?: Widget;
+    info: ICellInfo;
+  }) {
     super();
     this.removeClass('lm-Widget');
     this.removeClass('p-Widget');
@@ -20,6 +30,9 @@ export class SpectaCellOutput extends Panel {
     content.addClass('specta-cell-content');
 
     cell.addClass('specta-item-widget');
+    if (sourceCell) {
+      content.addWidget(sourceCell);
+    }
     content.addWidget(cell);
     this.addWidget(content);
     this._cellOutput = cell;

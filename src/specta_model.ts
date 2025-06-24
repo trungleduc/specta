@@ -1,4 +1,6 @@
 import {
+  CodeCell,
+  CodeCellModel,
   ICellModel,
   MarkdownCell,
   MarkdownCellModel,
@@ -95,12 +97,22 @@ export class AppModel {
     };
     switch (cellModel.type) {
       case 'code': {
+        const codeCell = new CodeCell({
+          model: cellModel as CodeCellModel,
+          rendermime: this.options.rendermime,
+          contentFactory: this.options.contentFactory
+        });
         const outputareamodel = new OutputAreaModel({ trusted: true });
         const out = new SimplifiedOutputArea({
           model: outputareamodel,
           rendermime: this.options.rendermime
         });
-        item = new SpectaCellOutput(cellModel.id, out, info);
+        item = new SpectaCellOutput({
+          cellIdentity: cellModel.id,
+          cell: out,
+          sourceCell: codeCell,
+          info
+        });
         break;
       }
       case 'markdown': {
@@ -114,7 +126,11 @@ export class AppModel {
         markdownCell.rendered = true;
         Private.removeElements(markdownCell.node, 'jp-Collapser');
         Private.removeElements(markdownCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, markdownCell, info);
+        item = new SpectaCellOutput({
+          cellIdentity: cellModel.id,
+          cell: markdownCell,
+          info
+        });
         break;
       }
       default: {
@@ -126,7 +142,11 @@ export class AppModel {
         rawCell.inputHidden = false;
         Private.removeElements(rawCell.node, 'jp-Collapser');
         Private.removeElements(rawCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, rawCell, info);
+        item = new SpectaCellOutput({
+          cellIdentity: cellModel.id,
+          cell: rawCell,
+          info
+        });
         break;
       }
     }
