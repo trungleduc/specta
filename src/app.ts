@@ -23,7 +23,7 @@ export class SpectaApp extends JupyterFrontEnd<SpectaShell> {
   /**
    * The name of the application.
    */
-  readonly name: string = 'Voila';
+  readonly name: string = 'specta';
 
   /**
    * A namespace/prefix plugins may use to denote their provenance.

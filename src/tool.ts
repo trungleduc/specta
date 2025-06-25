@@ -10,8 +10,9 @@ import { VoilaFileBrowser } from '@voila-dashboards/voila';
 import { NotebookGridWidgetFactory } from './document/factory';
 import { SpectaWidgetFactory } from './specta_widget_factory';
 import { IDocumentManager } from '@jupyterlab/docmanager';
-import { ISpectaLayoutRegistry } from './token';
+import { ISpectaAppConfig, ISpectaLayoutRegistry } from './token';
 
+export const SPECTA_CELL_VISIBLE_TAG = 'specta:visible';
 export function registerDocumentFactory(options: {
   factoryName: string;
   app: JupyterFrontEnd;
@@ -21,6 +22,7 @@ export function registerDocumentFactory(options: {
   contentFactory: NotebookPanel.IContentFactory;
   spectaTracker: WidgetTracker;
   spectaLayoutRegistry: ISpectaLayoutRegistry;
+  spectaConfig: ISpectaAppConfig;
 }) {
   const {
     factoryName,
@@ -30,7 +32,8 @@ export function registerDocumentFactory(options: {
     editorServices,
     contentFactory,
     spectaTracker,
-    spectaLayoutRegistry
+    spectaLayoutRegistry,
+    spectaConfig
   } = options;
 
   const spectaWidgetFactory = new SpectaWidgetFactory({
@@ -40,7 +43,8 @@ export function registerDocumentFactory(options: {
     contentFactory,
     mimeTypeService: editorServices.mimeTypeService,
     editorServices,
-    spectaLayoutRegistry
+    spectaLayoutRegistry,
+    spectaConfig
   });
   const widgetFactory = new NotebookGridWidgetFactory({
     name: factoryName,

@@ -8,8 +8,8 @@ import { ISpectaLayoutRegistry, ITopbarConfig } from '../token';
 
 interface IProps {
   config?: ITopbarConfig;
-  themeManager: IThemeManager;
-  layoutRegistry: ISpectaLayoutRegistry;
+  themeManager?: IThemeManager;
+  layoutRegistry?: ISpectaLayoutRegistry;
 }
 
 export function TopbarElement(props: IProps): JSX.Element {

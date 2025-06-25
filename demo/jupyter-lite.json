@@ -1,9 +1,12 @@
 {
   "jupyter-config-data": {
+    "enableMemoryStorage": true,
+    "contentsStorageDrivers": ["memoryStorageDriver"],
     "spectaConfig": {
       "topBar": {
         "title": "Specta Demo"
-      }
+      },
+      "layout": "article"
     }
   }
 }

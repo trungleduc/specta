@@ -4,46 +4,54 @@ import { Divider } from '../components/divider';
 import { ISpectaLayoutRegistry } from '../token';
 
 export const SettingContent = (props: {
-  themeManager: IThemeManager;
-  layoutRegistry: ISpectaLayoutRegistry;
+  themeManager?: IThemeManager;
+  layoutRegistry?: ISpectaLayoutRegistry;
 }) => {
   const { themeManager, layoutRegistry } = props;
   const [themeOptions, setThemeOptions] = useState<string[]>([
-    ...themeManager.themes
+    ...(themeManager?.themes ?? [])
   ]);
   const [selectedTheme, setSelectedTheme] = useState<string>(
-    themeManager.theme ?? 'light'
+    themeManager?.theme ?? 'light'
   );
 
   const [layoutOptions, setLayoutOptions] = useState<string[]>(
-    layoutRegistry.allLayouts()
+    layoutRegistry?.allLayouts() ?? []
   );
   const [selectedLayout, setSelectedLayout] = useState<string>(
-    layoutRegistry.selectedLayout.name
+    layoutRegistry?.selectedLayout?.name ?? 'default'
   );
   useEffect(() => {
-    const cb = (sender: IThemeManager, args: any) => {
-      if (args.newValue.length > 0) {
-        return;
-      }
-      setThemeOptions([...themeManager.themes]);
-      if (themeManager.theme) {
-        setSelectedTheme(themeManager.theme);
-      }
-    };
-    themeManager.themeChanged.connect(cb);
+    let cb: any;
+    if (themeManager) {
+      cb = (sender: IThemeManager, args: any) => {
+        if (args.newValue.length > 0) {
+          return;
+        }
 
-    const layoutAddedCb = (
-      sender: ISpectaLayoutRegistry,
-      newLayout: string
-    ) => {
-      setLayoutOptions(layoutRegistry.allLayouts());
-    };
+        setThemeOptions([...themeManager.themes]);
 
-    layoutRegistry.layoutAdded.connect(layoutAddedCb);
+        if (themeManager.theme) {
+          setSelectedTheme(themeManager.theme);
+        }
+      };
+      themeManager.themeChanged.connect(cb);
+    }
+    if (layoutRegistry) {
+      const layoutAddedCb = (
+        sender: ISpectaLayoutRegistry,
+        newLayout: string
+      ) => {
+        setLayoutOptions(layoutRegistry.allLayouts());
+      };
+
+      layoutRegistry.layoutAdded.connect(layoutAddedCb);
+    }
 
     return () => {
-      themeManager.themeChanged.disconnect(cb);
+      if (themeManager && cb) {
+        themeManager.themeChanged.disconnect(cb);
+      }
     };
   }, [themeManager, layoutRegistry]);
 
@@ -51,7 +59,7 @@ export const SettingContent = (props: {
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const theme = e.currentTarget?.value;
       if (theme) {
-        themeManager.setTheme(theme);
+        themeManager?.setTheme(theme);
         setSelectedTheme(theme);
       }
     },
@@ -60,7 +68,7 @@ export const SettingContent = (props: {
   const onLayoutChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const layout = e.currentTarget?.value;
-      if (layout) {
+      if (layout && layoutRegistry) {
         layoutRegistry.setSelectedLayout(layout);
         setSelectedLayout(layout);
       }
@@ -73,54 +81,58 @@ export const SettingContent = (props: {
         SETTINGS
       </p>
       <Divider />
-      <div>
-        <label htmlFor="">Select layout</label>
-        <div className="jp-select-wrapper">
-          <select
-            className=" jp-mod-styled specta-topbar-theme"
-            onChange={onLayoutChange}
-            value={selectedLayout}
-          >
-            {layoutOptions.map(el => {
-              return (
-                <option
-                  key={el}
-                  value={el}
-                  style={{
-                    background: 'var(--jp-layout-color2)'
-                  }}
-                >
-                  {el}
-                </option>
-              );
-            })}
-          </select>
+      {layoutRegistry && (
+        <div>
+          <label htmlFor="">Select layout</label>
+          <div className="jp-select-wrapper">
+            <select
+              className=" jp-mod-styled specta-topbar-theme"
+              onChange={onLayoutChange}
+              value={selectedLayout}
+            >
+              {layoutOptions.map(el => {
+                return (
+                  <option
+                    key={el}
+                    value={el}
+                    style={{
+                      background: 'var(--jp-layout-color2)'
+                    }}
+                  >
+                    {el.charAt(0).toUpperCase() + el.slice(1)}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
-      </div>
-      <div>
-        <label htmlFor="">Select theme</label>
-        <div className="jp-select-wrapper">
-          <select
-            className=" jp-mod-styled specta-topbar-theme"
-            onChange={onThemeChange}
-            value={selectedTheme}
-          >
-            {themeOptions.map(el => {
-              return (
-                <option
-                  key={el}
-                  value={el}
-                  style={{
-                    background: 'var(--jp-layout-color2)'
-                  }}
-                >
-                  {el}
-                </option>
-              );
-            })}
-          </select>
+      )}
+      {themeManager && (
+        <div>
+          <label htmlFor="">Select theme</label>
+          <div className="jp-select-wrapper">
+            <select
+              className=" jp-mod-styled specta-topbar-theme"
+              onChange={onThemeChange}
+              value={selectedTheme}
+            >
+              {themeOptions.map(el => {
+                return (
+                  <option
+                    key={el}
+                    value={el}
+                    style={{
+                      background: 'var(--jp-layout-color2)'
+                    }}
+                  >
+                    {el}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

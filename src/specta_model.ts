@@ -1,4 +1,6 @@
 import {
+  CodeCell,
+  CodeCellModel,
   ICellModel,
   MarkdownCell,
   MarkdownCellModel,
@@ -24,6 +26,8 @@ import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
 
 import { createNotebookPanel } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
+import { PromiseDelegate } from '@lumino/coreutils';
+import { SPECTA_CELL_VISIBLE_TAG } from './tool';
 
 export const VIEW = 'grid_default';
 export class AppModel {
@@ -61,15 +65,42 @@ export class AppModel {
     return this._notebookPanel;
   }
   public async initialize(): Promise<void> {
+    const pd = new PromiseDelegate<void>();
     await this._context?.sessionContext.ready;
 
-    this._notebookPanel = createNotebookPanel({
-      context: this._context,
-      rendermime: this.options.rendermime,
-      editorServices: this.options.editorServices
-    });
+    const connectKernel = () => {
+      pd.resolve();
+      this._notebookPanel = createNotebookPanel({
+        context: this._context,
+        rendermime: this.options.rendermime,
+        editorServices: this.options.editorServices
+      });
 
-    (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
+      (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
+    };
+    const kernel = this._context.sessionContext.session?.kernel;
+    if (kernel) {
+      const status = kernel.status;
+      console.log('kernel status', status);
+      if (status !== 'unknown') {
+        // Connected to an existing kernel.
+        connectKernel();
+        return;
+      }
+    }
+    this._context.sessionContext.connectionStatusChanged.connect(
+      (_, status) => {
+        if (status === 'connected') {
+          const kernel = this._context.sessionContext.session?.kernel;
+          if (kernel) {
+            connectKernel();
+          }
+        }
+      },
+      this
+    );
+
+    return pd.promise;
   }
 
   createCell(cellModel: ICellModel): SpectaCellOutput {
@@ -80,12 +111,36 @@ export class AppModel {
     };
     switch (cellModel.type) {
       case 'code': {
+        cellModel.setMetadata('editable', false);
+        const codeCell = new CodeCell({
+          model: cellModel as CodeCellModel,
+          rendermime: this.options.rendermime,
+          contentFactory: this.options.contentFactory,
+          editorConfig: {
+            lineNumbers: false,
+            lineWrap: false,
+            tabFocusable: false,
+            editable: false
+          }
+        });
+        codeCell.loadEditableState();
         const outputareamodel = new OutputAreaModel({ trusted: true });
         const out = new SimplifiedOutputArea({
           model: outputareamodel,
           rendermime: this.options.rendermime
         });
-        item = new SpectaCellOutput(cellModel.id, out, info);
+        const tags = (cellModel?.metadata?.tags ?? []) as string[];
+        let sourceCell: CodeCell | undefined;
+        if (tags.includes(SPECTA_CELL_VISIBLE_TAG)) {
+          sourceCell = codeCell;
+        }
+        item = new SpectaCellOutput({
+          cellIdentity: cellModel.id,
+          cell: out,
+          sourceCell,
+          info
+        });
+
         break;
       }
       case 'markdown': {
@@ -99,7 +154,11 @@ export class AppModel {
         markdownCell.rendered = true;
         Private.removeElements(markdownCell.node, 'jp-Collapser');
         Private.removeElements(markdownCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, markdownCell, info);
+        item = new SpectaCellOutput({
+          cellIdentity: cellModel.id,
+          cell: markdownCell,
+          info
+        });
         break;
       }
       default: {
@@ -111,7 +170,11 @@ export class AppModel {
         rawCell.inputHidden = false;
         Private.removeElements(rawCell.node, 'jp-Collapser');
         Private.removeElements(rawCell.node, 'jp-InputPrompt');
-        item = new SpectaCellOutput(cellModel.id, rawCell, info);
+        item = new SpectaCellOutput({
+          cellIdentity: cellModel.id,
+          cell: rawCell,
+          info
+        });
         break;
       }
     }
@@ -121,17 +184,21 @@ export class AppModel {
 
   async executeCell(
     cell: ICellModel,
-    output: SimplifiedOutputArea
+    outputWrapper: SpectaCellOutput
   ): Promise<IExecuteReplyMsg | undefined> {
     if (cell.type !== 'code' || !this._context) {
       return;
     }
+    const output = outputWrapper.cellOutput as SimplifiedOutputArea;
     const source = cell.sharedModel.source;
     const rep = await SimplifiedOutputArea.execute(
       source,
       output,
       this._context.sessionContext
     );
+    output.future.done.then(() => {
+      outputWrapper.removePlaceholder();
+    });
     return rep;
   }
 

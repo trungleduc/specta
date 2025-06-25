@@ -57,9 +57,11 @@
   overflow: auto;
 }
 
-div#specta-top-panel {
+#specta-top-panel {
   min-height: 40px;
   display: flex;
+  box-shadow: unset !important;
+  z-index: 100;
 }
 
 .specta-topbar-element {
@@ -143,4 +145,37 @@ div#specta-top-panel {
   border-color: var(--jp-border-color1);
   padding: auto;
   margin-bottom: 5px;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #e2e2e2; /* Light gray base */
+  border-radius: 4px;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.invisible {
+  visibility: hidden;
 }
