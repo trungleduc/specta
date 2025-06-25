@@ -4,10 +4,17 @@ import { NotebookSpectaDocWidget } from './widget';
 
 import { INotebookModel } from '@jupyterlab/notebook';
 import { SpectaWidgetFactory } from '../specta_widget_factory';
-import { Widget } from '@lumino/widgets';
+import { Panel } from '@lumino/widgets';
+import { ReactWidget } from '@jupyterlab/ui-components';
+import { TopbarElement } from '../topbar/widget';
+import * as React from 'react';
+import { ISpectaLayoutRegistry } from '../token';
+import { IThemeManager } from '@jupyterlab/apputils';
 
 interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
   spectaWidgetFactory: SpectaWidgetFactory;
+  layoutRegistry?: ISpectaLayoutRegistry;
+  themeManager?: IThemeManager;
 }
 
 export class NotebookGridWidgetFactory extends ABCWidgetFactory<
@@ -22,15 +29,17 @@ export class NotebookGridWidgetFactory extends ABCWidgetFactory<
   protected createNewWidget(
     context: DocumentRegistry.IContext<INotebookModel>
   ): NotebookSpectaDocWidget {
-    const content = new Widget();
+    const content = new Panel();
     content.addClass('jp-specta-notebook-panel');
+    const topbar = ReactWidget.create(<TopbarElement />);
+    content.addWidget(topbar);
     context.ready.then(async () => {
       const spectaWidget = await this._spectaWidgetFactory.createNew({
         context
       });
 
       if (spectaWidget) {
-        Widget.attach(spectaWidget, content.node);
+        content.addWidget(spectaWidget);
       }
     });
 

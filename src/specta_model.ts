@@ -68,19 +68,32 @@ export class AppModel {
     const pd = new PromiseDelegate<void>();
     await this._context?.sessionContext.ready;
 
+    const connectKernel = () => {
+      pd.resolve();
+      this._notebookPanel = createNotebookPanel({
+        context: this._context,
+        rendermime: this.options.rendermime,
+        editorServices: this.options.editorServices
+      });
+
+      (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
+    };
+    const kernel = this._context.sessionContext.session?.kernel;
+    if (kernel) {
+      const status = kernel.status;
+      console.log('kernel status', status);
+      if (status !== 'unknown') {
+        // Connected to an existing kernel.
+        connectKernel();
+        return;
+      }
+    }
     this._context.sessionContext.connectionStatusChanged.connect(
       (_, status) => {
         if (status === 'connected') {
           const kernel = this._context.sessionContext.session?.kernel;
           if (kernel) {
-            pd.resolve();
-            this._notebookPanel = createNotebookPanel({
-              context: this._context,
-              rendermime: this.options.rendermime,
-              editorServices: this.options.editorServices
-            });
-
-            (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
+            connectKernel();
           }
         }
       },
