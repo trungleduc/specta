@@ -26,10 +26,13 @@ export class SpectaWidgetFactory {
     context: DocumentRegistry.IContext<INotebookModel>;
   }): Promise<AppWidget> {
     const { context } = options;
+    const rendermime = this._options.rendermime.clone({
+      resolver: context.urlResolver
+    });
     const model = new AppModel({
       context,
       manager: this._options.manager,
-      rendermime: this._options.rendermime,
+      rendermime,
       tracker: this._options.tracker,
       contentFactory: this._options.contentFactory,
       mimeTypeService: this._options.mimeTypeService,

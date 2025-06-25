@@ -81,7 +81,6 @@ export class AppModel {
     const kernel = this._context.sessionContext.session?.kernel;
     if (kernel) {
       const status = kernel.status;
-      console.log('kernel status', status);
       if (status !== 'unknown') {
         // Connected to an existing kernel.
         connectKernel();
@@ -150,6 +149,7 @@ export class AppModel {
           contentFactory: this.options.contentFactory,
           editorConfig: this.options.editorConfig.markdown
         });
+        markdownCell.initializeState();
         markdownCell.inputHidden = false;
         markdownCell.rendered = true;
         Private.removeElements(markdownCell.node, 'jp-Collapser');
