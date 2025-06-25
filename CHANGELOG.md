@@ -2,11 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.3
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.2...9ba4635604ed976834d4782eee514fa1e2aff584))
+
+### Merged PRs
+
+- Add new layout [#9](https://github.com/trungleduc/specta/pull/9) ([@trungleduc](https://github.com/trungleduc))
+- Add topbar [#8](https://github.com/trungleduc/specta/pull/8) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-06-12&to=2025-06-25&type=c))
+
+[@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-06-12..2025-06-25&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.2
 
 No merged PRs
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.1
 
