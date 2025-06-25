@@ -6,21 +6,24 @@
   display: flex;
   justify-content: center;
   margin: 0 24px;
+  padding-bottom: 200px;
   --jp-content-font-family: 'Source Serif 4', Georgia, serif;
   --jp-code-font-family:
     'Source Code Pro', Menlo, Monaco, 'Courier New', Courier, monospace;
+  --jp-code-font-size: 14px;
 }
 
 .specta-article-host-widget {
   .jp-Collapser-child,
   .jp-collapseHeadingButton,
   .jp-InputPrompt,
-  .jp-InputCollapser {
+  .jp-InputCollapser,
+  .jp-InternalAnchorLink {
     display: none;
   }
 
   .specta-article-outputs-panel {
-    max-width: 720px;
+    max-width: 680px;
     width: 100%;
     font-size: 1rem;
     line-height: 1.6;
@@ -49,6 +52,7 @@
   }
 
   h2 {
+    font-family: 'Work Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     margin-top: 1em !important;
     font-size: 1.6em;
   }
@@ -91,10 +95,11 @@
   pre {
     background-color: var(--jp-cell-editor-background) !important;
     padding: 32px !important;
-    border-radius: 5px !important;
+    border-radius: 4px !important;
     border: 1px solid var(--jp-cell-editor-border-color) !important;
     overflow-x: auto;
-    margin: 1.2em 0 !important;
+    margin: 0 !important;
+    margin-top: 56px !important;
     font-size: 0.85em !important;
     line-height: 1.4 !important;
   }
@@ -103,14 +108,18 @@
     color: #222;
     background-color: transparent !important;
     padding: 0;
-    font-size: 0.85em;
+    font-size: 14px !important;
   }
 
   code {
     background-color: #e9ecef;
     padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-size: 0.85em;
+    border-radius: 4px;
+    font-size: 14px !important;
+  }
+
+  p code {
+    font-size: 75% !important;
   }
 
   img {
@@ -171,6 +180,34 @@
     background-color: #f7f7f7;
     font-weight: bold;
   }
+
+  h1 + p,
+  h2 + p,
+  h3 + p,
+  h4 + p,
+  h5 + p {
+    margin-top: 0.66em !important;
+  }
+
+  .jp-CodeCell {
+    padding: 0 !important;
+    margin-top: 40px !important;
+  }
+
+  .jp-CodeCell + .jp-OutputArea > .jp-OutputArea-child {
+    margin-top: 40px !important;
+  }
+  .jp-InputArea-editor {
+    padding: 32px !important;
+    border-radius: 4px !important;
+    background-color: var(--jp-cell-editor-background) !important;
+  }
+  .jp-InputArea-editor > div.cm-editor {
+    background: transparent !important;
+  }
+  .cm-content {
+    padding: 0 !important;
+  }
 }
 /* Bigger screen */
 @media screen and (min-width: 728px) {
@@ -191,13 +228,20 @@
     }
 
     h2 {
-      font-size: 2em;
+      font-size: 24px;
+      font-weight: 700;
       margin-top: 1.25em !important;
+      line-height: 30px;
+      margin-bottom: 0 !important;
+      letter-spacing: -0.016em;
     }
 
     h3 {
-      font-size: 1.5em;
-      margin-top: 1.25em !important;
+      letter-spacing: 0;
+      line-height: 24px;
+      font-size: 20px;
+      margin-top: 1.72em !important;
+      font-weight: 700;
     }
 
     h4 {
@@ -215,8 +259,14 @@
     p,
     ul,
     ol {
-      font-size: 1.125rem;
-      line-height: 1.7;
+      letter-spacing: -0.003em;
+      line-height: 32px;
+      font-size: 20px;
+      margin-top: 2.1em;
+      margin-bottom: 0px !important;
+      font-style: normal;
+      word-break: break-word;
+      font-weight: 400;
     }
 
     li {
@@ -251,6 +301,14 @@
 
     img {
       margin: 2em auto;
+    }
+
+    .jp-CodeCell {
+      margin-top: 56px !important;
+    }
+
+    .jp-CodeCell + .jp-OutputArea > .jp-OutputArea-child {
+      margin-top: 56px !important;
     }
   }
 }
