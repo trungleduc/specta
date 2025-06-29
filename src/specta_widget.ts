@@ -78,7 +78,6 @@ export class AppWidget extends Panel {
     const cellList = this._model.cells ?? [];
 
     const layout = this._spectaAppConfig?.defaultLayout ?? 'default';
-
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
       if (src.length === 0) {

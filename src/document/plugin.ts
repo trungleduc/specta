@@ -15,11 +15,7 @@ import {
   isSpectaApp,
   registerDocumentFactory
 } from '../tool';
-import {
-  ISpectaAppConfig,
-  ISpectaDocTracker,
-  ISpectaLayoutRegistry
-} from '../token';
+import { ISpectaDocTracker, ISpectaLayoutRegistry } from '../token';
 import { IKernelSpecManager } from '@jupyterlab/services';
 
 const activate = (
@@ -28,8 +24,7 @@ const activate = (
   tracker: INotebookTracker,
   editorServices: IEditorServices,
   contentFactory: NotebookPanel.IContentFactory,
-  spectaLayoutRegistry: ISpectaLayoutRegistry,
-  spectaConfig: ISpectaAppConfig
+  spectaLayoutRegistry: ISpectaLayoutRegistry
 ): IWidgetTracker => {
   const namespace = 'specta';
   const spectaTracker = new WidgetTracker<Widget>({ namespace });
@@ -42,8 +37,7 @@ const activate = (
     editorServices,
     contentFactory,
     spectaTracker,
-    spectaLayoutRegistry,
-    spectaConfig
+    spectaLayoutRegistry
   });
 
   return spectaTracker;
@@ -57,8 +51,7 @@ export const spectaDocument: JupyterFrontEndPlugin<IWidgetTracker> = {
     INotebookTracker,
     IEditorServices,
     NotebookPanel.IContentFactory,
-    ISpectaLayoutRegistry,
-    ISpectaAppConfig
+    ISpectaLayoutRegistry
   ],
   activate,
   provides: ISpectaDocTracker

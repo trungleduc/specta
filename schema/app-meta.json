@@ -9,14 +9,14 @@
       "metadataSchema": {
         "type": "object",
         "properties": {
-          "/specta/showTopbar": {
-            "title": "Show top bar",
-            "type": "string",
-            "enum": ["Yes", "No"],
-            "default": "Yes"
+          "/specta/hideTopbar": {
+            "title": "Hide top bar",
+            "type": "boolean",
+            "enum": [true, false],
+            "default": false
           },
           "/specta/defaultLayout": {
-            "title": "Default layout",
+            "title": "Page layout",
             "type": "string",
             "enum": ["default", "article"],
             "default": "default"
@@ -24,7 +24,7 @@
         }
       },
       "metadataOptions": {
-        "/specta/showTopbar": {
+        "/specta/hideTopbar": {
           "metadataLevel": "notebook",
           "writeDefault": false
         },

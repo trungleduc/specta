@@ -4,20 +4,17 @@ import {
 } from '@jupyterlab/application';
 
 import { SpectaLayoutRegistry } from './layout_registry';
-import { ISpectaAppConfig, ISpectaLayoutRegistry } from '../token';
+import { ISpectaLayoutRegistry } from '../token';
+import { readSpectaConfig } from '../tool';
 
 export const spectaLayoutRegistry: JupyterFrontEndPlugin<ISpectaLayoutRegistry> =
   {
     id: 'specta:layout-registry',
     autoStart: true,
     provides: ISpectaLayoutRegistry,
-    requires: [ISpectaAppConfig],
-    activate: (
-      app: JupyterFrontEnd,
-      spectaConfig: ISpectaAppConfig
-    ): ISpectaLayoutRegistry => {
+    activate: (app: JupyterFrontEnd): ISpectaLayoutRegistry => {
       const layoutRegistry = new SpectaLayoutRegistry();
-
+      const spectaConfig = readSpectaConfig();
       const defaultLayout = spectaConfig.defaultLayout ?? 'default';
       layoutRegistry.setSelectedLayout(defaultLayout);
       return layoutRegistry;

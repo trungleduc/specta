@@ -15,6 +15,7 @@ import { NotebookGridWidgetFactory } from './document/factory';
 import { SpectaWidgetFactory } from './specta_widget_factory';
 import { IDocumentManager } from '@jupyterlab/docmanager';
 import { ISpectaAppConfig, ISpectaLayoutRegistry } from './token';
+import { INotebookMetadata } from '@jupyterlab/nbformat';
 
 export function registerDocumentFactory(options: {
   factoryName: string;
@@ -25,7 +26,6 @@ export function registerDocumentFactory(options: {
   contentFactory: NotebookPanel.IContentFactory;
   spectaTracker: WidgetTracker;
   spectaLayoutRegistry: ISpectaLayoutRegistry;
-  spectaConfig: ISpectaAppConfig;
 }) {
   const {
     factoryName,
@@ -35,8 +35,7 @@ export function registerDocumentFactory(options: {
     editorServices,
     contentFactory,
     spectaTracker,
-    spectaLayoutRegistry,
-    spectaConfig
+    spectaLayoutRegistry
   } = options;
 
   const spectaWidgetFactory = new SpectaWidgetFactory({
@@ -46,18 +45,13 @@ export function registerDocumentFactory(options: {
     contentFactory,
     mimeTypeService: editorServices.mimeTypeService,
     editorServices,
-    spectaLayoutRegistry,
-    spectaConfig
+    spectaLayoutRegistry
   });
   const widgetFactory = new NotebookGridWidgetFactory({
     name: factoryName,
     modelName: 'notebook',
     fileTypes: ['ipynb'],
     spectaWidgetFactory
-    // preferKernel: false,
-    // canStartKernel: true,
-    // autoStartDefault: false,
-    // shutdownOnClose: true
   });
 
   // Registering the widget factory
@@ -134,4 +128,17 @@ export function hideAppLoadingIndicator() {
 
 export function isSpectaApp(): boolean {
   return !!document.querySelector('meta[name="specta-config"]');
+}
+
+export function readSpectaConfig(
+  nbMetadata?: INotebookMetadata
+): ISpectaAppConfig {
+  let rawConfig = PageConfig.getOption('spectaConfig');
+  if (!rawConfig || rawConfig.length === 0) {
+    rawConfig = '{}';
+  }
+  const spectaConfig = JSON.parse(rawConfig) as ISpectaAppConfig;
+  const spectaMetadata = (nbMetadata?.specta ?? {}) as ISpectaAppConfig;
+
+  return { ...spectaConfig, ...spectaMetadata };
 }

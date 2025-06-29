@@ -15,7 +15,8 @@ import { ServiceManager } from '@jupyterlab/services';
 import { AppModel } from './specta_model';
 import { AppWidget } from './specta_widget';
 import { UUID } from '@lumino/coreutils';
-import { ISpectaAppConfig, ISpectaLayoutRegistry } from './token';
+import { ISpectaLayoutRegistry } from './token';
+import { readSpectaConfig } from './tool';
 
 export class SpectaWidgetFactory {
   constructor(options: SpectaWidgetFactory.IOptions) {
@@ -46,7 +47,7 @@ export class SpectaWidgetFactory {
       label: '',
       model,
       layoutRegistry: this._options.spectaLayoutRegistry,
-      spectaConfig: this._options.spectaConfig
+      spectaConfig: readSpectaConfig(context.model.metadata)
     });
 
     return panel;
@@ -63,6 +64,5 @@ export namespace SpectaWidgetFactory {
     mimeTypeService: IEditorMimeTypeService;
     editorServices: IEditorServices;
     spectaLayoutRegistry: ISpectaLayoutRegistry;
-    spectaConfig: ISpectaAppConfig;
   }
 }

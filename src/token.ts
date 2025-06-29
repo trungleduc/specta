@@ -39,7 +39,7 @@ export interface ITopbarConfig {
 export interface ISpectaAppConfig {
   topBar?: ITopbarConfig;
   defaultLayout?: string;
-  showTopbar?: boolean;
+  hideTopbar?: boolean;
 }
 
 export interface ISpectaCellConfig {
@@ -52,8 +52,4 @@ export const ISpectaLayoutRegistry = new Token<ISpectaLayoutRegistry>(
 
 export const ISpectaDocTracker = new Token<IWidgetTracker<Widget>>(
   'exampleDocTracker'
-);
-
-export const ISpectaAppConfig = new Token<ISpectaAppConfig>(
-  'specta:ISpectaAppConfig'
 );

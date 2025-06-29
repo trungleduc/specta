@@ -6,7 +6,7 @@ import { IThemeManager } from '@jupyterlab/apputils';
 import { ReactWidget } from '@jupyterlab/ui-components';
 import { TopbarElement } from './widget';
 import * as React from 'react';
-import { isSpectaApp } from '../tool';
+import { isSpectaApp, readSpectaConfig } from '../tool';
 import { ISpectaAppConfig, ISpectaLayoutRegistry } from '../token';
 
 /**
@@ -16,18 +16,17 @@ export const topbarPlugin: JupyterFrontEndPlugin<void> = {
   id: 'specta:topba',
   description: 'Specta topbar extension',
   autoStart: true,
-  requires: [IThemeManager, ISpectaLayoutRegistry, ISpectaAppConfig],
+  requires: [IThemeManager, ISpectaLayoutRegistry],
   activate: (
     app: JupyterFrontEnd,
     themeManager: IThemeManager,
     layoutRegistry: ISpectaLayoutRegistry,
-    config: ISpectaAppConfig
   ) => {
     const isSpecta = isSpectaApp();
     if (!isSpecta) {
       return;
     }
-
+    const config = readSpectaConfig();
     const widget = ReactWidget.create(
       <TopbarElement
         config={config.topBar}
