@@ -105,7 +105,7 @@ export class AppWidget extends Panel {
     await spectaLayout.render({
       host: this._host,
       items: this._outputs,
-      notebook: this._model.context.model.toJSON() as any,
+      notebook: this._model.context?.model.toJSON() as any,
       readyCallback
     });
   }
@@ -126,7 +126,7 @@ export class AppWidget extends Panel {
     args.layout.render({
       host: this._host,
       items: this._outputs,
-      notebook: this._model.context.model.toJSON() as any,
+      notebook: this._model.context?.model.toJSON() as any,
       readyCallback: async () => {}
     });
   }

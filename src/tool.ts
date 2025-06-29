@@ -3,7 +3,11 @@ import { WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 import { FilterFileBrowserModel } from '@jupyterlab/filebrowser';
-import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import {
+  INotebookTracker,
+  NotebookPanel,
+  NotebookModelFactory
+} from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { VoilaFileBrowser } from '@voila-dashboards/voila';
 
@@ -48,16 +52,29 @@ export function registerDocumentFactory(options: {
   const widgetFactory = new NotebookGridWidgetFactory({
     name: factoryName,
     modelName: 'notebook',
-    fileTypes: ['notebook'],
-    spectaWidgetFactory,
-    preferKernel: true,
-    canStartKernel: true,
-    autoStartDefault: true,
-    shutdownOnClose: true
+    fileTypes: ['ipynb'],
+    spectaWidgetFactory
+    // preferKernel: false,
+    // canStartKernel: true,
+    // autoStartDefault: false,
+    // shutdownOnClose: true
   });
 
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
+
+  // Creating and registering the model factory for our custom DocumentModelAdd commentMore actions
+  const modelFactory = new NotebookModelFactory({});
+  app.docRegistry.addModelFactory(modelFactory);
+  // register the filetype
+  app.docRegistry.addFileType({
+    name: 'ipynb',
+    displayName: 'IPYNB',
+    mimeTypes: ['text/json'],
+    extensions: ['.ipynb', '.IPYNB'],
+    fileFormat: 'json',
+    contentType: 'notebook'
+  });
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {

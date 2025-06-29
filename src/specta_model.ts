@@ -24,15 +24,28 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ServiceManager } from '@jupyterlab/services';
 import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
 
-import { createNotebookPanel } from './create_notebook_panel';
+import {
+  createNotebookContext,
+  createNotebookPanel
+} from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
-import { PromiseDelegate } from '@lumino/coreutils';
+import { PartialJSONValue, PromiseDelegate } from '@lumino/coreutils';
 import { ISpectaCellConfig } from './token';
+import { ISessionContext } from '@jupyterlab/apputils';
 
 export const VIEW = 'grid_default';
 export class AppModel {
   constructor(private options: AppModel.IOptions) {
-    this._context = options.context;
+    this._notebookModelJson = options.context.model.toJSON();
+    this._kernelPreference = {
+      shouldStart: true,
+      canStart: true,
+      shutdownOnDispose: true,
+      name: options.context.model.defaultKernelName,
+      autoStartDefault: true,
+      language: options.context.model.defaultKernelLanguage
+    };
+    this._manager = options.manager;
   }
   /**
    * Whether the handler is disposed.
@@ -58,20 +71,25 @@ export class AppModel {
     return this._context?.model.cells;
   }
 
-  get context(): DocumentRegistry.IContext<INotebookModel> {
+  get context(): DocumentRegistry.IContext<INotebookModel> | undefined {
     return this._context;
   }
   get panel(): NotebookPanel | undefined {
     return this._notebookPanel;
   }
-  public async initialize(): Promise<void> {
+  async initialize(): Promise<void> {
     const pd = new PromiseDelegate<void>();
-    await this._context?.sessionContext.ready;
+    this._context = await createNotebookContext({
+      manager: this._manager,
+      kernelPreference: this._kernelPreference
+    });
+    this._context.model.fromJSON(this._notebookModelJson);
 
     const connectKernel = () => {
       pd.resolve();
+
       this._notebookPanel = createNotebookPanel({
-        context: this._context,
+        context: this._context!,
         rendermime: this.options.rendermime,
         editorServices: this.options.editorServices
       });
@@ -79,6 +97,7 @@ export class AppModel {
       (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
     };
     const kernel = this._context.sessionContext.session?.kernel;
+
     if (kernel) {
       const status = kernel.status;
       if (status !== 'unknown') {
@@ -90,7 +109,7 @@ export class AppModel {
     this._context.sessionContext.connectionStatusChanged.connect(
       (_, status) => {
         if (status === 'connected') {
-          const kernel = this._context.sessionContext.session?.kernel;
+          const kernel = this._context!.sessionContext.session?.kernel;
           if (kernel) {
             connectKernel();
           }
@@ -204,8 +223,11 @@ export class AppModel {
   }
 
   private _notebookPanel?: NotebookPanel;
-  private _context: DocumentRegistry.IContext<INotebookModel>;
+  private _context?: DocumentRegistry.IContext<INotebookModel>;
+  private _notebookModelJson: PartialJSONValue;
   private _isDisposed = false;
+  private _manager: ServiceManager.IManager;
+  private _kernelPreference: ISessionContext.IKernelPreference;
 }
 
 export namespace AppModel {
