@@ -47,3 +47,7 @@ export const ISpectaLayoutRegistry = new Token<ISpectaLayoutRegistry>(
 export const ISpectaDocTracker = new Token<IWidgetTracker<Widget>>(
   'exampleDocTracker'
 );
+
+export const ISpectaAppConfig = new Token<ISpectaAppConfig>(
+  'specta:ISpectaAppConfig'
+);

@@ -144,3 +144,5 @@ demo/_output
 demo/.jupyterlite.doit.db
 lib/
 __pycache__
+
+.ipynb_checkpoints/
