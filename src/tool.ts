@@ -12,7 +12,6 @@ import { SpectaWidgetFactory } from './specta_widget_factory';
 import { IDocumentManager } from '@jupyterlab/docmanager';
 import { ISpectaAppConfig, ISpectaLayoutRegistry } from './token';
 
-export const SPECTA_CELL_VISIBLE_TAG = 'specta:visible';
 export function registerDocumentFactory(options: {
   factoryName: string;
   app: JupyterFrontEnd;

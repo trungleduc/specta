@@ -4,30 +4,32 @@
   "description": "Settings of the metadata form extension.",
   "jupyter.lab.metadataforms": [
     {
-      "id": "jupyter-specta:cell-meta",
-      "label": "Specta Cell Config",
+      "id": "jupyter-specta:app-meta",
+      "label": "Specta App Config",
       "metadataSchema": {
         "type": "object",
         "properties": {
-          "/specta/showSource": {
-            "title": "Show cell source",
-            "type": "string",
-            "enum": ["Yes", "No"],
-            "default": "No"
-          },
-          "/specta/showOutput": {
-            "title": "Show cell output",
+          "/specta/showTopbar": {
+            "title": "Show top bar",
             "type": "string",
             "enum": ["Yes", "No"],
             "default": "Yes"
+          },
+          "/specta/defaultLayout": {
+            "title": "Default layout",
+            "type": "string",
+            "enum": ["default", "article"],
+            "default": "default"
           }
         }
       },
       "metadataOptions": {
-        "/specta/showSource": {
+        "/specta/showTopbar": {
+          "metadataLevel": "notebook",
           "writeDefault": false
         },
-        "/specta/showOutput": {
+        "/specta/defaultLayout": {
+          "metadataLevel": "notebook",
           "writeDefault": false
         }
       }

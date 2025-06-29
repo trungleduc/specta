@@ -18,7 +18,7 @@ export const spectaLayoutRegistry: JupyterFrontEndPlugin<ISpectaLayoutRegistry> 
     ): ISpectaLayoutRegistry => {
       const layoutRegistry = new SpectaLayoutRegistry();
 
-      const defaultLayout = spectaConfig.layout ?? 'default';
+      const defaultLayout = spectaConfig.defaultLayout ?? 'default';
       layoutRegistry.setSelectedLayout(defaultLayout);
       return layoutRegistry;
     }

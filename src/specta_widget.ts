@@ -77,7 +77,7 @@ export class AppWidget extends Panel {
   async render(): Promise<void> {
     const cellList = this._model.cells ?? [];
 
-    const layout = this._spectaAppConfig?.layout ?? 'default';
+    const layout = this._spectaAppConfig?.defaultLayout ?? 'default';
 
     for (const cell of cellList) {
       const src = cell.sharedModel.source;

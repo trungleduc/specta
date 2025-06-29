@@ -1,7 +1,7 @@
 import { spectaConfig } from './config_plugin';
 import { spectaDocument, spectaOpener } from './document/plugin';
 import { spectaLayoutRegistry } from './layout';
-import { metadataForm } from './metadata';
+import { appMeta, cellMeta } from './metadata';
 import { topbarPlugin } from './topbar';
 
 export * from './tool';
@@ -12,6 +12,7 @@ export default [
   spectaOpener,
   spectaLayoutRegistry,
   topbarPlugin,
-  metadataForm,
+  appMeta,
+  cellMeta,
   spectaConfig
 ];

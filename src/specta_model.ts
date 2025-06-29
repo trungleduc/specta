@@ -27,7 +27,7 @@ import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
 import { createNotebookPanel } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
 import { PromiseDelegate } from '@lumino/coreutils';
-import { SPECTA_CELL_VISIBLE_TAG } from './tool';
+import { ISpectaCellConfig } from './token';
 
 export const VIEW = 'grid_default';
 export class AppModel {
@@ -110,7 +110,6 @@ export class AppModel {
     };
     switch (cellModel.type) {
       case 'code': {
-        cellModel.setMetadata('editable', false);
         const codeCell = new CodeCell({
           model: cellModel as CodeCellModel,
           rendermime: this.options.rendermime,
@@ -122,15 +121,17 @@ export class AppModel {
             editable: false
           }
         });
-        codeCell.loadEditableState();
+        codeCell.syncEditable = false;
+        codeCell.readOnly = true;
         const outputareamodel = new OutputAreaModel({ trusted: true });
         const out = new SimplifiedOutputArea({
           model: outputareamodel,
           rendermime: this.options.rendermime
         });
-        const tags = (cellModel?.metadata?.tags ?? []) as string[];
+        const cellConfig = (cellModel?.metadata?.specta ??
+          {}) as ISpectaCellConfig;
         let sourceCell: CodeCell | undefined;
-        if (tags.includes(SPECTA_CELL_VISIBLE_TAG)) {
+        if (cellConfig.showSource) {
           sourceCell = codeCell;
         }
         item = new SpectaCellOutput({

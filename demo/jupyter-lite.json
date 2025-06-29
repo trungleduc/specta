@@ -6,7 +6,7 @@
       "topBar": {
         "title": "Specta Demo"
       },
-      "layout": "article"
+      "defaultLayout": "article"
     }
   }
 }

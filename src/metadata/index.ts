@@ -3,13 +3,17 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
-/**
- * Initialization of a simple metadata form plugin.
- */
-export const metadataForm: JupyterFrontEndPlugin<void> = {
-  id: 'specta/metadata-form:cell-meta',
+export const cellMeta: JupyterFrontEndPlugin<void> = {
+  id: 'jupyter-specta:cell-meta',
   autoStart: true,
   activate: (app: JupyterFrontEnd) => {
-    console.log('Simple metadata-form example activated');
+    // no-op
+  }
+};
+export const appMeta: JupyterFrontEndPlugin<void> = {
+  id: 'jupyter-specta:app-meta',
+  autoStart: true,
+  activate: (app: JupyterFrontEnd) => {
+    // no-op
   }
 };
