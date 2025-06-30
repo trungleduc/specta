@@ -4,6 +4,7 @@ import { Panel, Widget } from '@lumino/widgets';
 import React from 'react';
 
 import { RandomSkeleton } from './components/cellSkeleton';
+import { ISpectaCellConfig } from './token';
 
 export interface ICellInfo {
   hidden?: boolean;
@@ -14,12 +15,14 @@ export class SpectaCellOutput extends Panel {
     cellIdentity,
     cell,
     sourceCell,
-    info
+    info,
+    cellConfig
   }: {
     cellIdentity: string;
     cell: Widget;
     sourceCell?: Widget;
     info: ICellInfo;
+    cellConfig: Required<ISpectaCellConfig>;
   }) {
     super();
     this.removeClass('lm-Widget');
@@ -39,9 +42,11 @@ export class SpectaCellOutput extends Panel {
     this.cellIdentity = cellIdentity;
     this._info = info ?? {};
     if (info.cellModel?.cell_type === 'code') {
-      this._placeholder = ReactWidget.create(<RandomSkeleton />);
-      this._placeholder.addClass('specta-cell-placeholder');
-      this.addWidget(this._placeholder);
+      if (cellConfig.showOutput) {
+        this._placeholder = ReactWidget.create(<RandomSkeleton />);
+        this._placeholder.addClass('specta-cell-placeholder');
+        this.addWidget(this._placeholder);
+      }
     }
   }
   readonly cellIdentity: string;

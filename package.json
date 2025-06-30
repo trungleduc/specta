@@ -15,7 +15,8 @@
     "files": [
         "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
         "style/**/*.{css,js,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
-        "dist/**/*.{js,js.map,.txt}"
+        "dist/**/*.{js,js.map,.txt}",
+        "schema/*.json"
     ],
     "main": "lib/extension_plugins.js",
     "types": "lib/extension_plugins.d.ts",
@@ -29,6 +30,7 @@
         "build:lib": "tsc",
         "build:labextension": "jupyter labextension build .",
         "build:labextension:dev": "jupyter labextension build --development True .",
+        "build:lab": "npm run clean && npm run build:lib && npm run build:labextension",
         "build:app": "npm run clean && npm run build:lib && cd app && NODE_OPTIONS=--max-old-space-size=4096 NODE_ENV=production webpack --mode production",
         "build:app:dev": "npm run clean && npm run build:lib && cd app && webpack",
         "build:all": "npm run build:app && npm run build:labextension",
@@ -233,6 +235,7 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "specta/labextension"
+        "outputDir": "specta/labextension",
+        "schemaDir": "schema"
     }
 }

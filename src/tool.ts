@@ -3,16 +3,24 @@ import { WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 import { FilterFileBrowserModel } from '@jupyterlab/filebrowser';
-import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import {
+  INotebookTracker,
+  NotebookPanel,
+  NotebookModelFactory
+} from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { VoilaFileBrowser } from '@voila-dashboards/voila';
 
 import { NotebookGridWidgetFactory } from './document/factory';
 import { SpectaWidgetFactory } from './specta_widget_factory';
 import { IDocumentManager } from '@jupyterlab/docmanager';
-import { ISpectaAppConfig, ISpectaLayoutRegistry } from './token';
-
-export const SPECTA_CELL_VISIBLE_TAG = 'specta:visible';
+import {
+  ISpectaAppConfig,
+  ISpectaCellConfig,
+  ISpectaLayoutRegistry
+} from './token';
+import { INotebookMetadata } from '@jupyterlab/nbformat';
+import { ICell } from '@jupyterlab/nbformat';
 export function registerDocumentFactory(options: {
   factoryName: string;
   app: JupyterFrontEnd;
@@ -22,7 +30,6 @@ export function registerDocumentFactory(options: {
   contentFactory: NotebookPanel.IContentFactory;
   spectaTracker: WidgetTracker;
   spectaLayoutRegistry: ISpectaLayoutRegistry;
-  spectaConfig: ISpectaAppConfig;
 }) {
   const {
     factoryName,
@@ -32,8 +39,7 @@ export function registerDocumentFactory(options: {
     editorServices,
     contentFactory,
     spectaTracker,
-    spectaLayoutRegistry,
-    spectaConfig
+    spectaLayoutRegistry
   } = options;
 
   const spectaWidgetFactory = new SpectaWidgetFactory({
@@ -43,22 +49,30 @@ export function registerDocumentFactory(options: {
     contentFactory,
     mimeTypeService: editorServices.mimeTypeService,
     editorServices,
-    spectaLayoutRegistry,
-    spectaConfig
+    spectaLayoutRegistry
   });
   const widgetFactory = new NotebookGridWidgetFactory({
     name: factoryName,
     modelName: 'notebook',
-    fileTypes: ['notebook'],
-    spectaWidgetFactory,
-    preferKernel: true,
-    canStartKernel: true,
-    autoStartDefault: true,
-    shutdownOnClose: true
+    fileTypes: ['ipynb'],
+    spectaWidgetFactory
   });
 
   // Registering the widget factory
   app.docRegistry.addWidgetFactory(widgetFactory);
+
+  // Creating and registering the model factory for our custom DocumentModelAdd commentMore actions
+  const modelFactory = new NotebookModelFactory({});
+  app.docRegistry.addModelFactory(modelFactory);
+  // register the filetype
+  app.docRegistry.addFileType({
+    name: 'ipynb',
+    displayName: 'IPYNB',
+    mimeTypes: ['text/json'],
+    extensions: ['.ipynb', '.IPYNB'],
+    fileFormat: 'json',
+    contentType: 'notebook'
+  });
 
   widgetFactory.widgetCreated.connect((sender, widget) => {
     widget.context.pathChanged.connect(() => {
@@ -118,4 +132,35 @@ export function hideAppLoadingIndicator() {
 
 export function isSpectaApp(): boolean {
   return !!document.querySelector('meta[name="specta-config"]');
+}
+
+export function readSpectaConfig(
+  nbMetadata?: INotebookMetadata
+): ISpectaAppConfig {
+  let rawConfig = PageConfig.getOption('spectaConfig');
+  if (!rawConfig || rawConfig.length === 0) {
+    rawConfig = '{}';
+  }
+  const spectaConfig = JSON.parse(rawConfig) as ISpectaAppConfig;
+  const spectaMetadata = (nbMetadata?.specta ?? {}) as ISpectaAppConfig;
+
+  return { ...spectaConfig, ...spectaMetadata };
+}
+
+export function readCellConfig(cell?: ICell): Required<ISpectaCellConfig> {
+  const metaData = (cell?.metadata?.specta ?? {}) as any;
+  const spectaCellConfig: Required<ISpectaCellConfig> = {
+    showSource: false,
+    showOutput: true
+  };
+
+  if (metaData.showSource && metaData.showSource === 'Yes') {
+    spectaCellConfig.showSource = true;
+  }
+
+  if (metaData.showOutput && metaData.showOutput === 'No') {
+    spectaCellConfig.showOutput = false;
+  }
+
+  return spectaCellConfig;
 }

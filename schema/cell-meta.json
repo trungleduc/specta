@@ -1,0 +1,37 @@
+{
+  "type": "object",
+  "title": "Metadata Form example",
+  "description": "Settings of the metadata form extension.",
+  "jupyter.lab.metadataforms": [
+    {
+      "id": "jupyter-specta:cell-meta",
+      "label": "Specta Cell Config",
+      "metadataSchema": {
+        "type": "object",
+        "properties": {
+          "/specta/showSource": {
+            "title": "Show cell source",
+            "type": "string",
+            "enum": ["Yes", "No"],
+            "default": "No"
+          },
+          "/specta/showOutput": {
+            "title": "Show output placeholder",
+            "type": "string",
+            "enum": ["Yes", "No"],
+            "default": "Yes"
+          }
+        }
+      },
+      "metadataOptions": {
+        "/specta/showSource": {
+          "writeDefault": false
+        },
+        "/specta/showOutput": {
+          "writeDefault": false
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

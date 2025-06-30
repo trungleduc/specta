@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "title": "Metadata Form example",
+  "description": "Settings of the metadata form extension.",
+  "jupyter.lab.metadataforms": [
+    {
+      "id": "jupyter-specta:app-meta",
+      "label": "Specta App Config",
+      "metadataSchema": {
+        "type": "object",
+        "properties": {
+          "/specta/hideTopbar": {
+            "title": "Hide top bar",
+            "type": "boolean",
+            "enum": [true, false],
+            "default": false
+          },
+          "/specta/defaultLayout": {
+            "title": "Page layout",
+            "type": "string",
+            "enum": ["default", "article"],
+            "default": "default"
+          }
+        }
+      },
+      "metadataOptions": {
+        "/specta/hideTopbar": {
+          "metadataLevel": "notebook",
+          "writeDefault": false
+        },
+        "/specta/defaultLayout": {
+          "metadataLevel": "notebook",
+          "writeDefault": false
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

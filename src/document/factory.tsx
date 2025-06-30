@@ -7,7 +7,7 @@ import * as React from 'react';
 
 import { SpectaWidgetFactory } from '../specta_widget_factory';
 import { ISpectaLayoutRegistry } from '../token';
-import { isSpectaApp } from '../tool';
+import { isSpectaApp, readSpectaConfig } from '../tool';
 import { TopbarElement } from '../topbar/widget';
 import { NotebookSpectaDocWidget } from './widget';
 
@@ -31,11 +31,13 @@ export class NotebookGridWidgetFactory extends ABCWidgetFactory<
   ): NotebookSpectaDocWidget {
     const content = new Panel();
     content.addClass('jp-specta-notebook-panel');
-    if (!isSpectaApp()) {
+    const spectaConfig = readSpectaConfig(context.model.metadata);
+    if (!isSpectaApp() && !spectaConfig.hideTopbar) {
       // Not a specta app, add topbar to document widget
       const topbar = ReactWidget.create(<TopbarElement />);
       content.addWidget(topbar);
     }
+
     context.ready.then(async () => {
       const spectaWidget = await this._spectaWidgetFactory.createNew({
         context

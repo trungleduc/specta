@@ -77,8 +77,7 @@ export class AppWidget extends Panel {
   async render(): Promise<void> {
     const cellList = this._model.cells ?? [];
 
-    const layout = this._spectaAppConfig?.layout ?? 'default';
-
+    const layout = this._spectaAppConfig?.defaultLayout ?? 'default';
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
       if (src.length === 0) {
@@ -105,7 +104,7 @@ export class AppWidget extends Panel {
     await spectaLayout.render({
       host: this._host,
       items: this._outputs,
-      notebook: this._model.context.model.toJSON() as any,
+      notebook: this._model.context?.model.toJSON() as any,
       readyCallback
     });
   }
@@ -126,7 +125,7 @@ export class AppWidget extends Panel {
     args.layout.render({
       host: this._host,
       items: this._outputs,
-      notebook: this._model.context.model.toJSON() as any,
+      notebook: this._model.context?.model.toJSON() as any,
       readyCallback: async () => {}
     });
   }
