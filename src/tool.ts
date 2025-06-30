@@ -14,9 +14,13 @@ import { VoilaFileBrowser } from '@voila-dashboards/voila';
 import { NotebookGridWidgetFactory } from './document/factory';
 import { SpectaWidgetFactory } from './specta_widget_factory';
 import { IDocumentManager } from '@jupyterlab/docmanager';
-import { ISpectaAppConfig, ISpectaLayoutRegistry } from './token';
+import {
+  ISpectaAppConfig,
+  ISpectaCellConfig,
+  ISpectaLayoutRegistry
+} from './token';
 import { INotebookMetadata } from '@jupyterlab/nbformat';
-
+import { ICell } from '@jupyterlab/nbformat';
 export function registerDocumentFactory(options: {
   factoryName: string;
   app: JupyterFrontEnd;
@@ -141,4 +145,22 @@ export function readSpectaConfig(
   const spectaMetadata = (nbMetadata?.specta ?? {}) as ISpectaAppConfig;
 
   return { ...spectaConfig, ...spectaMetadata };
+}
+
+export function readCellConfig(cell?: ICell): Required<ISpectaCellConfig> {
+  const metaData = (cell?.metadata?.specta ?? {}) as any;
+  const spectaCellConfig: Required<ISpectaCellConfig> = {
+    showSource: false,
+    showOutput: true
+  };
+
+  if (metaData.showSource && metaData.showSource === 'Yes') {
+    spectaCellConfig.showSource = true;
+  }
+
+  if (metaData.showOutput && metaData.showOutput === 'No') {
+    spectaCellConfig.showOutput = false;
+  }
+
+  return spectaCellConfig;
 }

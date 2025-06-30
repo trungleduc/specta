@@ -16,7 +16,7 @@
             "default": "No"
           },
           "/specta/showOutput": {
-            "title": "Show cell output",
+            "title": "Show output placeholder",
             "type": "string",
             "enum": ["Yes", "No"],
             "default": "Yes"

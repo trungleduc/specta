@@ -30,8 +30,8 @@ import {
 } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
 import { PartialJSONValue, PromiseDelegate } from '@lumino/coreutils';
-import { ISpectaCellConfig } from './token';
 import { ISessionContext } from '@jupyterlab/apputils';
+import { readCellConfig } from './tool';
 
 export const VIEW = 'grid_default';
 export class AppModel {
@@ -127,36 +127,36 @@ export class AppModel {
     const info = {
       cellModel: cellModelJson
     };
+    const cellConfig = readCellConfig(cellModelJson);
     switch (cellModel.type) {
       case 'code': {
-        const codeCell = new CodeCell({
-          model: cellModel as CodeCellModel,
-          rendermime: this.options.rendermime,
-          contentFactory: this.options.contentFactory,
-          editorConfig: {
-            lineNumbers: false,
-            lineWrap: false,
-            tabFocusable: false,
-            editable: false
-          }
-        });
-        codeCell.syncEditable = false;
-        codeCell.readOnly = true;
+        let sourceCell: CodeCell | undefined;
+        if (cellConfig.showSource) {
+          sourceCell = new CodeCell({
+            model: cellModel as CodeCellModel,
+            rendermime: this.options.rendermime,
+            contentFactory: this.options.contentFactory,
+            editorConfig: {
+              lineNumbers: false,
+              lineWrap: false,
+              tabFocusable: false,
+              editable: false
+            }
+          });
+          sourceCell.syncEditable = false;
+          sourceCell.readOnly = true;
+        }
         const outputareamodel = new OutputAreaModel({ trusted: true });
         const out = new SimplifiedOutputArea({
           model: outputareamodel,
           rendermime: this.options.rendermime
         });
-        const cellConfig = (cellModel?.metadata?.specta ??
-          {}) as ISpectaCellConfig;
-        let sourceCell: CodeCell | undefined;
-        if (cellConfig.showSource) {
-          sourceCell = codeCell;
-        }
+
         item = new SpectaCellOutput({
           cellIdentity: cellModel.id,
           cell: out,
           sourceCell,
+          cellConfig,
           info
         });
 
@@ -177,7 +177,8 @@ export class AppModel {
         item = new SpectaCellOutput({
           cellIdentity: cellModel.id,
           cell: markdownCell,
-          info
+          info,
+          cellConfig
         });
         break;
       }
@@ -193,7 +194,8 @@ export class AppModel {
         item = new SpectaCellOutput({
           cellIdentity: cellModel.id,
           cell: rawCell,
-          info
+          info,
+          cellConfig
         });
         break;
       }
