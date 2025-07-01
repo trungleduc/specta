@@ -3,6 +3,7 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { IWidgetTracker, WidgetTracker } from '@jupyterlab/apputils';
+import { IDocumentWidget } from '@jupyterlab/docregistry';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
@@ -17,6 +18,7 @@ import {
 } from '../tool';
 import { ISpectaDocTracker, ISpectaLayoutRegistry } from '../token';
 import { IKernelSpecManager } from '@jupyterlab/services';
+import { PathExt } from '@jupyterlab/coreutils';
 
 const activate = (
   app: JupyterFrontEnd,
@@ -76,7 +78,14 @@ export const spectaOpener: JupyterFrontEndPlugin<void> = {
       app.shell.add(browser, 'main', { rank: 100 });
       hideAppLoadingIndicator();
     } else {
-      const widget = docManager.openOrReveal(path, 'specta');
+      let widget: IDocumentWidget | undefined;
+
+      if (PathExt.extname(path) === 'ipynb') {
+        widget = docManager.openOrReveal(path, 'specta');
+      } else {
+        widget = docManager.openOrReveal(path);
+      }
+
       if (widget) {
         app.shell.add(widget, 'main');
       }
