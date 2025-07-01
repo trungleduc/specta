@@ -2,25 +2,24 @@ import { JupyterFrontEnd } from '@jupyterlab/application';
 import { WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
-import { FilterFileBrowserModel } from '@jupyterlab/filebrowser';
+import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
+import { ICell, INotebookMetadata } from '@jupyterlab/nbformat';
 import {
   INotebookTracker,
-  NotebookPanel,
-  NotebookModelFactory
+  NotebookModelFactory,
+  NotebookPanel
 } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { VoilaFileBrowser } from '@voila-dashboards/voila';
+import { Contents } from '@jupyterlab/services';
 
 import { NotebookGridWidgetFactory } from './document/factory';
 import { SpectaWidgetFactory } from './specta_widget_factory';
-import { IDocumentManager } from '@jupyterlab/docmanager';
 import {
   ISpectaAppConfig,
   ISpectaCellConfig,
   ISpectaLayoutRegistry
 } from './token';
-import { INotebookMetadata } from '@jupyterlab/nbformat';
-import { ICell } from '@jupyterlab/nbformat';
+
 export function registerDocumentFactory(options: {
   factoryName: string;
   app: JupyterFrontEnd;
@@ -82,13 +81,16 @@ export function registerDocumentFactory(options: {
   });
 }
 
-export function createFileBrowser(options: { docManager: IDocumentManager }) {
-  const { docManager } = options;
+export function createFileBrowser(options: {
+  defaultBrowser: IDefaultFileBrowser;
+}) {
+  const { defaultBrowser } = options;
+  const browser = defaultBrowser as any;
+  browser.singleClickNavigation = true;
+  browser.showFileCheckboxes = false;
+  browser.showLastModifiedColumn = false;
+  browser.addClass('specta-file-browser');
 
-  const model = new FilterFileBrowserModel({
-    manager: docManager,
-    auto: true
-  });
   const urlFactory = (path: string) => {
     const baseUrl = PageConfig.getBaseUrl();
     let appUrl = PageConfig.getOption('appUrl');
@@ -104,16 +106,17 @@ export function createFileBrowser(options: { docManager: IDocumentManager }) {
     });
     return url.toString();
   };
-  const browser = new VoilaFileBrowser({
-    id: 'filebrowser',
-    model,
-    restore: false,
-    urlFactory,
-    title: 'Select items to open with Specta.'
-  });
-  browser.showFileCheckboxes = false;
-  browser.showLastModifiedColumn = false;
-  browser.addClass('specta-file-browser');
+
+  const oldHandler = browser.listing.handleOpen.bind(browser.listing);
+  browser.listing.handleOpen = (item: Contents.IModel) => {
+    if (item.type === 'directory') {
+      oldHandler(item);
+      return;
+    } else {
+      window.open(urlFactory(item.path), '_blank');
+    }
+  };
+
   return browser;
 }
 

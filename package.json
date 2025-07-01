@@ -41,6 +41,9 @@
         "lint:eslint": "eslint --ext .ts,.tsx .",
         "install:extension": "npm run build:lib && npm run build:labextension:dev"
     },
+    "overrides": {
+        "@microsoft/fast-foundation": "~2.49.5"
+    },
     "dependencies": {
         "@jupyter-notebook/tree": "^7.4.3",
         "@jupyter-widgets/base": "^6.0.6",
@@ -49,6 +52,7 @@
         "@jupyterlab/apputils": "^4.4.2",
         "@jupyterlab/apputils-extension": "^4.4.2",
         "@jupyterlab/console": "^4.4.2",
+        "@jupyterlab/console-extension": "^4.4.2",
         "@jupyterlab/coreutils": "^6.4.2",
         "@jupyterlab/docmanager": "^4.4.2",
         "@jupyterlab/docmanager-extension": "^4.4.2",
@@ -76,6 +80,7 @@
         "@jupyterlab/translation": "^4.4.2",
         "@jupyterlab/translation-extension": "^4.4.2",
         "@jupyterlab/ui-components": "^4.4.2",
+        "@jupyterlab/ui-components-extension": "~4.4.2",
         "@jupyterlite/application": "^0.6.2",
         "@jupyterlite/application-extension": "^0.6.2",
         "@jupyterlite/contents": "^0.6.2",

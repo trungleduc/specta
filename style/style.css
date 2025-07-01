@@ -4,7 +4,7 @@
   background: var(--jp-layout-color1);
 }
 
-#jp-main-content-panel jp-toolbar {
+.specta-document-viewer #jp-main-content-panel jp-toolbar {
   display: none;
 }
 
