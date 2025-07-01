@@ -6,6 +6,7 @@ import { IWidgetTracker, WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { PathExt } from '@jupyterlab/coreutils';
 import { IDocumentManager } from '@jupyterlab/docmanager';
+import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IKernelSpecManager } from '@jupyterlab/services';
@@ -61,10 +62,16 @@ export const spectaDocument: JupyterFrontEndPlugin<IWidgetTracker> = {
 export const spectaOpener: JupyterFrontEndPlugin<void> = {
   id: 'specta/application-extension:opener',
   autoStart: true,
-  requires: [IDocumentManager, ISpectaDocTracker, IKernelSpecManager],
+  requires: [
+    IDocumentManager,
+    IDefaultFileBrowser,
+    ISpectaDocTracker,
+    IKernelSpecManager
+  ],
   activate: async (
     app: JupyterFrontEnd,
-    docManager: IDocumentManager
+    docManager: IDocumentManager,
+    defaultBrowser: IDefaultFileBrowser
   ): Promise<void> => {
     if (!isSpectaApp()) {
       // Not a specta app, return
@@ -75,7 +82,7 @@ export const spectaOpener: JupyterFrontEndPlugin<void> = {
     const path = urlParams.get('path');
 
     if (!path) {
-      const browser = createFileBrowser({ docManager });
+      const browser = createFileBrowser({ defaultBrowser });
       app.shell.add(browser, 'main', { rank: 100 });
       hideAppLoadingIndicator();
     } else {
