@@ -3,22 +3,21 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 import { IWidgetTracker, WidgetTracker } from '@jupyterlab/apputils';
-import { IDocumentWidget } from '@jupyterlab/docregistry';
 import { IEditorServices } from '@jupyterlab/codeeditor';
+import { PathExt } from '@jupyterlab/coreutils';
+import { IDocumentManager } from '@jupyterlab/docmanager';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
+import { IKernelSpecManager } from '@jupyterlab/services';
 import { Widget } from '@lumino/widgets';
-import { IDocumentManager } from '@jupyterlab/docmanager';
 
+import { ISpectaDocTracker, ISpectaLayoutRegistry } from '../token';
 import {
   createFileBrowser,
   hideAppLoadingIndicator,
   isSpectaApp,
   registerDocumentFactory
 } from '../tool';
-import { ISpectaDocTracker, ISpectaLayoutRegistry } from '../token';
-import { IKernelSpecManager } from '@jupyterlab/services';
-import { PathExt } from '@jupyterlab/coreutils';
 
 const activate = (
   app: JupyterFrontEnd,
@@ -71,23 +70,39 @@ export const spectaOpener: JupyterFrontEndPlugin<void> = {
       // Not a specta app, return
       return;
     }
+
     const urlParams = new URLSearchParams(window.location.search);
     const path = urlParams.get('path');
+
     if (!path) {
       const browser = createFileBrowser({ docManager });
       app.shell.add(browser, 'main', { rank: 100 });
       hideAppLoadingIndicator();
     } else {
-      let widget: IDocumentWidget | undefined;
-
-      if (PathExt.extname(path) === 'ipynb') {
-        widget = docManager.openOrReveal(path, 'specta');
+      if (PathExt.extname(path) === '.ipynb') {
+        app.shell.addClass('specta-document-viewer');
+        const widget = docManager.openOrReveal(path, 'specta');
+        if (widget) {
+          app.shell.add(widget, 'main');
+        }
       } else {
-        widget = docManager.openOrReveal(path);
-      }
-
-      if (widget) {
-        app.shell.add(widget, 'main');
+        let count = 0;
+        const tryOpen = () => {
+          const widget = docManager.openOrReveal(path);
+          if (widget) {
+            app.shell.add(widget, 'main');
+            hideAppLoadingIndicator();
+          } else {
+            count++;
+            if (count > 10) {
+              console.error('Failed to open file', path);
+              //TODO Open in text editor?
+              return;
+            }
+            setTimeout(tryOpen, 100);
+          }
+        };
+        tryOpen();
       }
     }
   }
