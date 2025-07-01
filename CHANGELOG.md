@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.5
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.4...50267928b8cef118c65e076f93c6f63e33a54424))
+
+### Merged PRs
+
+- Allow specta to open more document types [#12](https://github.com/trungleduc/specta/pull/12) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-01&to=2025-07-01&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AmartinRenou+updated%3A2025-07-01..2025-07-01&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.4
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.3...d71c4554b157a060d13183f49e9a3c3578013d14))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-06-25&to=2025-07-01&type=c))
 
 [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-06-25..2025-07-01&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.3
 
