@@ -4,7 +4,11 @@ import { SpectaCellOutput } from './specta_cell_output';
 import * as nbformat from '@jupyterlab/nbformat';
 import { ISignal } from '@lumino/signaling';
 import { IWidgetTracker } from '@jupyterlab/apputils';
+import { JupyterFrontEnd } from '@jupyterlab/application';
 
+export interface ISpectaShell extends JupyterFrontEnd.IShell {
+  hideTopBar: () => void;
+}
 export interface ISpectaLayout {
   render(options: {
     host: Panel;

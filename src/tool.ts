@@ -1,5 +1,5 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
-import { WidgetTracker } from '@jupyterlab/apputils';
+import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
 import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
@@ -17,18 +17,20 @@ import { SpectaWidgetFactory } from './specta_widget_factory';
 import {
   ISpectaAppConfig,
   ISpectaCellConfig,
-  ISpectaLayoutRegistry
+  ISpectaLayoutRegistry,
+  ISpectaShell
 } from './token';
 
 export function registerDocumentFactory(options: {
   factoryName: string;
-  app: JupyterFrontEnd;
+  app: JupyterFrontEnd<ISpectaShell>;
   rendermime: IRenderMimeRegistry;
   tracker: INotebookTracker;
   editorServices: IEditorServices;
   contentFactory: NotebookPanel.IContentFactory;
   spectaTracker: WidgetTracker;
   spectaLayoutRegistry: ISpectaLayoutRegistry;
+  themeManager?: IThemeManager;
 }) {
   const {
     factoryName,
@@ -38,7 +40,8 @@ export function registerDocumentFactory(options: {
     editorServices,
     contentFactory,
     spectaTracker,
-    spectaLayoutRegistry
+    spectaLayoutRegistry,
+    themeManager
   } = options;
 
   const spectaWidgetFactory = new SpectaWidgetFactory({
@@ -54,7 +57,10 @@ export function registerDocumentFactory(options: {
     name: factoryName,
     modelName: 'notebook',
     fileTypes: ['ipynb'],
-    spectaWidgetFactory
+    spectaWidgetFactory,
+    shell: app.shell,
+    themeManager,
+    spectaLayoutRegistry
   });
 
   // Registering the widget factory
@@ -137,14 +143,23 @@ export function isSpectaApp(): boolean {
   return !!document.querySelector('meta[name="specta-config"]');
 }
 
-export function readSpectaConfig(
-  nbMetadata?: INotebookMetadata
-): ISpectaAppConfig {
+export function readSpectaConfig({
+  nbMetadata,
+  nbPath
+}: {
+  nbMetadata?: INotebookMetadata;
+  nbPath?: string | null;
+}): ISpectaAppConfig {
   let rawConfig = PageConfig.getOption('spectaConfig');
   if (!rawConfig || rawConfig.length === 0) {
     rawConfig = '{}';
   }
-  const spectaConfig = JSON.parse(rawConfig) as ISpectaAppConfig;
+
+  const { perFileConfig, ...globalConfig } = JSON.parse(rawConfig);
+  let spectaConfig: ISpectaAppConfig = { ...(globalConfig ?? {}) };
+  if (perFileConfig && nbPath && perFileConfig[nbPath]) {
+    spectaConfig = { ...spectaConfig, ...perFileConfig[nbPath] };
+  }
   const spectaMetadata = (nbMetadata?.specta ?? {}) as ISpectaAppConfig;
 
   return { ...spectaConfig, ...spectaMetadata };

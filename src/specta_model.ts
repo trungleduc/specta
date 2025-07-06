@@ -1,3 +1,4 @@
+import { ISessionContext } from '@jupyterlab/apputils';
 import {
   CodeCell,
   CodeCellModel,
@@ -23,14 +24,13 @@ import { OutputAreaModel, SimplifiedOutputArea } from '@jupyterlab/outputarea';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { ServiceManager } from '@jupyterlab/services';
 import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
+import { PartialJSONValue } from '@lumino/coreutils';
 
 import {
   createNotebookContext,
   createNotebookPanel
 } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
-import { PartialJSONValue, PromiseDelegate } from '@lumino/coreutils';
-import { ISessionContext } from '@jupyterlab/apputils';
 import { readCellConfig } from './tool';
 
 export const VIEW = 'grid_default';
@@ -78,47 +78,19 @@ export class AppModel {
     return this._notebookPanel;
   }
   async initialize(): Promise<void> {
-    const pd = new PromiseDelegate<void>();
     this._context = await createNotebookContext({
       manager: this._manager,
       kernelPreference: this._kernelPreference
     });
     this._context.model.fromJSON(this._notebookModelJson);
 
-    const connectKernel = () => {
-      pd.resolve();
-
-      this._notebookPanel = createNotebookPanel({
-        context: this._context!,
-        rendermime: this.options.rendermime,
-        editorServices: this.options.editorServices
-      });
-
-      (this.options.tracker.widgetAdded as any).emit(this._notebookPanel);
-    };
-    const kernel = this._context.sessionContext.session?.kernel;
-
-    if (kernel) {
-      const status = kernel.status;
-      if (status !== 'unknown') {
-        // Connected to an existing kernel.
-        connectKernel();
-        return;
-      }
-    }
-    this._context.sessionContext.connectionStatusChanged.connect(
-      (_, status) => {
-        if (status === 'connected') {
-          const kernel = this._context!.sessionContext.session?.kernel;
-          if (kernel) {
-            connectKernel();
-          }
-        }
-      },
-      this
-    );
-
-    return pd.promise;
+    this._notebookPanel = createNotebookPanel({
+      context: this._context!,
+      rendermime: this.options.rendermime,
+      editorServices: this.options.editorServices
+    });
+    (this.options.tracker as any).add(this._notebookPanel);
+    await this._context.sessionContext.initialize();
   }
 
   createCell(cellModel: ICellModel): SpectaCellOutput {

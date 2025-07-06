@@ -62,6 +62,7 @@
   display: flex;
   box-shadow: unset !important;
   z-index: 100;
+  contain: unset !important;
 }
 
 .specta-topbar-element {

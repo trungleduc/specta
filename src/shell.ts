@@ -1,10 +1,10 @@
-import { JupyterFrontEnd } from '@jupyterlab/application';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { ArrayExt } from '@lumino/algorithm';
 import { IMessageHandler, Message, MessageLoop } from '@lumino/messaging';
 import { Debouncer } from '@lumino/polling';
 import { Signal } from '@lumino/signaling';
 import { BoxLayout, BoxPanel, Panel, Widget } from '@lumino/widgets';
+import { ISpectaShell } from './token';
 
 /**
  * A namespace for Shell statics
@@ -37,7 +37,7 @@ const DEFAULT_RANK = 900;
 /**
  * The application shell.
  */
-export class SpectaShell extends Widget implements JupyterFrontEnd.IShell {
+export class SpectaShell extends Widget implements ISpectaShell {
   constructor() {
     super();
     this.id = 'main';
@@ -107,6 +107,10 @@ export class SpectaShell extends Widget implements JupyterFrontEnd.IShell {
         console.warn(`Area ${area} is not implemented yet!`);
         break;
     }
+  }
+
+  hideTopBar(): void {
+    this._topHandler.panel.hide();
   }
 
   widgets(area: IShell.Area): IterableIterator<Widget> {
