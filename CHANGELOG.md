@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.6
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.5...7717c064b6bbfb84c305f963d0ab74014a876cbd))
+
+### Merged PRs
+
+- Update kernel loader [#13](https://github.com/trungleduc/specta/pull/13) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-01&to=2025-07-06&type=c))
+
+[@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-07-01..2025-07-06&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.5
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.4...50267928b8cef118c65e076f93c6f63e33a54424))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-01&to=2025-07-01&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AmartinRenou+updated%3A2025-07-01..2025-07-01&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.4
 
