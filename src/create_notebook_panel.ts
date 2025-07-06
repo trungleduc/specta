@@ -51,7 +51,6 @@ export async function createNotebookContext(options: {
     kernelPreference: kernelPreference
   });
 
-  await context.sessionContext.initialize();
   return context;
 }
 
