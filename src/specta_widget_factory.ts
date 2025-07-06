@@ -41,13 +41,16 @@ export class SpectaWidgetFactory {
       notebookConfig: StaticNotebook.defaultNotebookConfig,
       editorServices: this._options.editorServices
     });
-
+    const spectaConfig = readSpectaConfig({
+      nbMetadata: context.model.metadata,
+      nbPath: context.contentsModel?.path
+    });
     const panel = new AppWidget({
       id: UUID.uuid4(),
       label: '',
       model,
       layoutRegistry: this._options.spectaLayoutRegistry,
-      spectaConfig: readSpectaConfig(context.model.metadata)
+      spectaConfig
     });
 
     return panel;

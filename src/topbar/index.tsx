@@ -7,18 +7,16 @@ import { ReactWidget } from '@jupyterlab/ui-components';
 import { TopbarElement } from './widget';
 import * as React from 'react';
 import { isSpectaApp, readSpectaConfig } from '../tool';
-import { ISpectaLayoutRegistry } from '../token';
+import { ISpectaLayoutRegistry, ISpectaShell } from '../token';
+import { PathExt } from '@jupyterlab/coreutils';
 
-/**
- * Initialization data for the voila_topbar extension.
- */
-export const topbarPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'specta:topba',
+export const topbarPlugin: JupyterFrontEndPlugin<void, ISpectaShell> = {
+  id: 'specta:topbar',
   description: 'Specta topbar extension',
   autoStart: true,
   requires: [IThemeManager, ISpectaLayoutRegistry],
   activate: (
-    app: JupyterFrontEnd,
+    app: JupyterFrontEnd<ISpectaShell>,
     themeManager: IThemeManager,
     layoutRegistry: ISpectaLayoutRegistry
   ) => {
@@ -26,7 +24,17 @@ export const topbarPlugin: JupyterFrontEndPlugin<void> = {
     if (!isSpecta) {
       return;
     }
-    const config = readSpectaConfig();
+    const urlParams = new URLSearchParams(window.location.search);
+    const path = urlParams.get('path');
+    if (path && PathExt.extname(path) === '.ipynb') {
+      // Specta document will handle the top bar.
+      return;
+    }
+    const config = readSpectaConfig({ nbPath: path });
+    if (config.hideTopbar) {
+      app.shell.hideTopBar();
+      return;
+    }
     const widget = ReactWidget.create(
       <TopbarElement
         config={config.topBar}

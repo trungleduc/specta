@@ -6,7 +6,7 @@ import { Panel } from '@lumino/widgets';
 import * as React from 'react';
 
 import { SpectaWidgetFactory } from '../specta_widget_factory';
-import { ISpectaLayoutRegistry } from '../token';
+import { ISpectaLayoutRegistry, ISpectaShell } from '../token';
 import { isSpectaApp, readSpectaConfig } from '../tool';
 import { TopbarElement } from '../topbar/widget';
 import { NotebookSpectaDocWidget } from './widget';
@@ -15,6 +15,8 @@ interface IOptions extends DocumentRegistry.IWidgetFactoryOptions {
   spectaWidgetFactory: SpectaWidgetFactory;
   layoutRegistry?: ISpectaLayoutRegistry;
   themeManager?: IThemeManager;
+  shell: ISpectaShell;
+  spectaLayoutRegistry: ISpectaLayoutRegistry;
 }
 
 export class NotebookGridWidgetFactory extends ABCWidgetFactory<
@@ -24,6 +26,9 @@ export class NotebookGridWidgetFactory extends ABCWidgetFactory<
   constructor(options: IOptions) {
     super(options);
     this._spectaWidgetFactory = options.spectaWidgetFactory;
+    this._shell = options.shell;
+    this._themeManager = options.themeManager;
+    this._layoutRegistry = options.spectaLayoutRegistry;
   }
 
   protected createNewWidget(
@@ -31,14 +36,40 @@ export class NotebookGridWidgetFactory extends ABCWidgetFactory<
   ): NotebookSpectaDocWidget {
     const content = new Panel();
     content.addClass('jp-specta-notebook-panel');
-    const spectaConfig = readSpectaConfig(context.model.metadata);
-    if (!isSpectaApp() && !spectaConfig.hideTopbar) {
-      // Not a specta app, add topbar to document widget
-      const topbar = ReactWidget.create(<TopbarElement />);
-      content.addWidget(topbar);
-    }
 
     context.ready.then(async () => {
+      const path = context.contentsModel?.path;
+      const spectaConfig = readSpectaConfig({
+        nbMetadata: context.model.metadata,
+        nbPath: path
+      });
+      const isSpecta = isSpectaApp();
+
+      if (!spectaConfig.hideTopbar) {
+        const topbar = ReactWidget.create(
+          <TopbarElement
+            config={spectaConfig.topBar}
+            themeManager={this._themeManager}
+            layoutRegistry={this._layoutRegistry}
+          />
+        );
+        topbar.addClass('specta-topbar-element');
+        if (!isSpecta) {
+          // Not a specta app, add topbar to document widget
+          content.addWidget(topbar);
+        } else {
+          // Specta app, add topbar to layout
+          topbar.id = 'specta-topbar-widget';
+          this._shell.add(topbar, 'top');
+          if (topbar.parent) {
+            topbar.parent.node.style.boxShadow =
+              'rgba(0 0 0 / 20%) 0 2px 4px -1px, rgba(0 0 0 / 14%) 0 4px 5px 0, rgba(0 0 0 / 12%) 0 1px 10px 0';
+          }
+        }
+      } else if (isSpecta) {
+        this._shell.hideTopBar();
+      }
+
       const spectaWidget = await this._spectaWidgetFactory.createNew({
         context
       });
@@ -57,4 +88,7 @@ export class NotebookGridWidgetFactory extends ABCWidgetFactory<
   }
 
   private _spectaWidgetFactory: SpectaWidgetFactory;
+  private _shell: ISpectaShell;
+  private _themeManager?: IThemeManager;
+  private _layoutRegistry: ISpectaLayoutRegistry;
 }

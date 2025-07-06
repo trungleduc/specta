@@ -9,12 +9,6 @@
       "metadataSchema": {
         "type": "object",
         "properties": {
-          "/specta/hideTopbar": {
-            "title": "Hide top bar",
-            "type": "boolean",
-            "enum": [true, false],
-            "default": false
-          },
           "/specta/defaultLayout": {
             "title": "Page layout",
             "type": "string",

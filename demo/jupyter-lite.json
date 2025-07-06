@@ -4,9 +4,20 @@
     "contentsStorageDrivers": ["memoryStorageDriver"],
     "spectaConfig": {
       "topBar": {
-        "title": "Specta Demo"
+        "title": "Specta Tree"
       },
-      "defaultLayout": "article"
+      "hideTopbar": false,
+      "defaultLayout": "default",
+      "perFileConfig": {
+        "blog.ipynb": {
+          "hideTopbar": false,
+          "defaultLayout": "article",
+          "topBar": {
+            "title": "ipecharts blog",
+            "themeToggle": false
+          }
+        }
+      }
     }
   }
 }

@@ -2,7 +2,11 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-import { IWidgetTracker, WidgetTracker } from '@jupyterlab/apputils';
+import {
+  IThemeManager,
+  IWidgetTracker,
+  WidgetTracker
+} from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { PathExt } from '@jupyterlab/coreutils';
 import { IDocumentManager } from '@jupyterlab/docmanager';
@@ -12,7 +16,11 @@ import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { IKernelSpecManager } from '@jupyterlab/services';
 import { Widget } from '@lumino/widgets';
 
-import { ISpectaDocTracker, ISpectaLayoutRegistry } from '../token';
+import {
+  ISpectaDocTracker,
+  ISpectaLayoutRegistry,
+  ISpectaShell
+} from '../token';
 import {
   createFileBrowser,
   hideAppLoadingIndicator,
@@ -21,12 +29,13 @@ import {
 } from '../tool';
 
 const activate = (
-  app: JupyterFrontEnd,
+  app: JupyterFrontEnd<ISpectaShell>,
   rendermime: IRenderMimeRegistry,
   tracker: INotebookTracker,
   editorServices: IEditorServices,
   contentFactory: NotebookPanel.IContentFactory,
-  spectaLayoutRegistry: ISpectaLayoutRegistry
+  spectaLayoutRegistry: ISpectaLayoutRegistry,
+  themeManager: IThemeManager
 ): IWidgetTracker => {
   const namespace = 'specta';
   const spectaTracker = new WidgetTracker<Widget>({ namespace });
@@ -39,13 +48,17 @@ const activate = (
     editorServices,
     contentFactory,
     spectaTracker,
-    spectaLayoutRegistry
+    spectaLayoutRegistry,
+    themeManager
   });
 
   return spectaTracker;
 };
 
-export const spectaDocument: JupyterFrontEndPlugin<IWidgetTracker> = {
+export const spectaDocument: JupyterFrontEndPlugin<
+  IWidgetTracker,
+  ISpectaShell
+> = {
   id: 'specta:notebook-doc',
   autoStart: true,
   requires: [
@@ -53,7 +66,8 @@ export const spectaDocument: JupyterFrontEndPlugin<IWidgetTracker> = {
     INotebookTracker,
     IEditorServices,
     NotebookPanel.IContentFactory,
-    ISpectaLayoutRegistry
+    ISpectaLayoutRegistry,
+    IThemeManager
   ],
   activate,
   provides: ISpectaDocTracker
