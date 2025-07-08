@@ -26,3 +26,8 @@
   background: var(--jp-layout-color1);
   box-shadow: var(--jp-elevation-z4);
 }
+
+.specta-main-content-panel {
+  padding-left: 5px;
+  padding-right: 5px;
+}

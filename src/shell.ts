@@ -54,6 +54,8 @@ export class SpectaShell extends Widget implements ISpectaShell {
 
     const hboxPanel = (this._mainPanel = new BoxPanel());
     hboxPanel.id = 'jp-main-content-panel';
+    hboxPanel.addClass('specta-main-content-panel');
+
     hboxPanel.direction = 'top-to-bottom';
     BoxLayout.setStretch(hboxPanel, 1);
     rootLayout.addWidget(hboxPanel);
