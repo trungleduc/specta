@@ -60,6 +60,8 @@
         "@jupyterlab/docregistry": "^4.4.2",
         "@jupyterlab/filebrowser": "^4.4.2",
         "@jupyterlab/filebrowser-extension": "^4.4.2",
+        "@jupyterlab/imageviewer": "^4.4.2",
+        "@jupyterlab/imageviewer-extension": "^4.4.2",
         "@jupyterlab/json-extension": "^4.4.2",
         "@jupyterlab/logconsole": "^4.4.2",
         "@jupyterlab/mainmenu": "^4.4.2",

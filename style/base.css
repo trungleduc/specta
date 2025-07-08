@@ -55,6 +55,7 @@
 
 .jp-specta-notebook-panel {
   overflow: auto;
+  padding: 0 5px 5px 5px;
 }
 
 #specta-top-panel {

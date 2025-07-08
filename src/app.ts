@@ -6,6 +6,7 @@ import {
 import { SpectaShell } from './shell';
 import { IRenderMime } from '@jupyterlab/rendermime';
 import { PageConfig } from '@jupyterlab/coreutils';
+import { Base64ModelFactory } from '@jupyterlab/docregistry';
 
 export class SpectaApp extends JupyterFrontEnd<SpectaShell> {
   constructor(options: SpectaApp.IOptions) {
@@ -13,6 +14,7 @@ export class SpectaApp extends JupyterFrontEnd<SpectaShell> {
       ...options,
       shell: options.shell ?? new SpectaShell()
     });
+    this.docRegistry.addModelFactory(new Base64ModelFactory());
     if (options.mimeExtensions) {
       for (const plugin of createRendermimePlugins(options.mimeExtensions)) {
         this.registerPlugin(plugin);

@@ -109,7 +109,7 @@ export const spectaOpener: JupyterFrontEndPlugin<void> = {
       } else {
         let count = 0;
         const tryOpen = () => {
-          const widget = docManager.openOrReveal(path);
+          const widget = docManager.openOrReveal(path, 'default');
           if (widget) {
             app.shell.add(widget, 'main');
             hideAppLoadingIndicator();
@@ -117,7 +117,10 @@ export const spectaOpener: JupyterFrontEndPlugin<void> = {
             count++;
             if (count > 10) {
               console.error('Failed to open file', path);
-              //TODO Open in text editor?
+              const widget = new Widget();
+              widget.node.innerHTML = `<h2 style="text-align: center; margin-top: 200px;">Failed to open file ${path}</h2>`;
+              app.shell.add(widget, 'main');
+              hideAppLoadingIndicator();
               return;
             }
             setTimeout(tryOpen, 100);
