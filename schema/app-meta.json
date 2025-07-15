@@ -12,7 +12,7 @@
           "/specta/defaultLayout": {
             "title": "Page layout",
             "type": "string",
-            "enum": ["default", "article"],
+            "enum": ["default", "article", "slides"],
             "default": "default"
           }
         }
