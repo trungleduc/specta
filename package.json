@@ -106,9 +106,11 @@
         "@lumino/signaling": "^2.0.0",
         "@lumino/virtualdom": "^2.0.0",
         "@lumino/widgets": "^2.0.0",
+        "@types/reveal.js": "^5.2.0",
         "@voila-dashboards/voila": "^0.5.5",
         "react": "^18.3.0",
-        "react-dom": "^18.3.0"
+        "react-dom": "^18.3.0",
+        "reveal.js": "^5.2.1"
     },
     "devDependencies": {
         "@jupyterlab/builder": "~4.4.2",

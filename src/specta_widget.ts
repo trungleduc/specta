@@ -22,9 +22,8 @@ export class AppWidget extends Panel {
     this._layoutRegistry = options.layoutRegistry;
     this._host = new Panel();
     this._host.addClass('specta-output-host');
+    this.addClass('specta-app-widget');
     this.addWidget(this._host);
-
-    this.node.style.overflow = 'auto';
 
     if (!isSpectaApp()) {
       // Not a specta app, add spinner
