@@ -48,5 +48,16 @@ export class SlidesLayout implements ISpectaLayout {
       embedded: true
     });
     deck.initialize();
+    deck.on('slidetransitionend', event => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    this._deckMap.set(host.node, deck);
   }
+  async unload(node: HTMLElement): Promise<void> {
+    console.log('deck is ', this._deckMap.get(node));
+    console.log('aaa');
+  }
+
+  private _deckMap = new WeakMap<HTMLElement, Reveal.Api>();
 }

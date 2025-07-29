@@ -115,13 +115,20 @@ export class AppWidget extends Panel {
 
   private _onSelectedLayoutChanged(
     sender: ISpectaLayoutRegistry,
-    args: { name: string; layout: ISpectaLayout }
+    args: { name: string; layout: ISpectaLayout; oldLayout?: ISpectaLayout }
   ): void {
+    const { layout, oldLayout } = args;
+    console.log('layout changed', layout, oldLayout);
+    if (oldLayout && oldLayout.unload) {
+      oldLayout.unload(this._host.node);
+    }
+
     const currentEls = [...this._host.widgets];
+
     currentEls.forEach(el => {
       this._host.layout?.removeWidget(el);
     });
-    args.layout.render({
+    layout.render({
       host: this._host,
       items: this._outputs,
       notebook: this._model.context?.model.toJSON() as any,

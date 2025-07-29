@@ -26,7 +26,7 @@ export class SpectaLayoutRegistry implements ISpectaLayoutRegistry {
 
   get selectedLayoutChanged(): ISignal<
     SpectaLayoutRegistry,
-    { name: string; layout: ISpectaLayout }
+    { name: string; layout: ISpectaLayout; oldLayout?: ISpectaLayout }
   > {
     return this._selectedLayoutChanged;
   }
@@ -38,12 +38,13 @@ export class SpectaLayoutRegistry implements ISpectaLayoutRegistry {
     return this._registry.get('default')!;
   }
 
-  setSelectedLayout(name: string): void {
+  async setSelectedLayout(name: string): Promise<void> {
     if (!this._registry.has(name)) {
       throw new Error(`Layout with name ${name} does not exist`);
     }
+    const oldLayout = this._selectedLayout.layout;
     this._selectedLayout = { name, layout: this._registry.get(name)! };
-    this._selectedLayoutChanged.emit(this._selectedLayout);
+    this._selectedLayoutChanged.emit({ ...this._selectedLayout, oldLayout });
   }
 
   register(name: string, layout: ISpectaLayout): void {
@@ -63,6 +64,6 @@ export class SpectaLayoutRegistry implements ISpectaLayoutRegistry {
   private _layoutAdded = new Signal<SpectaLayoutRegistry, string>(this);
   private _selectedLayoutChanged = new Signal<
     SpectaLayoutRegistry,
-    { name: string; layout: ISpectaLayout }
+    { name: string; layout: ISpectaLayout; oldLayout?: ISpectaLayout }
   >(this);
 }

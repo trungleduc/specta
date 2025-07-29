@@ -16,6 +16,7 @@ export interface ISpectaLayout {
     notebook: nbformat.INotebookContent;
     readyCallback: () => Promise<void>;
   }): Promise<void>;
+  unload?: (node: HTMLElement) => Promise<void>;
 }
 export interface ISpectaLayoutRegistry {
   get(name: string): ISpectaLayout | undefined;
@@ -27,7 +28,7 @@ export interface ISpectaLayoutRegistry {
   setSelectedLayout(name: string): void;
   selectedLayoutChanged: ISignal<
     ISpectaLayoutRegistry,
-    { name: string; layout: ISpectaLayout }
+    { name: string; layout: ISpectaLayout; oldLayout?: ISpectaLayout }
   >;
 }
 
