@@ -1,9 +1,10 @@
 import { IThemeManager } from '@jupyterlab/apputils';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Divider } from '../components/divider';
-import { ISpectaLayoutRegistry } from '../token';
+import { ISpectaLayoutRegistry, ITopbarConfig } from '../token';
 
 export const SettingContent = (props: {
+  config?: ITopbarConfig;
   themeManager?: IThemeManager;
   layoutRegistry?: ISpectaLayoutRegistry;
 }) => {
@@ -81,7 +82,7 @@ export const SettingContent = (props: {
         SETTINGS
       </p>
       <Divider />
-      {layoutRegistry && (
+      {(props.config?.layoutToggle !== undefined ? props.config.layoutToggle : true) && layoutRegistry && (
         <div>
           <label htmlFor="">Select layout</label>
           <div className="jp-select-wrapper">
@@ -107,7 +108,7 @@ export const SettingContent = (props: {
           </div>
         </div>
       )}
-      {themeManager && (
+      {(props.config?.themeToggle !== undefined ? props.config.themeToggle : true) && themeManager && (
         <div>
           <label htmlFor="">Select theme</label>
           <div className="jp-select-wrapper">

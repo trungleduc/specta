@@ -37,7 +37,9 @@ export interface ITopbarConfig {
   title?: string;
   icon?: string;
   kernelActivity?: boolean;
+  settingsButton?: boolean;
   themeToggle?: boolean;
+  layoutToggle?: boolean;
 }
 
 export interface ISpectaAppConfig {

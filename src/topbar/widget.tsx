@@ -59,7 +59,7 @@ export function TopbarElement(props: IProps): JSX.Element {
           {config.title}
         </div>
       </div>
-      <div className="specta-topbar-right">
+      {(props.config?.settingsButton !== undefined ? props.config.settingsButton : true) && <div className="specta-topbar-right">
         <IconButton
           ref={buttonRef}
           onClick={() => setOpen(!open)}
@@ -75,12 +75,13 @@ export function TopbarElement(props: IProps): JSX.Element {
           >
             <div className="specta-config-arrow" />
             <SettingContent
+              config={props.config}
               themeManager={props.themeManager}
               layoutRegistry={props.layoutRegistry}
             />
           </div>
         )}
-      </div>
+      </div>}
     </div>
   );
 }
