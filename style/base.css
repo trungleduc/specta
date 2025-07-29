@@ -88,6 +88,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  height: 80%;
+}
+
+.specta-topbar-icon-container {
+  height: 100%;
 }
 
 .specta-topbar-right {
