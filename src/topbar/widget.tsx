@@ -19,7 +19,8 @@ export function TopbarElement(props: IProps): JSX.Element {
       title: props.config?.title ?? 'Specta',
       themeToggle: Boolean(props.config?.themeToggle),
       kernelActivity: Boolean(props.config?.kernelActivity),
-      textColor: props.config?.textColor ?? 'var(--jp-ui-font-color1)'
+      textColor: props.config?.textColor ?? 'var(--jp-ui-font-color1)',
+      icon: props.config?.icon
     };
   }, [props.config]);
 
@@ -63,7 +64,7 @@ export function TopbarElement(props: IProps): JSX.Element {
           ref={buttonRef}
           onClick={() => setOpen(!open)}
           icon={
-            <GearIcon fill="var(--jp-ui-font-color2)" height={24} width={24} />
+            <GearIcon fill="var(--jp-ui-font-color2)" height={23} width={23} />
           }
         />
 

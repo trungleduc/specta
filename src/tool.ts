@@ -137,11 +137,15 @@ export function readSpectaConfig({
   if (!rawConfig || rawConfig.length === 0) {
     rawConfig = '{}';
   }
-
+  let pathWithoutDrive = nbPath;
+  const paths = nbPath?.split(':');
+  if (paths && paths.length > 1) {
+    pathWithoutDrive = paths[1];
+  }
   const { perFileConfig, ...globalConfig } = JSON.parse(rawConfig);
   let spectaConfig: ISpectaAppConfig = { ...(globalConfig ?? {}) };
-  if (perFileConfig && nbPath && perFileConfig[nbPath]) {
-    spectaConfig = { ...spectaConfig, ...perFileConfig[nbPath] };
+  if (perFileConfig && pathWithoutDrive && perFileConfig[pathWithoutDrive]) {
+    spectaConfig = { ...spectaConfig, ...perFileConfig[pathWithoutDrive] };
   }
   const spectaMetadata = (nbMetadata?.specta ?? {}) as ISpectaAppConfig;
 

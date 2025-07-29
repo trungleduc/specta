@@ -3,7 +3,7 @@ channels:
   - https://repo.prefix.dev/emscripten-forge-dev
   - https://repo.prefix.dev/conda-forge
 dependencies:
-  - xeus-python=0.17.4=py313h027658c_2
+  - xeus-python
   - ipywidgets
   - ipecharts
   - matplotlib
