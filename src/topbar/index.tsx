@@ -46,9 +46,5 @@ export const topbarPlugin: JupyterFrontEndPlugin<void, ISpectaShell> = {
     widget.addClass('specta-topbar-element');
 
     app.shell.add(widget, 'top');
-    if (widget.parent) {
-      widget.parent.node.style.boxShadow =
-        'rgba(0 0 0 / 20%) 0 2px 4px -1px, rgba(0 0 0 / 14%) 0 4px 5px 0, rgba(0 0 0 / 12%) 0 1px 10px 0';
-    }
   }
 };

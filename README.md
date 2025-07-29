@@ -43,7 +43,55 @@ Once installed, you can build your JupyterLite app, a `specta` app will be inclu
 jupyter lite build
 ```
 
-Then serve the contents of the output directory (by default `./_output`) using any static file server. You can access the `specta` app at the `/specta/` path.
+Then serve the contents of the output directory (by default `./_output`) using any static file server. You can access the `Specta` app at the `/specta/` path.
+
+## Specta Configuration
+
+### Top-level configuration
+
+Specta can be configured using the typicall JupyterLite configuration file: `jupyter-lite.json`. You can add a `spectaConfig` key to the `jupyter-config-data` section of this file to customize the Specta app.
+
+The following options are available:
+
+- `defaultLayout`: The default layout when opening a file.
+- `hideTopbar`: Boolean flag to show or hide the top bar.
+- `topBar`: Configuration for the top bar.
+
+```json
+      "topBar": {
+        "icon": "url to the icon file, it's shown on the left of the top bar",
+        "title": "Title on the left of the top bar",
+        "themeToggle": "Boolean flag to show/hide the theme selector",
+        "textColor": "Color of the text on the top bar",
+        "background": "Background color of the top bar"
+      },
+```
+
+- `perFileConfig`: an object with key is the file path and value is the above configuration, it's used to have different layout/top bar config for each files, for example:
+
+```json
+      "perFileConfig": {
+        "blog.ipynb": {
+          "hideTopbar": false,
+          "defaultLayout": "article",
+          "topBar": {
+            "title": "My blog",
+            "themeToggle": false
+          }
+        }
+      }
+```
+
+### Notebook specific configuration
+
+By default, when you open a notebook in Specta, all code cells are hidden, and placeholder skeletons are shown instead at the position of the cell. You can configure the visibility of each cell by using the Specta cell metadata toolbar.
+
+![Cell toolbar](./docs/images/specta-config.jpg)
+
+By opening the `Property Inspector` panel of JupyterLab and selecting the `Specta Cell Config` section, you can change the visibility of each cell as follows:
+
+- `Show cell source`: use this toggle to show or hide the cell source code. Default to `false`
+- `Show output placeholder`: use this toggle to show or hide the output skeleton. Default to `true`
 
 ## Try it online!
 

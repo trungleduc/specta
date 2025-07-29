@@ -59,7 +59,7 @@
 }
 
 #specta-top-panel {
-  min-height: 40px;
+  min-height: 36px;
   display: flex;
   box-shadow: unset !important;
   z-index: 100;
@@ -74,12 +74,9 @@
 .specta-topbar {
   display: flex;
   flex-direction: row;
-  height: 40px;
+  height: 36px;
   width: calc(100% + 20px);
-  box-shadow:
-    rgba(0 0 0 / 20%) 0 2px 4px -1px,
-    rgba(0 0 0 / 14%) 0 4px 5px 0,
-    rgba(0 0 0 / 12%) 0 1px 10px 0;
+  border-bottom: solid 0.5px var(--jp-border-color1);
   gap: 10px;
   align-items: center;
   justify-content: space-between;
@@ -98,8 +95,8 @@
 }
 
 .specta-topbar-title {
-  line-height: 40px;
-  font-size: 1.5rem;
+  line-height: 36px;
+  font-size: 1.25rem;
 }
 
 .specta-topbar-theme {
