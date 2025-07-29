@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.8
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.7...9f9d248e3e0b13c6305a826133b77ab090d1452f))
+
+### Enhancements made
+
+- update config [#17](https://github.com/trungleduc/specta/pull/17) ([@trungleduc](https://github.com/trungleduc))
+
+### Other merged PRs
+
+- Only hide the first toolbar in the document [#16](https://github.com/trungleduc/specta/pull/16) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-28&to=2025-07-29&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AmartinRenou+updated%3A2025-07-28..2025-07-29&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-07-28..2025-07-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.7
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.6...bbdace10be8aeef148efcc161907319d3de866f3))
@@ -15,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-06&to=2025-07-28&type=c))
 
 [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-07-06..2025-07-28&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.6
 
