@@ -59,7 +59,7 @@ export function TopbarElement(props: IProps): JSX.Element {
           {config.title}
         </div>
       </div>
-      <div className="specta-topbar-right">
+      {config.themeToggle && <div className="specta-topbar-right">
         <IconButton
           ref={buttonRef}
           onClick={() => setOpen(!open)}
@@ -80,7 +80,7 @@ export function TopbarElement(props: IProps): JSX.Element {
             />
           </div>
         )}
-      </div>
+      </div>}
     </div>
   );
 }
