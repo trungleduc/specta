@@ -48,9 +48,9 @@ export function TopbarElement(props: IProps): JSX.Element {
       className="specta-topbar"
       style={{ background: config.background ?? 'var(--jp-layout-color2)' }}
     >
-      <div className="specta-topbar-left">
-        <div>
-          {config.icon && <img style={{ width: '50px' }} src={config.icon} />}
+      <div className='specta-topbar-left'>
+        <div className='specta-topbar-icon-container'>
+          {config.icon && <img style={{ height: '100%' }} src={config.icon} />}
         </div>
         <div
           className="specta-topbar-title"
