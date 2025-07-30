@@ -113,5 +113,3 @@ By opening the `Property Inspector` panel of JupyterLab and selecting the `Spect
 For the slides layout, you can set the cells as a sub-slide for [vertical slide](https://revealjs.com/vertical-slides/) or [a fragment](https://revealjs.com/fragments/) using the Slide Type field in the `Common Tools` section of the `Property Inspector` panel.
 
 ![Slide tool](./docs/images/slide-tool.png)
-
-
