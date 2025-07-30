@@ -31,9 +31,8 @@ import {
   createNotebookPanel
 } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
-import { readCellConfig } from './tool';
+import { emitResizeEvent, readCellConfig } from './tool';
 
-export const VIEW = 'grid_default';
 export class AppModel {
   constructor(private options: AppModel.IOptions) {
     this._notebookModelJson = options.context.model.toJSON();
@@ -191,6 +190,7 @@ export class AppModel {
       this._context.sessionContext
     );
     output.future.done.then(() => {
+      emitResizeEvent();
       outputWrapper.removePlaceholder();
     });
     return rep;

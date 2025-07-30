@@ -3,7 +3,12 @@ import { SpectaCellOutput } from '../specta_cell_output';
 import * as nbformat from '@jupyterlab/nbformat';
 import { ISpectaLayout } from '../token';
 import Reveal from 'reveal.js';
+import { emitResizeEvent } from '../tool';
 
+interface ISlideElement {
+  type: 'slide' | 'subslide' | 'fragment';
+  widget: Widget[];
+}
 class HostPanel extends Panel {
   constructor() {
     super();
@@ -14,14 +19,51 @@ class HostPanel extends Panel {
     this.addWidget(this._outputs);
   }
 
-  addOutput(widget: Widget): void {
-    const section = document.createElement('section');
-    const sectionWidget = new Widget({ node: section });
-    sectionWidget.node.appendChild(widget.node);
-    widget.parent = sectionWidget;
-    sectionWidget.processMessage = msg => {
-      widget.processMessage(msg);
-    };
+  addOutput(slideEl: ISlideElement): void {
+    const { type, widget } = slideEl;
+    const sectionWidget = new Widget({
+      node: document.createElement('section')
+    });
+    switch (type) {
+      case 'slide': {
+        const outputWidget = widget[0];
+        sectionWidget.node.appendChild(outputWidget.node);
+        outputWidget.parent = sectionWidget;
+        sectionWidget.processMessage = msg => {
+          outputWidget.processMessage(msg);
+        };
+        break;
+      }
+      case 'subslide': {
+        for (const outputWidget of widget) {
+          const subSection = document.createElement('section');
+          subSection.appendChild(outputWidget.node);
+          outputWidget.parent = sectionWidget;
+          sectionWidget.node.appendChild(subSection);
+        }
+        sectionWidget.processMessage = msg => {
+          widget.forEach(w => w.processMessage(msg));
+        };
+        break;
+      }
+      case 'fragment': {
+        for (const [idx, outputWidget] of widget.entries()) {
+          if (idx !== 0) {
+            outputWidget.addClass('fragment');
+            outputWidget.addClass('fade-in');
+          }
+          sectionWidget.node.appendChild(outputWidget.node);
+          outputWidget.parent = sectionWidget;
+        }
+        sectionWidget.processMessage = msg => {
+          widget.forEach(w => w.processMessage(msg));
+        };
+        break;
+      }
+      default:
+        break;
+    }
+
     this._outputs.addWidget(sectionWidget);
   }
   private _outputs: Panel;
@@ -35,28 +77,60 @@ export class SlidesLayout implements ISpectaLayout {
   }): Promise<void> {
     const { host, items, readyCallback } = options;
     const hostPanel = new HostPanel();
+    const elementList: ISlideElement[] = [];
     for (const el of items) {
       const info = el.info;
+      const cellMeta = (info.cellModel?.metadata ?? {}) as any;
+      const slideType = cellMeta?.slideshow?.slide_type;
+
       if (!info.hidden) {
-        hostPanel.addOutput(el);
+        const lastEl = elementList[elementList.length - 1] as
+          | ISlideElement
+          | undefined;
+        switch (slideType) {
+          case 'subslide': {
+            if (lastEl?.type === 'subslide') {
+              lastEl.widget.push(el);
+            } else {
+              elementList.push({ type: 'subslide', widget: [el] });
+            }
+            break;
+          }
+          case 'fragment': {
+            if (lastEl?.type === 'fragment') {
+              lastEl.widget.push(el);
+            } else {
+              elementList.push({ type: 'fragment', widget: [el] });
+            }
+            break;
+          }
+          case 'slide': {
+            elementList.push({ type: 'slide', widget: [el] });
+            break;
+          }
+          default: {
+            elementList.push({ type: 'slide', widget: [el] });
+            break;
+          }
+        }
       }
     }
+    for (const element of elementList) {
+      hostPanel.addOutput(element);
+    }
+
     host.addWidget(hostPanel);
     await readyCallback();
 
     const deck = new Reveal(hostPanel.node, {
       embedded: true
     });
-    deck.initialize();
+    deck.initialize({ slideNumber: true });
     deck.on('slidetransitionend', event => {
-      window.dispatchEvent(new Event('resize'));
+      emitResizeEvent();
     });
 
     this._deckMap.set(host.node, deck);
-  }
-  async unload(node: HTMLElement): Promise<void> {
-    console.log('deck is ', this._deckMap.get(node));
-    console.log('aaa');
   }
 
   private _deckMap = new WeakMap<HTMLElement, Reveal.Api>();

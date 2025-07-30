@@ -82,58 +82,64 @@ export const SettingContent = (props: {
         SETTINGS
       </p>
       <Divider />
-      {(props.config?.layoutToggle !== undefined ? props.config.layoutToggle : true) && layoutRegistry && (
-        <div>
-          <label htmlFor="">Select layout</label>
-          <div className="jp-select-wrapper">
-            <select
-              className=" jp-mod-styled specta-topbar-theme"
-              onChange={onLayoutChange}
-              value={selectedLayout}
-            >
-              {layoutOptions.map(el => {
-                return (
-                  <option
-                    key={el}
-                    value={el}
-                    style={{
-                      background: 'var(--jp-layout-color2)'
-                    }}
-                  >
-                    {el.charAt(0).toUpperCase() + el.slice(1)}
-                  </option>
-                );
-              })}
-            </select>
+      {(props.config?.layoutToggle !== undefined
+        ? props.config.layoutToggle
+        : true) &&
+        layoutRegistry && (
+          <div>
+            <label htmlFor="">Select layout</label>
+            <div className="jp-select-wrapper">
+              <select
+                className=" jp-mod-styled specta-topbar-theme"
+                onChange={onLayoutChange}
+                value={selectedLayout}
+              >
+                {layoutOptions.map(el => {
+                  return (
+                    <option
+                      key={el}
+                      value={el}
+                      style={{
+                        background: 'var(--jp-layout-color2)'
+                      }}
+                    >
+                      {el.charAt(0).toUpperCase() + el.slice(1)}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
           </div>
-        </div>
-      )}
-      {(props.config?.themeToggle !== undefined ? props.config.themeToggle : true) && themeManager && (
-        <div>
-          <label htmlFor="">Select theme</label>
-          <div className="jp-select-wrapper">
-            <select
-              className=" jp-mod-styled specta-topbar-theme"
-              onChange={onThemeChange}
-              value={selectedTheme}
-            >
-              {themeOptions.map(el => {
-                return (
-                  <option
-                    key={el}
-                    value={el}
-                    style={{
-                      background: 'var(--jp-layout-color2)'
-                    }}
-                  >
-                    {el}
-                  </option>
-                );
-              })}
-            </select>
+        )}
+      {(props.config?.themeToggle !== undefined
+        ? props.config.themeToggle
+        : true) &&
+        themeManager && (
+          <div>
+            <label htmlFor="">Select theme</label>
+            <div className="jp-select-wrapper">
+              <select
+                className=" jp-mod-styled specta-topbar-theme"
+                onChange={onThemeChange}
+                value={selectedTheme}
+              >
+                {themeOptions.map(el => {
+                  return (
+                    <option
+                      key={el}
+                      value={el}
+                      style={{
+                        background: 'var(--jp-layout-color2)'
+                      }}
+                    >
+                      {el}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 };

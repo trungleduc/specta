@@ -16,7 +16,6 @@ export interface ISpectaLayout {
     notebook: nbformat.INotebookContent;
     readyCallback: () => Promise<void>;
   }): Promise<void>;
-  unload?: (node: HTMLElement) => Promise<void>;
 }
 export interface ISpectaLayoutRegistry {
   get(name: string): ISpectaLayout | undefined;

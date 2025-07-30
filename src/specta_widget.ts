@@ -9,7 +9,7 @@ import {
   ISpectaLayout,
   ISpectaLayoutRegistry
 } from './token';
-import { hideAppLoadingIndicator, isSpectaApp } from './tool';
+import { emitResizeEvent, hideAppLoadingIndicator, isSpectaApp } from './tool';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -31,9 +31,7 @@ export class AppWidget extends Panel {
     }
 
     this._model.initialize().then(() => {
-      this.render()
-        .catch(console.error)
-        .then(() => window.dispatchEvent(new Event('resize')));
+      this.render().catch(console.error).then(emitResizeEvent);
     });
     this._layoutRegistry.selectedLayoutChanged.connect(
       this._onSelectedLayoutChanged,
@@ -117,11 +115,7 @@ export class AppWidget extends Panel {
     sender: ISpectaLayoutRegistry,
     args: { name: string; layout: ISpectaLayout; oldLayout?: ISpectaLayout }
   ): void {
-    const { layout, oldLayout } = args;
-    console.log('layout changed', layout, oldLayout);
-    if (oldLayout && oldLayout.unload) {
-      oldLayout.unload(this._host.node);
-    }
+    const { layout } = args;
 
     const currentEls = [...this._host.widgets];
 

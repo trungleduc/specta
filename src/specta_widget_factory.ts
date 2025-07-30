@@ -34,7 +34,7 @@ export class SpectaWidgetFactory {
       nbMetadata: context.model.metadata,
       nbPath: context.contentsModel?.path
     });
-    console.log('spectaConfig', spectaConfig);
+
     const defaultLayout = spectaConfig.defaultLayout ?? 'default';
     this._options.spectaLayoutRegistry.setSelectedLayout(defaultLayout);
 

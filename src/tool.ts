@@ -169,3 +169,20 @@ export function readCellConfig(cell?: ICell): Required<ISpectaCellConfig> {
 
   return spectaCellConfig;
 }
+
+export function debounce<T extends (...args: any[]) => void>(
+  fn: T,
+  delay = 100
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout>;
+
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
+}
+export const emitResizeEvent = debounce(() => {
+  window.dispatchEvent(new Event('resize'));
+});
