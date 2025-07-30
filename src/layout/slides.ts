@@ -125,7 +125,7 @@ export class SlidesLayout implements ISpectaLayout {
     const deck = new Reveal(hostPanel.node, {
       embedded: true
     });
-    deck.initialize({ slideNumber: true });
+    deck.initialize();
     deck.on('slidetransitionend', event => {
       emitResizeEvent();
     });
