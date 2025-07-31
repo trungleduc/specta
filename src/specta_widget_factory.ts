@@ -30,6 +30,14 @@ export class SpectaWidgetFactory {
     const rendermime = this._options.rendermime.clone({
       resolver: context.urlResolver
     });
+    const spectaConfig = readSpectaConfig({
+      nbMetadata: context.model.metadata,
+      nbPath: context.contentsModel?.path
+    });
+
+    const defaultLayout = spectaConfig.defaultLayout ?? 'default';
+    this._options.spectaLayoutRegistry.setSelectedLayout(defaultLayout);
+
     const model = new AppModel({
       context,
       manager: this._options.manager,
@@ -41,10 +49,8 @@ export class SpectaWidgetFactory {
       notebookConfig: StaticNotebook.defaultNotebookConfig,
       editorServices: this._options.editorServices
     });
-    const spectaConfig = readSpectaConfig({
-      nbMetadata: context.model.metadata,
-      nbPath: context.contentsModel?.path
-    });
+
+    // Create the specta pane
     const panel = new AppWidget({
       id: UUID.uuid4(),
       label: '',

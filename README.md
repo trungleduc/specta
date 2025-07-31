@@ -14,8 +14,9 @@ Specta is a custom JupyterLite app for rendering notebooks and Jupyter‑support
 
 Render notebooks in:
 
-- **Dashboard mode** – structured panels for interactive widgets and outputs
-- **Article mode** – a minimal, blog-like reading experience
+- **Dashboard mode** – structured panels for interactive widgets and outputs.
+- **Article mode** – a minimal, blog-like reading experience.
+- **Slides mode** – a fullscreen presentation mode.
 
 ### Clean Viewer for all Jupyter-supported file types
 
@@ -24,6 +25,12 @@ View any Jupyter-supported file using Specta's clean viewer with all Jupyter UI 
 ### Preview from JupyterLab
 
 A `specta` preview can be launched directly from JupyterLab, letting users verify how their documents will look when published.
+
+## Try it online!
+
+You can try it online by clicking on this badge:
+
+[![Try on lite](https://jupyterlite.rtfd.io/en/latest/_static/badge.svg)](https://trungleduc.github.io/specta/specta/)
 
 ## Installation and Usage
 
@@ -47,6 +54,14 @@ Then serve the contents of the output directory (by default `./_output`) using a
 
 ## Specta Configuration
 
+### Available layouts
+
+Specta comes with three built-in layouts:
+
+- `default`: The default layout, which renders the notebook as a dashboard.
+- `article`: A minimal, blog-like reading experience.
+- `slides`: A fullscreen presentation mode using [reveal.js](https://revealjs.com/).
+
 ### Top-level configuration
 
 Specta can be configured using the typicall JupyterLite configuration file: `jupyter-lite.json`. You can add a `spectaConfig` key to the `jupyter-config-data` section of this file to customize the Specta app.
@@ -56,6 +71,7 @@ The following options are available:
 - `defaultLayout`: The default layout when opening a file.
 - `hideTopbar`: Boolean flag to show or hide the top bar.
 - `topBar`: Configuration for the top bar.
+- `slidesTheme`: The theme for the slides layout. The list of available themes can be found [here](https://revealjs.com/themes/).
 
 ```json
       "topBar": {
@@ -78,11 +94,21 @@ The following options are available:
             "title": "My blog",
             "themeToggle": false
           }
+        },
+        "slides.ipynb": {
+          "hideTopbar": true,
+          "slidesTheme": "sky"
         }
       }
 ```
 
-### Notebook specific configuration
+### Notebook metadata configuration
+
+In addition to the global configuration, you can also configure the layout and top bar for each notebook by using the notebook metadata. You can use the `Specta App Config` of the `Property Inspector` panel of JupyterLab to edit the notebook metadata.
+
+![Metadata](./docs/images/specta-meta.jpg)
+
+### Notebook cell configuration
 
 By default, when you open a notebook in Specta, all code cells are hidden, and placeholder skeletons are shown instead at the position of the cell. You can configure the visibility of each cell by using the Specta cell metadata toolbar.
 
@@ -93,8 +119,8 @@ By opening the `Property Inspector` panel of JupyterLab and selecting the `Spect
 - `Show cell source`: use this toggle to show or hide the cell source code. Default to `false`
 - `Show output placeholder`: use this toggle to show or hide the output skeleton. Default to `true`
 
-## Try it online!
+### Slides layout configuration
 
-You can try it online by clicking on this badge:
+For the slides layout, you can set the cells as a sub-slide for [vertical slide](https://revealjs.com/vertical-slides/) or [a fragment](https://revealjs.com/fragments/) using the Slide Type field in the `Common Tools` section of the `Property Inspector` panel.
 
-[![Try on lite](https://jupyterlite.rtfd.io/en/latest/_static/badge.svg)](https://trungleduc.github.io/specta/specta/)
+![Slide tool](./docs/images/slide-tool.png)

@@ -52,10 +52,20 @@
   left: calc(50% - 52px);
   color: var(--jp-ui-font-color1) !important;
 }
-
+.specta-app-widget {
+  overflow: auto;
+  display: flex;
+  flex-grow: 1;
+}
 .jp-specta-notebook-panel {
   overflow: auto;
   padding: 0 5px 5px 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.specta-output-host {
+  flex-grow: 1;
 }
 
 #specta-top-panel {

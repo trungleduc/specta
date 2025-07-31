@@ -9,7 +9,7 @@ import {
   ISpectaLayout,
   ISpectaLayoutRegistry
 } from './token';
-import { hideAppLoadingIndicator, isSpectaApp } from './tool';
+import { emitResizeEvent, hideAppLoadingIndicator, isSpectaApp } from './tool';
 
 export class AppWidget extends Panel {
   constructor(options: AppWidget.IOptions) {
@@ -22,9 +22,8 @@ export class AppWidget extends Panel {
     this._layoutRegistry = options.layoutRegistry;
     this._host = new Panel();
     this._host.addClass('specta-output-host');
+    this.addClass('specta-app-widget');
     this.addWidget(this._host);
-
-    this.node.style.overflow = 'auto';
 
     if (!isSpectaApp()) {
       // Not a specta app, add spinner
@@ -32,9 +31,7 @@ export class AppWidget extends Panel {
     }
 
     this._model.initialize().then(() => {
-      this.render()
-        .catch(console.error)
-        .then(() => window.dispatchEvent(new Event('resize')));
+      this.render().catch(console.error).then(emitResizeEvent);
     });
     this._layoutRegistry.selectedLayoutChanged.connect(
       this._onSelectedLayoutChanged,
@@ -105,7 +102,8 @@ export class AppWidget extends Panel {
       host: this._host,
       items: this._outputs,
       notebook: this._model.context?.model.toJSON() as any,
-      readyCallback
+      readyCallback,
+      spectaConfig: this._spectaAppConfig
     });
   }
 
@@ -116,17 +114,21 @@ export class AppWidget extends Panel {
 
   private _onSelectedLayoutChanged(
     sender: ISpectaLayoutRegistry,
-    args: { name: string; layout: ISpectaLayout }
+    args: { name: string; layout: ISpectaLayout; oldLayout?: ISpectaLayout }
   ): void {
+    const { layout } = args;
+
     const currentEls = [...this._host.widgets];
+
     currentEls.forEach(el => {
       this._host.layout?.removeWidget(el);
     });
-    args.layout.render({
+    layout.render({
       host: this._host,
       items: this._outputs,
       notebook: this._model.context?.model.toJSON() as any,
-      readyCallback: async () => {}
+      readyCallback: async () => {},
+      spectaConfig: this._spectaAppConfig
     });
   }
   private _model: AppModel;

@@ -34,6 +34,7 @@ jobs:
         run: |
           set -eux
           npm install
+          npm run lint:check
           npm run build:all:dev
           python -m pip install -e .
 

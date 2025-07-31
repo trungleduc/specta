@@ -1,0 +1,30 @@
+.specta-slides-host-widget {
+  --jp-content-font-family: 'Source Serif 4', Georgia, serif;
+  --jp-code-font-family:
+    'Source Code Pro', Menlo, Monaco, 'Courier New', Courier, monospace;
+  --jp-code-font-size: 14px;
+}
+
+.specta-slides-host-widget.reveal {
+  .jp-Collapser-child,
+  .jp-collapseHeadingButton,
+  .jp-InputPrompt,
+  .jp-InputCollapser,
+  .jp-InternalAnchorLink {
+    display: none;
+  }
+
+  .jp-CodeMirrorEditor {
+    text-align: start !important;
+  }
+  h1:last-child,
+  h2:last-child,
+  h3:last-child,
+  h4:last-child,
+  h5:last-child,
+  h6:last-child {
+    margin-bottom: calc(
+      0.5 * var(--jp-content-heading-margin-bottom)
+    ) !important;
+  }
+}

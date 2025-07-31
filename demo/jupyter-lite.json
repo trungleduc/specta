@@ -16,6 +16,10 @@
             "title": "ipecharts blog",
             "themeToggle": false
           }
+        },
+        "slides.ipynb": {
+          "hideTopbar": true,
+          "slidesTheme": "sky"
         }
       }
     }

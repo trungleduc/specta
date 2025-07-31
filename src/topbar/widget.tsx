@@ -59,29 +59,37 @@ export function TopbarElement(props: IProps): JSX.Element {
           {config.title}
         </div>
       </div>
-      {(props.config?.settingsButton !== undefined ? props.config.settingsButton : true) && <div className="specta-topbar-right">
-        <IconButton
-          ref={buttonRef}
-          onClick={() => setOpen(!open)}
-          icon={
-            <GearIcon fill="var(--jp-ui-font-color2)" height={23} width={23} />
-          }
-        />
+      {(props.config?.settingsButton !== undefined
+        ? props.config.settingsButton
+        : true) && (
+        <div className="specta-topbar-right">
+          <IconButton
+            ref={buttonRef}
+            onClick={() => setOpen(!open)}
+            icon={
+              <GearIcon
+                fill="var(--jp-ui-font-color2)"
+                height={23}
+                width={23}
+              />
+            }
+          />
 
-        {open && (
-          <div
-            ref={dialogRef}
-            className="jp-Dialog-content specta-config-dialog"
-          >
-            <div className="specta-config-arrow" />
-            <SettingContent
-              config={props.config}
-              themeManager={props.themeManager}
-              layoutRegistry={props.layoutRegistry}
-            />
-          </div>
-        )}
-      </div>}
+          {open && (
+            <div
+              ref={dialogRef}
+              className="jp-Dialog-content specta-config-dialog"
+            >
+              <div className="specta-config-arrow" />
+              <SettingContent
+                config={props.config}
+                themeManager={props.themeManager}
+                layoutRegistry={props.layoutRegistry}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
