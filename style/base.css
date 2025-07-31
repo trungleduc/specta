@@ -53,9 +53,9 @@
   color: var(--jp-ui-font-color1) !important;
 }
 .specta-app-widget {
-  overflow: auto;
   display: flex;
   flex-grow: 1;
+  flex-direction: column;
 }
 .jp-specta-notebook-panel {
   overflow: auto;
