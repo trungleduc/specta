@@ -109,9 +109,15 @@
   position: relative;
 }
 
+.specta-topbar-right .jp-Dialog-content {
+  min-height: unset !important;
+}
+
 .specta-topbar-title {
   line-height: 36px;
   font-size: 1.25rem;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
 }
 
 .specta-topbar-theme {
