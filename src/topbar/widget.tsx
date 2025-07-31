@@ -84,7 +84,6 @@ export function TopbarElement(props: IProps): JSX.Element {
               <SettingContent
                 config={props.config}
                 themeManager={props.themeManager}
-                layoutRegistry={props.layoutRegistry}
               />
             </div>
           )}
