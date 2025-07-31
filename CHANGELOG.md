@@ -2,6 +2,28 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.0
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.8...2f32ca5856d7d43cea24dca0fa94d081398cd641))
+
+### Enhancements made
+
+- Fix themeToggle config not taken into account + added some other settings button options [#19](https://github.com/trungleduc/specta/pull/19) ([@martinRenou](https://github.com/martinRenou))
+- Add `slides` layout [#15](https://github.com/trungleduc/specta/pull/15) ([@trungleduc](https://github.com/trungleduc))
+
+### Other merged PRs
+
+- Remove layout selector [#21](https://github.com/trungleduc/specta/pull/21) ([@trungleduc](https://github.com/trungleduc))
+- Fix icon size [#18](https://github.com/trungleduc/specta/pull/18) ([@martinRenou](https://github.com/martinRenou))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-29&to=2025-07-31&type=c))
+
+[@martinRenou](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AmartinRenou+updated%3A2025-07-29..2025-07-31&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-07-29..2025-07-31&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.8
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.7...9f9d248e3e0b13c6305a826133b77ab090d1452f))
@@ -19,8 +41,6 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-28&to=2025-07-29&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AmartinRenou+updated%3A2025-07-28..2025-07-29&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-07-28..2025-07-29&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.7
 
