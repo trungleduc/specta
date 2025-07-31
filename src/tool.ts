@@ -137,15 +137,8 @@ export function mergeObjects(
 }
 
 export function getSpectaAssetUrl(path: string): string {
-  const baseUrl = PageConfig.getBaseUrl();
   const labExtension = PageConfig.getOption('fullLabextensionsUrl');
-  const url = URLExt.join(
-    baseUrl,
-    labExtension,
-    'jupyter-specta',
-    'static',
-    path
-  );
+  const url = URLExt.join(labExtension, 'jupyter-specta', 'static', path);
 
   return url;
 }
