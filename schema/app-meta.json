@@ -14,6 +14,32 @@
             "type": "string",
             "enum": ["default", "article", "slides"],
             "default": "default"
+          },
+          "/specta/hideTopbar": {
+            "title": "Hide topbar",
+            "type": "string",
+            "enum": ["Yes", "No", null],
+            "default": null
+          },
+          "/specta/slidesTheme": {
+            "title": "Slides layout theme",
+            "type": "string",
+            "enum": [
+              null,
+              "beige",
+              "black",
+              "blood",
+              "dracula",
+              "league",
+              "moon",
+              "night",
+              "serif",
+              "simple",
+              "sky",
+              "solarized",
+              "white"
+            ],
+            "default": null
           }
         }
       },
@@ -23,6 +49,10 @@
           "writeDefault": false
         },
         "/specta/defaultLayout": {
+          "metadataLevel": "notebook",
+          "writeDefault": false
+        },
+        "/specta/slidesTheme": {
           "metadataLevel": "notebook",
           "writeDefault": false
         }

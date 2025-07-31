@@ -28,8 +28,8 @@
     "scripts": {
         "clean": "rimraf specta/labextension && rimraf app/specta/build && rimraf specta/app_static",
         "build:lib": "tsc",
-        "build:labextension": "jupyter labextension build .",
-        "build:labextension:dev": "jupyter labextension build --development True .",
+        "build:labextension": "jupyter labextension build . && npm run copy:reveal",
+        "build:labextension:dev": "jupyter labextension build --development True . && npm run copy:reveal",
         "build:lab": "npm run clean && npm run build:lib && npm run build:labextension",
         "build:app": "npm run clean && npm run build:lib && cd app && NODE_OPTIONS=--max-old-space-size=4096 NODE_ENV=production webpack --mode production",
         "build:app:dev": "npm run clean && npm run build:lib && cd app && webpack",
@@ -37,6 +37,7 @@
         "build:all:dev": "npm run build:app:dev && npm run build:labextension:dev",
         "build:demo": "cd  demo && rm -rf .jupyterlite.doit.db _output && jupyter lite build .",
         "update:demo": "node script/build-dev.mjs",
+        "copy:reveal": "node script/copy-reveal.mjs",
         "lint": "npm run lint:prettier && npm run lint:eslint",
         "lint:check": "npm run lint:prettier:check && npm run lint:eslint:check",
         "lint:prettier": "prettier --no-error-on-unmatched-pattern --write \"**/*{.ts,.tsx,.jsx,.css,.json,.md,.yml}\"",

@@ -122,6 +122,34 @@ export function hideAppLoadingIndicator() {
   }
 }
 
+export function mergeObjects(
+  ...objects: Record<string, any>[]
+): Record<string, any> {
+  const result: Record<string, any> = {};
+  for (const obj of objects) {
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== null && value !== undefined) {
+        result[key] = value;
+      }
+    }
+  }
+  return result;
+}
+
+export function getSpectaAssetUrl(path: string): string {
+  const baseUrl = PageConfig.getBaseUrl();
+  const labExtension = PageConfig.getOption('fullLabextensionsUrl');
+  const url = URLExt.join(
+    baseUrl,
+    labExtension,
+    'jupyter-specta',
+    'static',
+    path
+  );
+
+  return url;
+}
+
 export function isSpectaApp(): boolean {
   return !!document.querySelector('meta[name="specta-config"]');
 }
@@ -147,9 +175,14 @@ export function readSpectaConfig({
   if (perFileConfig && pathWithoutDrive && perFileConfig[pathWithoutDrive]) {
     spectaConfig = { ...spectaConfig, ...perFileConfig[pathWithoutDrive] };
   }
-  const spectaMetadata = (nbMetadata?.specta ?? {}) as ISpectaAppConfig;
+  const spectaMetadata = (nbMetadata?.specta ?? {}) as any;
+  if (spectaMetadata.hideTopbar === 'Yes') {
+    spectaMetadata.hideTopbar = true;
+  } else if (spectaMetadata.hideTopbar === 'No') {
+    spectaMetadata.hideTopbar = false;
+  }
 
-  return { ...spectaConfig, ...spectaMetadata };
+  return mergeObjects(spectaConfig, spectaMetadata);
 }
 
 export function readCellConfig(cell?: ICell): Required<ISpectaCellConfig> {
@@ -186,3 +219,20 @@ export function debounce<T extends (...args: any[]) => void>(
 export const emitResizeEvent = debounce(() => {
   window.dispatchEvent(new Event('resize'));
 });
+
+export function setRevealTheme(themeName: string) {
+  let themeLink = document.getElementById(
+    'reveal-theme'
+  ) as HTMLLinkElement | null;
+
+  if (!themeLink) {
+    // Create <link> tag if it doesn't exist
+    themeLink = document.createElement('link');
+    themeLink.rel = 'stylesheet';
+    themeLink.id = 'reveal-theme';
+    document.head.appendChild(themeLink);
+  }
+
+  // Set or update href to new theme
+  themeLink.href = getSpectaAssetUrl(`reveal.js/${themeName}.css`);
+}

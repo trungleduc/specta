@@ -15,6 +15,7 @@ export interface ISpectaLayout {
     items: SpectaCellOutput[];
     notebook: nbformat.INotebookContent;
     readyCallback: () => Promise<void>;
+    spectaConfig: ISpectaAppConfig;
   }): Promise<void>;
 }
 export interface ISpectaLayoutRegistry {
@@ -46,6 +47,7 @@ export interface ISpectaAppConfig {
   topBar?: ITopbarConfig;
   defaultLayout?: string;
   hideTopbar?: boolean;
+  slidesTheme?: string;
 }
 
 export interface ISpectaCellConfig {

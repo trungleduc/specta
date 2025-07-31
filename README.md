@@ -71,6 +71,7 @@ The following options are available:
 - `defaultLayout`: The default layout when opening a file.
 - `hideTopbar`: Boolean flag to show or hide the top bar.
 - `topBar`: Configuration for the top bar.
+- `slidesTheme`: The theme for the slides layout. The list of available themes can be found [here](https://revealjs.com/themes/).
 
 ```json
       "topBar": {
@@ -93,11 +94,21 @@ The following options are available:
             "title": "My blog",
             "themeToggle": false
           }
+        },
+        "slides.ipynb": {
+          "hideTopbar": true,
+          "slidesTheme": "sky"
         }
       }
 ```
 
-### Notebook specific configuration
+### Notebook metadata configuration
+
+In addition to the global configuration, you can also configure the layout and top bar for each notebook by using the notebook metadata. You can use the `Specta App Config` of the `Property Inspector` panel of JupyterLab to edit the notebook metadata.
+
+![Metadata](./docs/images/specta-meta.jpg)
+
+### Notebook cell configuration
 
 By default, when you open a notebook in Specta, all code cells are hidden, and placeholder skeletons are shown instead at the position of the cell. You can configure the visibility of each cell by using the Specta cell metadata toolbar.
 

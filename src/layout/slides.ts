@@ -1,9 +1,9 @@
 import { Panel, Widget } from '@lumino/widgets';
 import { SpectaCellOutput } from '../specta_cell_output';
 import * as nbformat from '@jupyterlab/nbformat';
-import { ISpectaLayout } from '../token';
+import { ISpectaAppConfig, ISpectaLayout } from '../token';
 import Reveal from 'reveal.js';
-import { emitResizeEvent } from '../tool';
+import { emitResizeEvent, setRevealTheme } from '../tool';
 
 interface ISlideElement {
   type: 'slide' | 'subslide' | 'fragment';
@@ -74,7 +74,12 @@ export class SlidesLayout implements ISpectaLayout {
     items: SpectaCellOutput[];
     notebook: nbformat.INotebookContent;
     readyCallback: () => Promise<void>;
+    spectaConfig: ISpectaAppConfig;
   }): Promise<void> {
+    const theme = options.spectaConfig.slidesTheme;
+    if (theme) {
+      setRevealTheme(theme);
+    }
     const { host, items, readyCallback } = options;
     const hostPanel = new HostPanel();
     const elementList: ISlideElement[] = [];

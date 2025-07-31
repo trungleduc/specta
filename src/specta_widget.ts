@@ -102,7 +102,8 @@ export class AppWidget extends Panel {
       host: this._host,
       items: this._outputs,
       notebook: this._model.context?.model.toJSON() as any,
-      readyCallback
+      readyCallback,
+      spectaConfig: this._spectaAppConfig
     });
   }
 
@@ -126,7 +127,8 @@ export class AppWidget extends Panel {
       host: this._host,
       items: this._outputs,
       notebook: this._model.context?.model.toJSON() as any,
-      readyCallback: async () => {}
+      readyCallback: async () => {},
+      spectaConfig: this._spectaAppConfig
     });
   }
   private _model: AppModel;
