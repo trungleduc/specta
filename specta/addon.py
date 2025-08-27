@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import shutil
+import json
 
 from jupyterlite_core.addons.base import BaseAddon
 
@@ -20,6 +21,22 @@ class SpectaAddon(BaseAddon):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def update_index(self) -> None:
+        """Update index html to change the loading name"""
+        loading_name = None
+
+        with open(self.manager.output_dir / "jupyter-lite.json", "r") as f:
+            config = json.loads(f.read())
+            try:
+                loading_name = config["jupyter-config-data"]["spectaConfig"]["loadingName"]
+            except KeyError:
+                loading_name = "Loading Specta"
+
+        with open(self.manager.output_dir / "specta" / "index.html", "r+") as f:
+            content = f.read()
+            f.seek(0)
+            f.write(content.replace("#SPECTA_LOADING_NAME#", loading_name))
 
     def post_build(self, *args, **kwargs):
         """Post-build hook"""
@@ -45,7 +62,8 @@ class SpectaAddon(BaseAddon):
                         self.static_path / "specta",
                         self.manager.output_dir / "specta",
                     ],
+                ), (
+                    self.update_index
                 )
             ],
         )
-
