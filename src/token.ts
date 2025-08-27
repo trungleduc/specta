@@ -48,6 +48,7 @@ export interface ISpectaAppConfig {
   defaultLayout?: string;
   hideTopbar?: boolean;
   slidesTheme?: string;
+  loadingName?: string;
 }
 
 export interface ISpectaCellConfig {
