@@ -72,6 +72,7 @@ The following options are available:
 - `hideTopbar`: Boolean flag to show or hide the top bar.
 - `topBar`: Configuration for the top bar.
 - `slidesTheme`: The theme for the slides layout. The list of available themes can be found [here](https://revealjs.com/themes/).
+- `loadingName`:  The string shown during the loading of specta (default to Loading Specta) only available globally not per file.
 
 ```json
       "topBar": {

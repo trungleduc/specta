@@ -23,23 +23,19 @@ class SpectaAddon(BaseAddon):
         super().__init__(*args, **kwargs)
 
     def update_index(self) -> None:
-        loadingName = None
+        loading_name = None
 
         with open(self.manager.output_dir / "jupyter-lite.json", "r") as f:
             config = json.loads(f.read())
             try:
-                loadingName = config["jupyter-config-data"]["spectaConfig"]["loadingName"]
-            except:
-                loadingName = "Loading Specta"
+                loading_name = config["jupyter-config-data"]["spectaConfig"]["loadingName"]
+            except KeyError:
+                loading_name = "Loading Specta"
 
         with open(self.manager.output_dir / "specta" / "index.html", "r+") as f:
             content = f.read()
             f.seek(0)
-            f.write(content.replace("#SPECTA_LOADING_NAME#", loadingName))
-        print(
-            "index file",
-            os.path.exists(self.manager.output_dir / "specta" / "index.html"),
-        )
+            f.write(content.replace("#SPECTA_LOADING_NAME#", loading_name))
 
     def post_build(self, *args, **kwargs):
         """Post-build hook"""
@@ -65,6 +61,8 @@ class SpectaAddon(BaseAddon):
                         self.static_path / "specta",
                         self.manager.output_dir / "specta",
                     ],
+                ), (
+                    self.update_index
                 )
             ],
         )
