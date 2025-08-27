@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import shutil
+import json
 
 from jupyterlite_core.addons.base import BaseAddon
 
@@ -20,6 +21,25 @@ class SpectaAddon(BaseAddon):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def update_index(self) -> None:
+        loadingName = None
+
+        with open(self.manager.output_dir / "jupyter-lite.json", "r") as f:
+            config = json.loads(f.read())
+            try:
+                loadingName = config["jupyter-config-data"]["spectaConfig"]["loadingName"]
+            except:
+                loadingName = "Loading Specta"
+
+        with open(self.manager.output_dir / "specta" / "index.html", "r+") as f:
+            content = f.read()
+            f.seek(0)
+            f.write(content.replace("#SPECTA_LOADING_NAME#", loadingName))
+        print(
+            "index file",
+            os.path.exists(self.manager.output_dir / "specta" / "index.html"),
+        )
 
     def post_build(self, *args, **kwargs):
         """Post-build hook"""
@@ -48,4 +68,3 @@ class SpectaAddon(BaseAddon):
                 )
             ],
         )
-
