@@ -58,7 +58,7 @@ export class AppWidget extends Panel {
     loaderHost.node.appendChild(spinner);
     const text = document.createElement('div');
     text.className = 'specta-loading-indicator-text';
-    text.textContent = 'Loading Specta';
+    text.textContent = this._spectaAppConfig.loadingName ?? 'Loading Specta';
     loaderHost.node.appendChild(text);
     this.addWidget(loaderHost);
   }
