@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.1
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.2.0...ee1aba0a5d1ce428a52cd664aae174055aac566c))
+
+### Merged PRs
+
+- Add a configurable loading name [#22](https://github.com/trungleduc/specta/pull/22) ([@Gauss-Taylor-Euler](https://github.com/Gauss-Taylor-Euler))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-31&to=2025-08-27&type=c))
+
+[@Gauss-Taylor-Euler](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AGauss-Taylor-Euler+updated%3A2025-07-31..2025-08-27&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-07-31..2025-08-27&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.0
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.1.8...2f32ca5856d7d43cea24dca0fa94d081398cd641))
@@ -21,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-07-29&to=2025-07-31&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AmartinRenou+updated%3A2025-07-29..2025-07-31&type=Issues) | [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-07-29..2025-07-31&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.8
 
