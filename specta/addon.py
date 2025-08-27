@@ -23,6 +23,7 @@ class SpectaAddon(BaseAddon):
         super().__init__(*args, **kwargs)
 
     def update_index(self) -> None:
+        """Update index html to change the loading name"""
         loading_name = None
 
         with open(self.manager.output_dir / "jupyter-lite.json", "r") as f:
