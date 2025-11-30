@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.3.0
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.2.2...7fe70e12a672ca297e745fec1c1b23d8db96d37a))
+
+### Enhancements made
+
+- Update jupyterlite 0.7 jupyterlab 4.5 [#24](https://github.com/trungleduc/specta/pull/24) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-08-27&to=2025-11-30&type=c))
+
+[@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-08-27..2025-11-30&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.2
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.2.1...fa190b011076fb120d694511a89a31235a481397))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-08-27&to=2025-08-27&type=c))
 
 [@martinRenou](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3AmartinRenou+updated%3A2025-08-27..2025-08-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.1
 
