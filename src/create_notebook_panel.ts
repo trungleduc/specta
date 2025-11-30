@@ -20,9 +20,9 @@ class CustomContext extends Context<INotebookModel> {
     return;
   }
 
-  async saveAs(): Promise<void> {
+  async saveAs(): Promise<boolean> {
     await this.ready;
-    return;
+    return true;
   }
 
   async revert(): Promise<void> {

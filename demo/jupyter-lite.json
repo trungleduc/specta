@@ -6,7 +6,6 @@
       "topBar": {
         "title": "Specta Tree"
       },
-      "hideTopbar": false,
       "defaultLayout": "default",
       "perFileConfig": {
         "blog.ipynb": {
@@ -22,6 +21,7 @@
           "slidesTheme": "sky"
         }
       }
-    }
+    },
+    "disabledExtensions": ["@jupyterlab/notebook-extension:open-with-no-kernel"]
   }
 }
