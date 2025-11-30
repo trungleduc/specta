@@ -168,13 +168,21 @@ export function readSpectaConfig({
   if (perFileConfig && pathWithoutDrive && perFileConfig[pathWithoutDrive]) {
     spectaConfig = { ...spectaConfig, ...perFileConfig[pathWithoutDrive] };
   }
-  const spectaMetadata = (nbMetadata?.specta ?? {}) as any;
+  const spectaMetadata = JSON.parse(JSON.stringify(nbMetadata?.specta ?? {}));
   if (spectaMetadata.hideTopbar === 'Yes') {
     spectaMetadata.hideTopbar = true;
   } else if (spectaMetadata.hideTopbar === 'No') {
     spectaMetadata.hideTopbar = false;
+  } else {
+    if (
+      spectaConfig.hideTopbar === null ||
+      spectaConfig.hideTopbar === undefined
+    ) {
+      // Hide topbar by default if not specified in the global config
+      // and notebook metadata
+      spectaMetadata.hideTopbar = true;
+    }
   }
-
   return mergeObjects(spectaConfig, spectaMetadata);
 }
 
