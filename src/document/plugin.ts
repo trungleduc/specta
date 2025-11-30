@@ -97,7 +97,6 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         });
         return;
       }
-
       app.restored.then(async () => {
         const labShell = app.shell;
         if (PathExt.extname(path) === '.ipynb') {
