@@ -9,7 +9,7 @@
       "defaultLayout": "default",
       "perFileConfig": {
         "blog.ipynb": {
-          "hideTopbar": false,
+          "hideTopbar": true,
           "defaultLayout": "article",
           "topBar": {
             "title": "ipecharts blog",
@@ -22,6 +22,9 @@
         }
       }
     },
-    "disabledExtensions": ["@jupyterlab/notebook-extension:open-with-no-kernel"]
+    "disabledExtensions": [
+      "@jupyterlab/notebook-extension:open-with-no-kernel",
+      "@jupyterlite/application-extension:opener"
+    ]
   }
 }

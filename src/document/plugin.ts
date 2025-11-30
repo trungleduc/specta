@@ -1,4 +1,5 @@
 import {
+  ILabShell,
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
@@ -73,7 +74,7 @@ export const spectaDocument: JupyterFrontEndPlugin<
   provides: ISpectaDocTracker
 };
 
-export const spectaOpener: JupyterFrontEndPlugin<void> = {
+export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
   id: 'specta/application-extension:opener',
   autoStart: true,
   requires: [
@@ -83,50 +84,83 @@ export const spectaOpener: JupyterFrontEndPlugin<void> = {
     IKernelSpecManager
   ],
   activate: async (
-    app: JupyterFrontEnd,
+    app: JupyterFrontEnd<ILabShell>,
     docManager: IDocumentManager,
     defaultBrowser: IDefaultFileBrowser
   ): Promise<void> => {
-    if (!isSpectaApp()) {
-      // Not a specta app, return
-      return;
-    }
-
     const urlParams = new URLSearchParams(window.location.search);
     const path = urlParams.get('path');
+    if (!isSpectaApp()) {
+      if (!path) {
+        app.restored.then(async () => {
+          await app.commands.execute('application:reset-layout');
+        });
+        return;
+      }
 
-    if (!path) {
-      const browser = createFileBrowser({ defaultBrowser });
-      app.shell.add(browser, 'main', { rank: 100 });
-      hideAppLoadingIndicator();
-    } else {
-      if (PathExt.extname(path) === '.ipynb') {
-        app.shell.addClass('specta-document-viewer');
-        const widget = docManager.openOrReveal(path, 'specta');
-        if (widget) {
-          app.shell.add(widget, 'main');
-        }
-      } else {
-        let count = 0;
-        const tryOpen = () => {
-          const widget = docManager.openOrReveal(path, 'default');
+      app.restored.then(async () => {
+        const labShell = app.shell;
+        if (PathExt.extname(path) === '.ipynb') {
+          await app.commands.execute('application:set-mode', {
+            mode: 'single-document'
+          });
+          labShell.collapseLeft();
+          labShell.collapseRight();
+          if (labShell.isSideTabBarVisible('right')) {
+            labShell.toggleSideTabBarVisibility('right');
+          }
+          if (labShell.isSideTabBarVisible('left')) {
+            labShell.toggleSideTabBarVisibility('left');
+          }
+          if (labShell.isTopInSimpleModeVisible()) {
+            await app.commands.execute('application:toggle-header');
+          }
+          const statusBar = document.getElementById('jp-bottom-panel');
+          if (statusBar && statusBar.clientHeight !== 0) {
+            await app.commands.execute('statusbar:toggle');
+          }
+          const widget = docManager.openOrReveal(path, 'specta');
           if (widget) {
             app.shell.add(widget, 'main');
-            hideAppLoadingIndicator();
-          } else {
-            count++;
-            if (count > 10) {
-              console.error('Failed to open file', path);
-              const widget = new Widget();
-              widget.node.innerHTML = `<h2 style="text-align: center; margin-top: 200px;">Failed to open file ${path}</h2>`;
+          }
+        }
+      });
+      // Not a specta app
+      return;
+    } else {
+      if (!path) {
+        const browser = createFileBrowser({ defaultBrowser });
+        app.shell.add(browser, 'main', { rank: 100 });
+        hideAppLoadingIndicator();
+      } else {
+        if (PathExt.extname(path) === '.ipynb') {
+          app.shell.addClass('specta-document-viewer');
+          const widget = docManager.openOrReveal(path, 'specta');
+          if (widget) {
+            app.shell.add(widget, 'main');
+          }
+        } else {
+          let count = 0;
+          const tryOpen = () => {
+            const widget = docManager.openOrReveal(path, 'default');
+            if (widget) {
               app.shell.add(widget, 'main');
               hideAppLoadingIndicator();
-              return;
+            } else {
+              count++;
+              if (count > 10) {
+                console.error('Failed to open file', path);
+                const widget = new Widget();
+                widget.node.innerHTML = `<h2 style="text-align: center; margin-top: 200px;">Failed to open file ${path}</h2>`;
+                app.shell.add(widget, 'main');
+                hideAppLoadingIndicator();
+                return;
+              }
+              setTimeout(tryOpen, 100);
             }
-            setTimeout(tryOpen, 100);
-          }
-        };
-        tryOpen();
+          };
+          tryOpen();
+        }
       }
     }
   }

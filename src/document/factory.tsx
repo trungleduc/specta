@@ -44,7 +44,6 @@ export class NotebookGridWidgetFactory extends ABCWidgetFactory<
         nbPath: path
       });
       const isSpecta = isSpectaApp();
-
       if (!spectaConfig.hideTopbar) {
         const topbar = ReactWidget.create(
           <TopbarElement
