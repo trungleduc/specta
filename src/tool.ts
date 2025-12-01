@@ -1,4 +1,4 @@
-import { JupyterFrontEnd } from '@jupyterlab/application';
+import { ILabShell, JupyterFrontEnd } from '@jupyterlab/application';
 import { IThemeManager, WidgetTracker } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
 import { PageConfig, URLExt } from '@jupyterlab/coreutils';
@@ -7,6 +7,7 @@ import { ICell, INotebookMetadata } from '@jupyterlab/nbformat';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { Contents } from '@jupyterlab/services';
+import { CommandRegistry } from '@lumino/commands';
 
 import { NotebookGridWidgetFactory } from './document/factory';
 import { SpectaWidgetFactory } from './specta_widget_factory';
@@ -236,4 +237,53 @@ export function setRevealTheme(themeName: string) {
 
   // Set or update href to new theme
   themeLink.href = getSpectaAssetUrl(`reveal.js/${themeName}.css`);
+}
+
+export async function configLabLayout(options: {
+  config?: ISpectaAppConfig['labConfig'];
+  labShell: ILabShell;
+  commands: CommandRegistry;
+}): Promise<void> {
+  const { config, labShell, commands } = options;
+  if (!config) {
+    return;
+  }
+  console.log('vvvvvvvvvvv', config);
+  const {
+    setSingleMode,
+    hideLeftPanel,
+    hideRightPanel,
+    hideStatusbar,
+    hideHeader
+  } = config;
+  if (setSingleMode) {
+    await commands.execute('application:set-mode', {
+      mode: 'single-document'
+    });
+  }
+  if (hideLeftPanel) {
+    labShell.collapseLeft();
+    if (labShell.isSideTabBarVisible('left')) {
+      labShell.toggleSideTabBarVisibility('left');
+    }
+  }
+  if (hideRightPanel) {
+    labShell.collapseRight();
+    if (labShell.isSideTabBarVisible('right')) {
+      labShell.toggleSideTabBarVisibility('right');
+    }
+  }
+  if (hideHeader) {
+    if (labShell.isTopInSimpleModeVisible()) {
+      await commands.execute('application:toggle-header');
+    }
+  }
+  if (hideStatusbar) {
+    const statusBar = document.getElementById('jp-main-statusbar');
+    console.log('statusBar.clientHeight', statusBar?.clientHeight);
+    if (statusBar && !statusBar.classList.contains('lm-mod-hidden')) {
+      console.log('toggle status');
+      await commands.execute('statusbar:toggle');
+    }
+  }
 }

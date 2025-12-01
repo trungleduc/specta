@@ -23,9 +23,11 @@ import {
   ISpectaShell
 } from '../token';
 import {
+  configLabLayout,
   createFileBrowser,
   hideAppLoadingIndicator,
   isSpectaApp,
+  readSpectaConfig,
   registerDocumentFactory
 } from '../tool';
 
@@ -99,25 +101,16 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
       }
       app.restored.then(async () => {
         const labShell = app.shell;
+
         if (PathExt.extname(path) === '.ipynb') {
-          await app.commands.execute('application:set-mode', {
-            mode: 'single-document'
+          const commands = app.commands;
+          const spectaConfig = readSpectaConfig({});
+
+          await configLabLayout({
+            config: spectaConfig.labConfig,
+            labShell,
+            commands
           });
-          labShell.collapseLeft();
-          labShell.collapseRight();
-          if (labShell.isSideTabBarVisible('right')) {
-            labShell.toggleSideTabBarVisibility('right');
-          }
-          if (labShell.isSideTabBarVisible('left')) {
-            labShell.toggleSideTabBarVisibility('left');
-          }
-          if (labShell.isTopInSimpleModeVisible()) {
-            await app.commands.execute('application:toggle-header');
-          }
-          const statusBar = document.getElementById('jp-bottom-panel');
-          if (statusBar && statusBar.clientHeight !== 0) {
-            await app.commands.execute('statusbar:toggle');
-          }
           const widget = docManager.openOrReveal(path, 'specta');
           if (widget) {
             app.shell.add(widget, 'main');

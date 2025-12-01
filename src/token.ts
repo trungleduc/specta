@@ -49,6 +49,13 @@ export interface ISpectaAppConfig {
   hideTopbar?: boolean;
   slidesTheme?: string;
   loadingName?: string;
+  labConfig?: {
+    setSingleMode?: boolean;
+    hideLeftPanel?: boolean;
+    hideRightPanel?: boolean;
+    hideStatusbar?: boolean;
+    hideHeader?: boolean;
+  };
 }
 
 export interface ISpectaCellConfig {
