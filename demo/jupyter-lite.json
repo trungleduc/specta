@@ -20,6 +20,13 @@
           "hideTopbar": true,
           "slidesTheme": "sky"
         }
+      },
+      "labConfig": {
+        "setSingleMode": true,
+        "hideLeftPanel": true,
+        "hideRightPanel": true,
+        "hideStatusbar": true,
+        "hideHeader": false
       }
     },
     "disabledExtensions": [
