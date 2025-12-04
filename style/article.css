@@ -23,12 +23,15 @@
   }
 
   .specta-article-outputs-panel {
-    max-width: 680px;
-    width: 100%;
     font-size: 1rem;
     line-height: 1.6;
+    width: 100%;
   }
 
+  .specta-cell-output {
+    max-width: 680px;
+    margin: auto;
+  }
   .specta-article-outputs-panel {
     .jp-MarkdownOutput {
       padding-left: 0px !important;
@@ -194,7 +197,7 @@
     margin-top: 40px !important;
   }
 
-  .jp-CodeCell + .jp-OutputArea > .jp-OutputArea-child {
+  .jp-OutputArea > .jp-OutputArea-child:first-child {
     margin-top: 40px !important;
   }
   .jp-InputArea-editor {
@@ -307,8 +310,32 @@
       margin-top: 56px !important;
     }
 
-    .jp-CodeCell + .jp-OutputArea > .jp-OutputArea-child {
+    .jp-OutputArea > .jp-OutputArea-child:first-child {
       margin-top: 56px !important;
+    }
+
+    .specta-cell-output-big {
+      max-width: 1192px;
+    }
+    .specta-cell-output-big .jp-Cell {
+      max-width: 680px;
+      margin: auto;
+    }
+    .specta-cell-output-big .jp-Cell.jp-MarkdownCell {
+      max-width: 1192px;
+      margin: auto;
+    }
+
+    .specta-cell-output-full {
+      max-width: 100%;
+    }
+    .specta-cell-output-full .jp-Cell {
+      max-width: 680px;
+      margin: auto;
+    }
+    .specta-cell-output-full .jp-Cell.jp-MarkdownCell {
+      max-width: 100%;
+      margin: auto;
     }
   }
 }

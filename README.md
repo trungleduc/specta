@@ -115,10 +115,11 @@ By default, when you open a notebook in Specta, all code cells are hidden, and p
 
 ![Cell toolbar](./docs/images/specta-config.jpg)
 
-By opening the `Property Inspector` panel of JupyterLab and selecting the `Specta Cell Config` section, you can change the visibility of each cell as follows:
+By opening the `Property Inspector` panel of JupyterLab and selecting the `Specta Cell Config` section, you can change the display of each cell as follows:
 
 - `Show cell source`: use this toggle to show or hide the cell source code. Default to `false`
 - `Show output placeholder`: use this toggle to show or hide the output skeleton. Default to `true`
+- `Output size`: use this dropdown to select the size of the cell output. Default to `Small`
 
 ### Slides layout configuration
 

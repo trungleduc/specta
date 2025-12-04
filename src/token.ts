@@ -61,6 +61,7 @@ export interface ISpectaAppConfig {
 export interface ISpectaCellConfig {
   showSource?: boolean;
   showOutput?: boolean;
+  outputSize?: 'Small' | 'Big' | 'Full';
 }
 export const ISpectaLayoutRegistry = new Token<ISpectaLayoutRegistry>(
   'specta:ISpectaLayoutRegistry'
