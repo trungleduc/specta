@@ -191,7 +191,8 @@ export function readCellConfig(cell?: ICell): Required<ISpectaCellConfig> {
   const metaData = (cell?.metadata?.specta ?? {}) as any;
   const spectaCellConfig: Required<ISpectaCellConfig> = {
     showSource: false,
-    showOutput: true
+    showOutput: true,
+    outputSize: 'Small'
   };
 
   if (metaData.showSource && metaData.showSource === 'Yes') {
@@ -200,6 +201,10 @@ export function readCellConfig(cell?: ICell): Required<ISpectaCellConfig> {
 
   if (metaData.showOutput && metaData.showOutput === 'No') {
     spectaCellConfig.showOutput = false;
+  }
+
+  if (metaData.outputSize) {
+    spectaCellConfig.outputSize = metaData.outputSize;
   }
 
   return spectaCellConfig;

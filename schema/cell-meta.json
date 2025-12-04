@@ -20,6 +20,12 @@
             "type": "string",
             "enum": ["Yes", "No"],
             "default": "Yes"
+          },
+          "/specta/outputSize": {
+            "title": "Output size",
+            "type": "string",
+            "enum": ["Small", "Big", "Full"],
+            "default": "Small"
           }
         }
       },
@@ -28,6 +34,9 @@
           "writeDefault": false
         },
         "/specta/showOutput": {
+          "writeDefault": false
+        },
+        "/specta/outputSize": {
           "writeDefault": false
         }
       }

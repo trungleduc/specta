@@ -25,10 +25,16 @@ export class SpectaCellOutput extends Panel {
     cellConfig: Required<ISpectaCellConfig>;
   }) {
     super();
+    const { showOutput, outputSize } = cellConfig;
     this.removeClass('lm-Widget');
     this.removeClass('p-Widget');
     this.addClass('specta-cell-output');
 
+    if (outputSize === 'Big') {
+      this.addClass('specta-cell-output-big');
+    } else if (outputSize === 'Full') {
+      this.addClass('specta-cell-output-full');
+    }
     const content = new Panel();
     content.addClass('specta-cell-content');
 
@@ -42,7 +48,7 @@ export class SpectaCellOutput extends Panel {
     this.cellIdentity = cellIdentity;
     this._info = info ?? {};
     if (info.cellModel?.cell_type === 'code') {
-      if (cellConfig.showOutput) {
+      if (showOutput) {
         this._placeholder = ReactWidget.create(<RandomSkeleton />);
         this._placeholder.addClass('specta-cell-placeholder');
         this.addWidget(this._placeholder);
