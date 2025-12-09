@@ -30,7 +30,16 @@ export class AppWidget extends Panel {
       this.addSpinner();
     }
 
-    this._model.initialize().then(() => {
+    this._model.initialize().then(async () => {
+      let waitTime = this._spectaAppConfig.executionDelay;
+      if (!waitTime) {
+        waitTime = 100;
+      } else {
+        console.log(`Waiting for ${waitTime}ms`);
+      }
+      await new Promise(resolve =>
+        setTimeout(resolve, parseInt(waitTime + ''))
+      );
       this.render().catch(console.error).then(emitResizeEvent);
     });
     this._layoutRegistry.selectedLayoutChanged.connect(

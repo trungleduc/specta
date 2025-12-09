@@ -69,6 +69,7 @@ Specta can be configured using the typicall JupyterLite configuration file: `jup
 The following options are available:
 
 - `defaultLayout`: The default layout when opening a file.
+- `executionDelay`: Delay (in miliseconds) before executing cells.
 - `hideTopbar`: Boolean flag to show or hide the top bar.
 - `topBar`: Configuration for the top bar.
 - `slidesTheme`: The theme for the slides layout. The list of available themes can be found [here](https://revealjs.com/themes/).
