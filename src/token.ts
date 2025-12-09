@@ -49,6 +49,7 @@ export interface ISpectaAppConfig {
   hideTopbar?: boolean;
   slidesTheme?: string;
   loadingName?: string;
+  executionDelay?: number;
   labConfig?: {
     setSingleMode?: boolean;
     hideLeftPanel?: boolean;

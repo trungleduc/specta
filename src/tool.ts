@@ -253,7 +253,6 @@ export async function configLabLayout(options: {
   if (!config) {
     return;
   }
-  console.log('vvvvvvvvvvv', config);
   const {
     setSingleMode,
     hideLeftPanel,
@@ -285,9 +284,7 @@ export async function configLabLayout(options: {
   }
   if (hideStatusbar) {
     const statusBar = document.getElementById('jp-main-statusbar');
-    console.log('statusBar.clientHeight', statusBar?.clientHeight);
     if (statusBar && !statusBar.classList.contains('lm-mod-hidden')) {
-      console.log('toggle status');
       await commands.execute('statusbar:toggle');
     }
   }
