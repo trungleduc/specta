@@ -46,6 +46,9 @@ export class AppWidget extends Panel {
       this._onSelectedLayoutChanged,
       this
     );
+    this._model.fileChanged.connect(() => {
+      this.rerender();
+    });
   }
 
   /**
@@ -82,10 +85,10 @@ export class AppWidget extends Panel {
 
   async render(): Promise<void> {
     const cellList = this._model.cells ?? [];
-
     const layout = this._spectaAppConfig?.defaultLayout ?? 'default';
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
+      console.log('rerender', src);
       if (src.length === 0) {
         continue;
       }
@@ -107,6 +110,7 @@ export class AppWidget extends Panel {
     const spectaLayout =
       this._layoutRegistry.get(layout) ??
       this._layoutRegistry.getDefaultLayout();
+    console.log('sernding to renderer', this._outputs);
     await spectaLayout.render({
       host: this._host,
       items: this._outputs,
@@ -114,6 +118,18 @@ export class AppWidget extends Panel {
       readyCallback,
       spectaConfig: this._spectaAppConfig
     });
+  }
+
+  async rerender(): Promise<void> {
+    this._outputs.forEach(it => it.dispose());
+    this._outputs = [];
+    const currentEls = [...this._host.widgets];
+
+    currentEls.forEach(el => {
+      this._host.layout?.removeWidget(el);
+    });
+    await this.render();
+    emitResizeEvent();
   }
 
   protected onCloseRequest(msg: Message): void {
