@@ -46,8 +46,8 @@ export class AppModel {
       language: options.context.model.defaultKernelLanguage
     };
     this._manager = options.manager;
-    options.context.fileChanged.connect(() => {
-      this._fileChanged.emit();
+    options.context.fileChanged.connect(e => {
+      this._fileChanged.emit(e.model.cells);
     });
   }
   /**
@@ -57,7 +57,7 @@ export class AppModel {
     return this._isDisposed;
   }
 
-  get fileChanged(): ISignal<this, void> {
+  get fileChanged(): ISignal<this, CellList> {
     return this._fileChanged;
   }
 
@@ -210,7 +210,7 @@ export class AppModel {
   private _isDisposed = false;
   private _manager: ServiceManager.IManager;
   private _kernelPreference: ISessionContext.IKernelPreference;
-  private _fileChanged = new Signal<this, void>(this);
+  private _fileChanged = new Signal<this, CellList>(this);
 }
 
 export namespace AppModel {

@@ -39,7 +39,7 @@ export class ArticleLayout implements ISpectaLayout {
         }
       }
     }
-    console.log('post panel child', host, [...hostPanel.children()])
+
     host.addWidget(hostPanel);
     await readyCallback();
   }
