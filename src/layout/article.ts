@@ -39,6 +39,7 @@ export class ArticleLayout implements ISpectaLayout {
         }
       }
     }
+
     host.addWidget(hostPanel);
     await readyCallback();
   }

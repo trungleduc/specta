@@ -1,3 +1,4 @@
+import { CellList } from '@jupyterlab/notebook';
 import { PromiseDelegate } from '@lumino/coreutils';
 import { Message } from '@lumino/messaging';
 import { Panel, Widget } from '@lumino/widgets';
@@ -40,12 +41,16 @@ export class AppWidget extends Panel {
       await new Promise(resolve =>
         setTimeout(resolve, parseInt(waitTime + ''))
       );
-      this.render().catch(console.error).then(emitResizeEvent);
+      await this.render();
+      emitResizeEvent();
     });
     this._layoutRegistry.selectedLayoutChanged.connect(
       this._onSelectedLayoutChanged,
       this
     );
+    this._model.fileChanged.connect((_, newCells) => {
+      this.rerender(newCells);
+    });
   }
 
   /**
@@ -72,6 +77,17 @@ export class AppWidget extends Panel {
     this.addWidget(loaderHost);
   }
 
+  removeSpinner(): void {
+    if (this._loaderHost) {
+      this._loaderHost.node.style.opacity = '0';
+      setTimeout(() => {
+        this.layout?.removeWidget(this._loaderHost!);
+      }, 100);
+    } else {
+      hideAppLoadingIndicator();
+    }
+  }
+
   dispose(): void {
     if (this.isDisposed) {
       return;
@@ -80,33 +96,39 @@ export class AppWidget extends Panel {
     super.dispose();
   }
 
-  async render(): Promise<void> {
-    const cellList = this._model.cells ?? [];
-
-    const layout = this._spectaAppConfig?.defaultLayout ?? 'default';
+  async generateOutputs(cellList?: CellList): Promise<SpectaCellOutput[]> {
+    const outs: SpectaCellOutput[] = [];
+    if (!cellList) {
+      return outs;
+    }
     for (const cell of cellList) {
       const src = cell.sharedModel.source;
+
       if (src.length === 0) {
         continue;
       }
       const el = this._model.createCell(cell);
       this._model.executeCell(cell, el);
 
-      this._outputs.push(el);
+      outs.push(el);
     }
-    const readyCallback = async () => {
-      if (this._loaderHost) {
-        this._loaderHost.node.style.opacity = '0';
-        setTimeout(() => {
-          this.layout?.removeWidget(this._loaderHost!);
-        }, 100);
-      } else {
-        hideAppLoadingIndicator();
-      }
-    };
+    return outs;
+  }
+
+  getLayout(): ISpectaLayout {
+    const layout = this._spectaAppConfig?.defaultLayout ?? 'default';
     const spectaLayout =
       this._layoutRegistry.get(layout) ??
       this._layoutRegistry.getDefaultLayout();
+    return spectaLayout;
+  }
+
+  async render(): Promise<void> {
+    const cellList = this._model.cells;
+    this._outputs = await this.generateOutputs(cellList);
+    const spectaLayout = this.getLayout();
+    const readyCallback = async () => this.removeSpinner();
+
     await spectaLayout.render({
       host: this._host,
       items: this._outputs,
@@ -114,6 +136,33 @@ export class AppWidget extends Panel {
       readyCallback,
       spectaConfig: this._spectaAppConfig
     });
+  }
+
+  async rerender(newCells: CellList): Promise<void> {
+    this.addSpinner();
+    for (const element of this._outputs) {
+      element.dispose();
+    }
+
+    const currentEls = [...this._host.widgets];
+    currentEls.forEach(el => {
+      this._host.layout?.removeWidget(el);
+    });
+
+    this._outputs = await this.generateOutputs(newCells);
+
+    const spectaLayout = this.getLayout();
+
+    await spectaLayout.render({
+      host: this._host,
+      items: this._outputs,
+      notebook: this._model.context?.model.toJSON() as any,
+      readyCallback: async () => {},
+      spectaConfig: this._spectaAppConfig
+    });
+
+    emitResizeEvent();
+    this.removeSpinner();
   }
 
   protected onCloseRequest(msg: Message): void {

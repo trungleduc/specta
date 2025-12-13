@@ -32,6 +32,7 @@ import {
 } from './create_notebook_panel';
 import { SpectaCellOutput } from './specta_cell_output';
 import { emitResizeEvent, readCellConfig } from './tool';
+import { ISignal, Signal } from '@lumino/signaling';
 
 export class AppModel {
   constructor(private options: AppModel.IOptions) {
@@ -45,12 +46,19 @@ export class AppModel {
       language: options.context.model.defaultKernelLanguage
     };
     this._manager = options.manager;
+    options.context.fileChanged.connect(e => {
+      this._fileChanged.emit(e.model.cells);
+    });
   }
   /**
    * Whether the handler is disposed.
    */
   get isDisposed(): boolean {
     return this._isDisposed;
+  }
+
+  get fileChanged(): ISignal<this, CellList> {
+    return this._fileChanged;
   }
 
   dispose(): void {
@@ -202,6 +210,7 @@ export class AppModel {
   private _isDisposed = false;
   private _manager: ServiceManager.IManager;
   private _kernelPreference: ISessionContext.IKernelPreference;
+  private _fileChanged = new Signal<this, CellList>(this);
 }
 
 export namespace AppModel {
