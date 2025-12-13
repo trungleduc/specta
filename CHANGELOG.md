@@ -2,6 +2,29 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.3.4
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.3.3...d7d3b9caf7f6b0e69d83b0b5da585f9d338219e1))
+
+### Enhancements made
+
+- Reload on file changed [#31](https://github.com/trungleduc/specta/pull/31) ([@trungleduc](https://github.com/trungleduc))
+
+### Other merged PRs
+
+- update contributing doc [#30](https://github.com/trungleduc/specta/pull/30) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-12-09&to=2025-12-13&type=c))
+
+@trungleduc ([activity](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-12-09..2025-12-13&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.3.3
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.3.2...97072797bf580958087ab382295e38a59dbfe376))
@@ -15,8 +38,6 @@
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-12-04&to=2025-12-09&type=c))
 
 [@trungleduc](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-12-04..2025-12-09&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.3.2
 
