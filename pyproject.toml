@@ -67,7 +67,7 @@ build_cmd = "build:all"
 npm = ["npm"]
 
 [tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
-build_cmd = "install:extension"
+build_cmd = "build:all:dev"
 npm = ["npm"]
 source_dir = "src"
 build_dir = "specta/labextension"
