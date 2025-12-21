@@ -9,6 +9,17 @@
       "metadataSchema": {
         "type": "object",
         "properties": {
+          "/specta/topbarTitle": {
+            "title": "Top Bar Title",
+            "type": "string",
+            "default": ""
+          },
+          "/specta/topbarThemeToggle": {
+            "title": "Top Bar Theme Toggle",
+            "type": "string",
+            "enum": ["Yes", "No"],
+            "default": "Yes"
+          },
           "/specta/defaultLayout": {
             "title": "Page layout",
             "type": "string",
@@ -53,6 +64,14 @@
           "writeDefault": false
         },
         "/specta/slidesTheme": {
+          "metadataLevel": "notebook",
+          "writeDefault": false
+        },
+        "/specta/topbarTitle": {
+          "metadataLevel": "notebook",
+          "writeDefault": false
+        },
+        "/specta/topbarThemeToggle": {
           "metadataLevel": "notebook",
           "writeDefault": false
         }

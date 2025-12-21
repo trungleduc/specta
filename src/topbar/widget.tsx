@@ -15,7 +15,7 @@ interface IProps {
 export function TopbarElement(props: IProps): JSX.Element {
   const config = React.useMemo((): ITopbarConfig => {
     return {
-      background: props.config?.background ?? 'var(--jp-layout-color2)',
+      background: props.config?.background ?? 'var(--jp-layout-color1)',
       title: props.config?.title ?? 'Specta',
       themeToggle: Boolean(props.config?.themeToggle),
       kernelActivity: Boolean(props.config?.kernelActivity),
@@ -42,11 +42,11 @@ export function TopbarElement(props: IProps): JSX.Element {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
+  console.log('config.background ', config.background);
   return (
     <div
       className="specta-topbar"
-      style={{ background: config.background ?? 'var(--jp-layout-color2)' }}
+      style={{ background: config.background ?? 'var(--jp-layout-color1)' }}
     >
       <div className="specta-topbar-left">
         <div className="specta-topbar-icon-container">

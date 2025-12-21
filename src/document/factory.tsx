@@ -59,7 +59,7 @@ export class NotebookGridWidgetFactory extends ABCWidgetFactory<
         } else {
           // Specta app, add topbar to layout
           topbar.id = 'specta-topbar-widget';
-          this._shell.add(topbar, 'top');
+          this._shell.add(topbar, 'top', { rank: 100 });
         }
       } else if (isSpecta) {
         this._shell.hideTopBar();

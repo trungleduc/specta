@@ -6,6 +6,7 @@
 
 .specta-document-viewer #jp-main-content-panel jp-toolbar:first-of-type {
   display: none;
+  height: 0px !important;
 }
 
 .specta-file-browser {
@@ -28,6 +29,6 @@
 }
 
 .specta-main-content-panel {
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: 0px;
+  padding-right: 0px;
 }

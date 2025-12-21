@@ -91,12 +91,11 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
     defaultBrowser: IDefaultFileBrowser
   ): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);
-    const path = urlParams.get('path');
     if (!isSpectaApp()) {
+      // Not a specta app
+      const path = urlParams.get('specta-path');
+
       if (!path) {
-        app.restored.then(async () => {
-          await app.commands.execute('application:reset-layout');
-        });
         return;
       }
       app.restored.then(async () => {
@@ -105,7 +104,7 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         if (PathExt.extname(path) === '.ipynb') {
           const commands = app.commands;
           const spectaConfig = readSpectaConfig({});
-
+          console.log('spectaConfig', spectaConfig);
           await configLabLayout({
             config: spectaConfig.labConfig,
             labShell,
@@ -117,9 +116,10 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
           }
         }
       });
-      // Not a specta app
       return;
     } else {
+      //  Specta app
+      const path = urlParams.get('path');
       if (!path) {
         const browser = createFileBrowser({ defaultBrowser });
         app.shell.add(browser, 'main', { rank: 100 });
