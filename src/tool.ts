@@ -130,6 +130,7 @@ export function mergeObjects(
   for (const obj of objects) {
     for (const [key, value] of Object.entries(obj)) {
       if (value !== null && value !== undefined) {
+        console.log('setting', key, value);
         result[key] = value;
       }
     }
@@ -167,8 +168,10 @@ export function readSpectaConfig({
   const { perFileConfig, ...globalConfig } = JSON.parse(rawConfig);
 
   let spectaConfig: ISpectaAppConfig = { ...(globalConfig ?? {}) };
+  let fileConfig: ISpectaAppConfig = {};
   if (perFileConfig && pathWithoutDrive && perFileConfig[pathWithoutDrive]) {
-    spectaConfig = { ...spectaConfig, ...perFileConfig[pathWithoutDrive] };
+    fileConfig = perFileConfig[pathWithoutDrive];
+    spectaConfig = { ...spectaConfig, ...fileConfig };
   }
 
   const spectaMetadata = JSON.parse(JSON.stringify(nbMetadata?.specta ?? {}));
@@ -192,7 +195,7 @@ export function readSpectaConfig({
     if (spectaMetadata.topbarTitle && spectaMetadata.topbarTitle !== '') {
       spectaMetadata.topBar.title = spectaMetadata.topbarTitle;
       delete spectaMetadata.topbarTitle;
-    } else if (!spectaConfig.topBar?.title) {
+    } else if (!fileConfig?.topBar?.title) {
       spectaMetadata.topBar.title = pathWithoutDrive;
     }
     if (spectaMetadata.topbarThemeToggle === 'No') {
