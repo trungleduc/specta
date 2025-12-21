@@ -130,6 +130,7 @@ export function mergeObjects(
   for (const obj of objects) {
     for (const [key, value] of Object.entries(obj)) {
       if (value !== null && value !== undefined) {
+        console.log('setting', key, value);
         result[key] = value;
       }
     }
@@ -165,11 +166,16 @@ export function readSpectaConfig({
     pathWithoutDrive = paths[1];
   }
   const { perFileConfig, ...globalConfig } = JSON.parse(rawConfig);
+
   let spectaConfig: ISpectaAppConfig = { ...(globalConfig ?? {}) };
+  let fileConfig: ISpectaAppConfig = {};
   if (perFileConfig && pathWithoutDrive && perFileConfig[pathWithoutDrive]) {
-    spectaConfig = { ...spectaConfig, ...perFileConfig[pathWithoutDrive] };
+    fileConfig = perFileConfig[pathWithoutDrive];
+    spectaConfig = { ...spectaConfig, ...fileConfig };
   }
+
   const spectaMetadata = JSON.parse(JSON.stringify(nbMetadata?.specta ?? {}));
+
   if (spectaMetadata.hideTopbar === 'Yes') {
     spectaMetadata.hideTopbar = true;
   } else if (spectaMetadata.hideTopbar === 'No') {
@@ -179,11 +185,28 @@ export function readSpectaConfig({
       spectaConfig.hideTopbar === null ||
       spectaConfig.hideTopbar === undefined
     ) {
-      // Hide topbar by default if not specified in the global config
+      // Show topbar by default if not specified in the global config
       // and notebook metadata
-      spectaMetadata.hideTopbar = true;
+      spectaMetadata.hideTopbar = false;
     }
   }
+  if (!spectaMetadata.hideTopbar) {
+    spectaMetadata.topBar = {};
+    if (spectaMetadata.topbarTitle && spectaMetadata.topbarTitle !== '') {
+      spectaMetadata.topBar.title = spectaMetadata.topbarTitle;
+      delete spectaMetadata.topbarTitle;
+    } else if (!fileConfig?.topBar?.title) {
+      spectaMetadata.topBar.title = pathWithoutDrive;
+    }
+    if (spectaMetadata.topbarThemeToggle === 'No') {
+      spectaMetadata.topBar.themeToggle = false;
+    } else {
+      spectaMetadata.topBar.themeToggle = true;
+    }
+    delete spectaMetadata.topbarThemeToggle;
+  }
+
+  // merge spectaConfig and spectaMetadata (spectaMetadata has higher priority
   return mergeObjects(spectaConfig, spectaMetadata);
 }
 

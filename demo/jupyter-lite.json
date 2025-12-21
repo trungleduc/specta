@@ -9,12 +9,8 @@
       "defaultLayout": "default",
       "perFileConfig": {
         "blog.ipynb": {
-          "hideTopbar": true,
-          "defaultLayout": "article",
-          "topBar": {
-            "title": "ipecharts blog",
-            "themeToggle": false
-          }
+          "hideTopbar": false,
+          "defaultLayout": "article"
         },
         "slides.ipynb": {
           "hideTopbar": true,

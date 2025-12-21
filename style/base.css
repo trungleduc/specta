@@ -69,11 +69,13 @@
 }
 
 #specta-top-panel {
-  min-height: 36px;
+  min-height: 28px;
   display: flex;
   box-shadow: unset !important;
   z-index: 100;
   contain: unset !important;
+  border-bottom: var(--jp-border-width) solid var(--jp-border-color0);
+  background: var(--jp-layout-color1);
 }
 
 .specta-topbar-element {
@@ -84,7 +86,7 @@
 .specta-topbar {
   display: flex;
   flex-direction: row;
-  height: 36px;
+  height: 28px;
   width: calc(100% + 20px);
   border-bottom: solid 0.5px var(--jp-border-color1);
   gap: 10px;
@@ -128,7 +130,9 @@
   border-radius: 50% !important;
   transition: background 0.2s ease;
   background: transparent;
+  padding: 0 !important;
 }
+
 .specta-icon-button:hover {
   background-color: var('--jp-layout-color3');
 }
