@@ -42,7 +42,6 @@ export function TopbarElement(props: IProps): JSX.Element {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-  console.log('config.background ', config.background);
   return (
     <div
       className="specta-topbar"

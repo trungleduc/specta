@@ -104,7 +104,6 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         if (PathExt.extname(path) === '.ipynb') {
           const commands = app.commands;
           const spectaConfig = readSpectaConfig({});
-          console.log('spectaConfig', spectaConfig);
           await configLabLayout({
             config: spectaConfig.labConfig,
             labShell,

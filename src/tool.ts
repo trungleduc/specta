@@ -130,7 +130,6 @@ export function mergeObjects(
   for (const obj of objects) {
     for (const [key, value] of Object.entries(obj)) {
       if (value !== null && value !== undefined) {
-        console.log('setting', key, value);
         result[key] = value;
       }
     }
