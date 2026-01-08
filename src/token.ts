@@ -64,10 +64,15 @@ export interface ISpectaCellConfig {
   showOutput?: boolean;
   outputSize?: 'Small' | 'Big' | 'Full';
 }
+export type ISpectaUrlFactory = (path: string) => string;
 export const ISpectaLayoutRegistry = new Token<ISpectaLayoutRegistry>(
   'specta:ISpectaLayoutRegistry'
 );
 
 export const ISpectaDocTracker = new Token<IWidgetTracker<Widget>>(
   'exampleDocTracker'
+);
+
+export const ISpectaUrlFactoryToken = new Token<ISpectaUrlFactory>(
+  'specta:ISpectaUrlFactoryToken'
 );
