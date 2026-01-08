@@ -52,6 +52,8 @@ jupyter lite build
 
 Then serve the contents of the output directory (by default `./_output`) using any static file server. You can access the `Specta` app at the `/specta/` path.
 
+If you want to disable specta loading spinner, you can set the environment variable `SPECTA_NO_LOADING_SCREEN` to `1`before calling jupyterlite build command
+
 ## Specta Configuration
 
 ### Available layouts
