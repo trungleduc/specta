@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.2
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.4.1...bc94243cb7a1c99766bbe3041ae12b134c56617a))
+
+### Merged PRs
+
+- Missing-mock-ws [#35](https://github.com/trungleduc/specta/pull/35) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2026-01-08&to=2026-01-08&type=c))
+
+@trungleduc ([activity](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2026-01-08..2026-01-08&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.1
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.4.0...ed65556f762ee0218f0e28c6a4599ba43afc1d39))
@@ -18,8 +37,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2026-01-08&to=2026-01-08&type=c))
 
 @trungleduc ([activity](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2026-01-08..2026-01-08&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.0
 
