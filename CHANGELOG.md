@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.0
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.3.5...e842d3a0aabc427203978f1e2aed096418f4b7b0))
+
+### Enhancements made
+
+- allow disable loading screen [#33](https://github.com/trungleduc/specta/pull/33) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-12-22&to=2026-01-08&type=c))
+
+@trungleduc ([activity](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-12-22..2026-01-08&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.3.5
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.3.4...87ea6ba142212683f5a842a5b9010a0f78adf470))
@@ -18,8 +37,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2025-12-13&to=2025-12-22&type=c))
 
 @trungleduc ([activity](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2025-12-13..2025-12-22&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.3.4
 
