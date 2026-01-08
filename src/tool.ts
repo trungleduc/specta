@@ -15,7 +15,8 @@ import {
   ISpectaAppConfig,
   ISpectaCellConfig,
   ISpectaLayoutRegistry,
-  ISpectaShell
+  ISpectaShell,
+  ISpectaUrlFactory
 } from './token';
 
 export function registerDocumentFactory(options: {
@@ -73,29 +74,34 @@ export function registerDocumentFactory(options: {
 
 export function createFileBrowser(options: {
   defaultBrowser: IDefaultFileBrowser;
+  urlFactory: ISpectaUrlFactory | null;
 }) {
-  const { defaultBrowser } = options;
+  const { defaultBrowser, urlFactory } = options;
   const browser = defaultBrowser as any;
   browser.singleClickNavigation = true;
   browser.showFileCheckboxes = false;
   browser.showLastModifiedColumn = false;
   browser.addClass('specta-file-browser');
 
-  const urlFactory = (path: string) => {
-    const baseUrl = PageConfig.getBaseUrl();
-    let appUrl = PageConfig.getOption('appUrl');
-    if (!appUrl.endsWith('/')) {
-      appUrl = `${appUrl}/`;
-    }
-    const url = new URL(URLExt.join(baseUrl, appUrl));
-    url.searchParams.set('path', path);
-    const queries = PageConfig.getOption('query').split('&').filter(Boolean);
-    queries.forEach(query => {
-      const [key, value] = query.split('=');
-      url.searchParams.set(key, value);
-    });
-    return url.toString();
-  };
+  const urlFactoryFn = urlFactory
+    ? urlFactory
+    : (path: string) => {
+        const baseUrl = PageConfig.getBaseUrl();
+        let appUrl = PageConfig.getOption('appUrl');
+        if (!appUrl.endsWith('/')) {
+          appUrl = `${appUrl}/`;
+        }
+        const url = new URL(URLExt.join(baseUrl, appUrl));
+        url.searchParams.set('path', path);
+        const queries = PageConfig.getOption('query')
+          .split('&')
+          .filter(Boolean);
+        queries.forEach(query => {
+          const [key, value] = query.split('=');
+          url.searchParams.set(key, value);
+        });
+        return url.toString();
+      };
 
   const oldHandler = browser.listing.handleOpen.bind(browser.listing);
   browser.listing.handleOpen = (item: Contents.IModel) => {
@@ -103,7 +109,7 @@ export function createFileBrowser(options: {
       oldHandler(item);
       return;
     } else {
-      window.open(urlFactory(item.path), '_blank');
+      window.open(urlFactoryFn(item.path), '_blank');
     }
   };
 
@@ -130,7 +136,6 @@ export function mergeObjects(
   for (const obj of objects) {
     for (const [key, value] of Object.entries(obj)) {
       if (value !== null && value !== undefined) {
-        console.log('setting', key, value);
         result[key] = value;
       }
     }

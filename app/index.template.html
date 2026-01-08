@@ -149,6 +149,7 @@
   </head>
   {{#unless (ispage name 'tree')}}
   <body class="jp-ThemedContainer" data-notebook="{{ name }}">
+    <!-- START_SPECTA_LOADING_SCREEN -->
     <div id="specta-loader-host">
       <div id="specta-loader-spinner" class="specta-loader"></div>
       <div class="jupyterlite-loading-indicator-text" style="
@@ -159,6 +160,7 @@
        text-align: center;
      ">#SPECTA_LOADING_NAME#</div>
     </div>
+    <!-- END_SPECTA_LOADING_SCREEN -->
     <noscript>
       <div style="text-align: center; padding: 20px">
         JupyterLite requires JavaScript to be enabled in your browser.

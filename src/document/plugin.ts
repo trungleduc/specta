@@ -9,18 +9,20 @@ import {
   WidgetTracker
 } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
-import { PathExt } from '@jupyterlab/coreutils';
+import { PageConfig, PathExt, URLExt } from '@jupyterlab/coreutils';
 import { IDocumentManager } from '@jupyterlab/docmanager';
 import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { IKernelSpecManager } from '@jupyterlab/services';
+import { IKernelSpecManager, KernelSpec } from '@jupyterlab/services';
 import { Widget } from '@lumino/widgets';
 
 import {
   ISpectaDocTracker,
   ISpectaLayoutRegistry,
-  ISpectaShell
+  ISpectaShell,
+  ISpectaUrlFactory,
+  ISpectaUrlFactoryToken
 } from '../token';
 import {
   configLabLayout,
@@ -76,6 +78,30 @@ export const spectaDocument: JupyterFrontEndPlugin<
   provides: ISpectaDocTracker
 };
 
+export const spectaUrlFactory: JupyterFrontEndPlugin<ISpectaUrlFactory> = {
+  id: 'specta/application-extension:urlFactory',
+  autoStart: true,
+  provides: ISpectaUrlFactoryToken,
+  activate() {
+    const urlFactory = (path: string) => {
+      const baseUrl = PageConfig.getBaseUrl();
+      let appUrl = PageConfig.getOption('appUrl');
+      if (!appUrl.endsWith('/')) {
+        appUrl = `${appUrl}/`;
+      }
+      const url = new URL(URLExt.join(baseUrl, appUrl));
+      url.searchParams.set('path', path);
+      const queries = PageConfig.getOption('query').split('&').filter(Boolean);
+      queries.forEach(query => {
+        const [key, value] = query.split('=');
+        url.searchParams.set(key, value);
+      });
+      return url.toString();
+    };
+    return urlFactory;
+  }
+};
+
 export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
   id: 'specta/application-extension:opener',
   autoStart: true,
@@ -85,10 +111,14 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
     ISpectaDocTracker,
     IKernelSpecManager
   ],
+  optional: [ISpectaUrlFactoryToken],
   activate: async (
     app: JupyterFrontEnd<ILabShell>,
     docManager: IDocumentManager,
-    defaultBrowser: IDefaultFileBrowser
+    defaultBrowser: IDefaultFileBrowser,
+    tracker: IWidgetTracker,
+    kernelSpecManager: KernelSpec.IManager,
+    urlFactory: ISpectaUrlFactory | null
   ): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);
     if (!isSpectaApp()) {
@@ -104,7 +134,6 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         if (PathExt.extname(path) === '.ipynb') {
           const commands = app.commands;
           const spectaConfig = readSpectaConfig({});
-          console.log('spectaConfig', spectaConfig);
           await configLabLayout({
             config: spectaConfig.labConfig,
             labShell,
@@ -121,7 +150,7 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
       //  Specta app
       const path = urlParams.get('path');
       if (!path) {
-        const browser = createFileBrowser({ defaultBrowser });
+        const browser = createFileBrowser({ defaultBrowser, urlFactory });
         app.shell.add(browser, 'main', { rank: 100 });
         hideAppLoadingIndicator();
       } else {

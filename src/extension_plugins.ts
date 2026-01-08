@@ -1,4 +1,8 @@
-import { spectaDocument, spectaOpener } from './document/plugin';
+import {
+  spectaDocument,
+  spectaOpener,
+  spectaUrlFactory
+} from './document/plugin';
 import { spectaLayoutRegistry } from './layout';
 import { appMeta, cellMeta } from './metadata';
 import { topbarPlugin } from './topbar';
@@ -12,5 +16,6 @@ export default [
   spectaLayoutRegistry,
   topbarPlugin,
   appMeta,
-  cellMeta
+  cellMeta,
+  spectaUrlFactory
 ];

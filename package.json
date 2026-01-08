@@ -78,7 +78,7 @@
         "@jupyterlab/outputarea": "^4.5.0",
         "@jupyterlab/rendermime": "^4.5.0",
         "@jupyterlab/rendermime-extension": "^4.5.0",
-        "@jupyterlab/services": "^7.2.4",
+        "@jupyterlab/services": "^7.5.1",
         "@jupyterlab/services-extension": "^4.5.0",
         "@jupyterlab/settingeditor-extension": "^4.5.0",
         "@jupyterlab/settingregistry": "^4.5.0",
