@@ -110,6 +110,9 @@ export class AppModel {
     switch (cellModel.type) {
       case 'code': {
         let sourceCell: CodeCell | undefined;
+        cellModel.sharedModel.transact(() => {
+          (cellModel as CodeCellModel).clearExecution();
+        }, false);
         if (cellConfig.showSource) {
           sourceCell = new CodeCell({
             model: cellModel as CodeCellModel,
