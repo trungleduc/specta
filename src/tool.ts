@@ -130,17 +130,38 @@ export function hideAppLoadingIndicator() {
 }
 
 export function mergeObjects(
-  ...objects: Record<string, any>[]
+  lowerPriority: Record<string, any>,
+  higherPriority: Record<string, any>
 ): Record<string, any> {
-  const result: Record<string, any> = {};
-  for (const obj of objects) {
-    for (const [key, value] of Object.entries(obj)) {
-      if (value !== null && value !== undefined) {
-        result[key] = value;
+  const result: Record<string, any> = { ...lowerPriority };
+
+  for (const key of Object.keys(higherPriority)) {
+    const highVal = higherPriority[key];
+    const lowVal = lowerPriority[key];
+
+    // If higher is null or undefined, keep lower if it exists
+    if (highVal === null || highVal === undefined) {
+      if (lowVal !== null && lowVal !== undefined) {
+        result[key] = lowVal;
       }
+      continue;
     }
+
+    // Deep merge plain objects
+    if (isPlainObject(lowVal) && isPlainObject(highVal)) {
+      result[key] = mergeObjects(lowVal, highVal);
+      continue;
+    }
+
+    // Otherwise, higher priority wins
+    result[key] = highVal;
   }
+
   return result;
+}
+
+function isPlainObject(value: any): value is Record<string, any> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
 export function getSpectaAssetUrl(path: string): string {
