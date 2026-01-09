@@ -23,6 +23,7 @@
         "@jupyterlab/documentsearch": "~4.5.0",
         "@jupyterlab/filebrowser": "~4.5.0",
         "@jupyterlab/filebrowser-extension": "~4.5.0",
+        "@jupyterlab/fileeditor": "~4.5.0",
         "@jupyterlab/imageviewer": "~4.5.0",
         "@jupyterlab/imageviewer-extension": "~4.5.0",
         "@jupyterlab/inspector": "~4.5.0",
