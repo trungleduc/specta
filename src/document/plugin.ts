@@ -154,34 +154,37 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         app.shell.add(browser, 'main', { rank: 100 });
         hideAppLoadingIndicator();
       } else {
-        if (PathExt.extname(path) === '.ipynb') {
-          app.shell.addClass('specta-document-viewer');
-          const widget = docManager.openOrReveal(path, 'specta');
-          if (widget) {
-            app.shell.add(widget, 'main');
-          }
-        } else {
-          let count = 0;
-          const tryOpen = () => {
-            const widget = docManager.openOrReveal(path, 'default');
+        app.restored.then(async () => {
+          await new Promise(r => setTimeout(r, 200));
+          if (PathExt.extname(path) === '.ipynb') {
+            app.shell.addClass('specta-document-viewer');
+            const widget = docManager.openOrReveal(path, 'specta');
             if (widget) {
               app.shell.add(widget, 'main');
-              hideAppLoadingIndicator();
-            } else {
-              count++;
-              if (count > 10) {
-                console.error('Failed to open file', path);
-                const widget = new Widget();
-                widget.node.innerHTML = `<h2 style="text-align: center; margin-top: 200px;">Failed to open file ${path}</h2>`;
+            }
+          } else {
+            let count = 0;
+            const tryOpen = () => {
+              const widget = docManager.openOrReveal(path, 'default');
+              if (widget) {
                 app.shell.add(widget, 'main');
                 hideAppLoadingIndicator();
-                return;
+              } else {
+                count++;
+                if (count > 10) {
+                  console.error('Failed to open file', path);
+                  const widget = new Widget();
+                  widget.node.innerHTML = `<h2 style="text-align: center; margin-top: 200px;">Failed to open file ${path}</h2>`;
+                  app.shell.add(widget, 'main');
+                  hideAppLoadingIndicator();
+                  return;
+                }
+                setTimeout(tryOpen, 100);
               }
-              setTimeout(tryOpen, 100);
-            }
-          };
-          tryOpen();
-        }
+            };
+            tryOpen();
+          }
+        });
       }
     }
   }
