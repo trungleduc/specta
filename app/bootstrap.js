@@ -122,6 +122,27 @@ async function loadComponent(url, scope) {
 }
 
 void (async function bootstrap() {
+  let labExtensionUrl = getOption('fullLabextensionsUrl');
+
+  const notebookLinkExtensions = getOption('notebookLinkExtensions');
+  if (notebookLinkExtensions && notebookLinkExtensions.length > 0) {
+    const nblinkExtensions = await Promise.allSettled(
+      notebookLinkExtensions.map(async data => {
+        await loadComponent(
+          `${labExtensionUrl}/${data.name}/${data.load}`,
+          data.name
+        );
+      })
+    );
+
+    nblinkExtensions.forEach(p => {
+      if (p.status === 'rejected') {
+        // There was an error loading the component
+        console.error(p.reason);
+      }
+    });
+  }
+
   await applyThemeToAppLoadingIndicator();
 
   // This is all the data needed to load and activate plugins. This should be
@@ -133,7 +154,7 @@ void (async function bootstrap() {
   // components should be actually used. We have to do this before importing
   // and using the module that actually uses these components so that all
   // dependencies are initialized.
-  let labExtensionUrl = getOption('fullLabextensionsUrl');
+
   const extensions = await Promise.allSettled(
     extension_data.map(async data => {
       await loadComponent(
