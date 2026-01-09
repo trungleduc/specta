@@ -45,6 +45,46 @@ export async function main() {
   const federatedMimeExtensionPromises = [];
   const federatedStylePromises = [];
 
+  const notebookLinkExtensionsString = PageConfig.getOption(
+    "notebookLinkExtensions"
+  );
+  if (notebookLinkExtensionsString && notebookLinkExtensionsString.length > 0) {
+    const notebookLinkExtensions = JSON.parse(notebookLinkExtensionsString);
+    const notebookLinkExtensionPromises = []
+    const notebookLinkStylePromises = [];
+    notebookLinkExtensions.forEach((data) => {
+      if (data.extension) {
+        notebookLinkExtensionPromises.push(
+          createModule(data.name, data.extension)
+        );
+      }
+      if (data.style) {
+        notebookLinkStylePromises.push(createModule(data.name, data.style));
+      }
+    });
+
+    // Add the notebook.link extensions.
+    const notebookLinkExtensionsResult = await Promise.allSettled(
+      notebookLinkExtensionPromises
+    );
+    notebookLinkExtensionsResult.forEach((p) => {
+      if (p.status === "fulfilled") {
+        for (let plugin of activePlugins(p.value)) {
+          pluginsToRegister.push(plugin);
+        }
+      } else {
+        console.error(p.reason);
+      }
+    });
+
+    // Load all notebook.link styles and log errors for any that do not
+    (await Promise.allSettled(notebookLinkStylePromises))
+      .filter(({ status }) => status === "rejected")
+      .forEach(({ reason }) => {
+        console.error(reason);
+      });
+  }
+
   // This is all the data needed to load and activate plugins. This should be
   // gathered by the server and put onto the initial page template.
   const extensions = JSON.parse(
