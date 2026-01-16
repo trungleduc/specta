@@ -121,6 +121,7 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
     urlFactory: ISpectaUrlFactory | null
   ): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);
+    const noTree = urlParams.get('no-tree') === 'true';
     if (!isSpectaApp()) {
       // Not a specta app
       const path = urlParams.get('specta-path');
@@ -150,8 +151,10 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
       //  Specta app
       const path = urlParams.get('path');
       if (!path) {
-        const browser = createFileBrowser({ defaultBrowser, urlFactory });
-        app.shell.add(browser, 'main', { rank: 100 });
+        if (!noTree) {
+          const browser = createFileBrowser({ defaultBrowser, urlFactory });
+          app.shell.add(browser, 'main', { rank: 100 });
+        }
         hideAppLoadingIndicator();
       } else {
         app.restored.then(async () => {
