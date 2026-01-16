@@ -37,6 +37,7 @@ import { ISignal, Signal } from '@lumino/signaling';
 export class AppModel {
   constructor(private options: AppModel.IOptions) {
     this._notebookModelJson = options.context.model.toJSON();
+    this._filePath = options.context.localPath;
     this._kernelPreference = {
       shouldStart: true,
       canStart: true,
@@ -87,7 +88,8 @@ export class AppModel {
   async initialize(): Promise<void> {
     this._context = await createNotebookContext({
       manager: this._manager,
-      kernelPreference: this._kernelPreference
+      kernelPreference: this._kernelPreference,
+      filePath: this._filePath
     });
     this._context.model.fromJSON(this._notebookModelJson);
 
@@ -214,6 +216,7 @@ export class AppModel {
   private _manager: ServiceManager.IManager;
   private _kernelPreference: ISessionContext.IKernelPreference;
   private _fileChanged = new Signal<this, CellList>(this);
+  private _filePath: string;
 }
 
 export namespace AppModel {

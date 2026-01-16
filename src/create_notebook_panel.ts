@@ -1,5 +1,6 @@
 import { ISessionContext } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
+import { PathExt } from '@jupyterlab/coreutils';
 import { Context, DocumentRegistry } from '@jupyterlab/docregistry';
 import {
   INotebookModel,
@@ -34,12 +35,20 @@ class CustomContext extends Context<INotebookModel> {
 export async function createNotebookContext(options: {
   manager: ServiceManager.IManager;
   kernelPreference: ISessionContext.IKernelPreference;
+  filePath: string;
 }): Promise<Context<INotebookModel>> {
   const factory = new NotebookModelFactory({
     disableDocumentWideUndoRedo: false
   });
-  const { manager, kernelPreference } = options;
-  const path = UUID.uuid4() + '.ipynb';
+  const { manager, kernelPreference, filePath } = options;
+
+  const pathsWithoutDriver = filePath.split(':');
+  const dirPath = PathExt.dirname(
+    pathsWithoutDriver.length > 1
+      ? pathsWithoutDriver[1]
+      : pathsWithoutDriver[0]
+  );
+  const path = PathExt.join(dirPath, UUID.uuid4() + '.ipynb');
 
   await manager.ready;
   await manager.kernelspecs.ready;
