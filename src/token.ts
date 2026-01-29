@@ -41,6 +41,7 @@ export interface ITopbarConfig {
   settingsButton?: boolean;
   themeToggle?: boolean;
   layoutToggle?: boolean;
+  link?: string;
 }
 
 export interface ISpectaAppConfig {
@@ -75,4 +76,20 @@ export const ISpectaDocTracker = new Token<IWidgetTracker<Widget>>(
 
 export const ISpectaUrlFactoryToken = new Token<ISpectaUrlFactory>(
   'specta:ISpectaUrlFactoryToken'
+);
+
+export interface ISpectaTopbarWidget {
+  addTopbarWidget?: (
+    widget: Widget,
+    side: 'left' | 'right',
+    rank: number
+  ) => void;
+  addReactWidget?: (
+    widget: JSX.Element,
+    side: 'left' | 'right',
+    rank: number
+  ) => void;
+}
+export const ISpectaTopbarWidgetToken = new Token<ISpectaTopbarWidget>(
+  'specta:ISpectaTopbarWidget'
 );

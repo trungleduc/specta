@@ -21,6 +21,8 @@ import {
   ISpectaDocTracker,
   ISpectaLayoutRegistry,
   ISpectaShell,
+  ISpectaTopbarWidget,
+  ISpectaTopbarWidgetToken,
   ISpectaUrlFactory,
   ISpectaUrlFactoryToken
 } from '../token';
@@ -32,6 +34,7 @@ import {
   readSpectaConfig,
   registerDocumentFactory
 } from '../tool';
+import { PromiseDelegate } from '@lumino/coreutils';
 
 const activate = (
   app: JupyterFrontEnd<ISpectaShell>,
@@ -40,7 +43,8 @@ const activate = (
   editorServices: IEditorServices,
   contentFactory: NotebookPanel.IContentFactory,
   spectaLayoutRegistry: ISpectaLayoutRegistry,
-  themeManager: IThemeManager
+  themeManager: IThemeManager,
+  spectaTopbar: ISpectaTopbarWidget
 ): IWidgetTracker => {
   const namespace = 'specta';
   const spectaTracker = new WidgetTracker<Widget>({ namespace });
@@ -54,7 +58,8 @@ const activate = (
     contentFactory,
     spectaTracker,
     spectaLayoutRegistry,
-    themeManager
+    themeManager,
+    spectaTopbar
   });
 
   return spectaTracker;
@@ -72,7 +77,8 @@ export const spectaDocument: JupyterFrontEndPlugin<
     IEditorServices,
     NotebookPanel.IContentFactory,
     ISpectaLayoutRegistry,
-    IThemeManager
+    IThemeManager,
+    ISpectaTopbarWidgetToken
   ],
   activate,
   provides: ISpectaDocTracker
@@ -82,7 +88,7 @@ export const spectaUrlFactory: JupyterFrontEndPlugin<ISpectaUrlFactory> = {
   id: 'specta/application-extension:urlFactory',
   autoStart: true,
   provides: ISpectaUrlFactoryToken,
-  activate() {
+  activate: () => {
     const urlFactory = (path: string) => {
       const baseUrl = PageConfig.getBaseUrl();
       let appUrl = PageConfig.getOption('appUrl');
@@ -159,6 +165,16 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
       } else {
         app.restored.then(async () => {
           await new Promise(r => setTimeout(r, 200));
+          console.log('in specta app')
+          await kernelSpecManager.ready;
+          const specs = kernelSpecManager.specs;
+          const pd = new PromiseDelegate<void>();
+          kernelSpecManager.specsChanged.connect((_, b) => {
+            pd.resolve();
+          });
+          if (!specs || Object.keys(specs.kernelspecs).length === 0) {
+            await pd.promise;
+          }
           if (PathExt.extname(path) === '.ipynb') {
             app.shell.addClass('specta-document-viewer');
             const widget = docManager.openOrReveal(path, 'specta');

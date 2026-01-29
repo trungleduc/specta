@@ -87,12 +87,11 @@
   display: flex;
   flex-direction: row;
   height: 28px;
-  width: calc(100% + 20px);
   border-bottom: solid 0.5px var(--jp-border-color1);
   gap: 10px;
   align-items: center;
   justify-content: space-between;
-  padding: 0;
+  padding: 0 5px;
   position: relative;
 }
 
@@ -109,6 +108,7 @@
 
 .specta-topbar-right {
   position: relative;
+  display: flex;
 }
 
 .specta-topbar-right .jp-Dialog-content {
