@@ -9,9 +9,8 @@ import {
   INotebookModel
 } from '@jupyterlab/notebook';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
-
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { ServiceManager } from '@jupyterlab/services';
+import { ServiceManager, KernelSpec } from '@jupyterlab/services';
 import { AppModel } from './specta_model';
 import { AppWidget } from './specta_widget';
 import { UUID } from '@lumino/coreutils';
@@ -47,7 +46,8 @@ export class SpectaWidgetFactory {
       mimeTypeService: this._options.mimeTypeService,
       editorConfig: StaticNotebook.defaultEditorConfig,
       notebookConfig: StaticNotebook.defaultNotebookConfig,
-      editorServices: this._options.editorServices
+      editorServices: this._options.editorServices,
+      kernelSpecManager: this._options.kernelSpecManager
     });
 
     // Create the specta pane
@@ -73,5 +73,6 @@ export namespace SpectaWidgetFactory {
     mimeTypeService: IEditorMimeTypeService;
     editorServices: IEditorServices;
     spectaLayoutRegistry: ISpectaLayoutRegistry;
+    kernelSpecManager: KernelSpec.IManager;
   }
 }

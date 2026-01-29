@@ -34,7 +34,6 @@ import {
   readSpectaConfig,
   registerDocumentFactory
 } from '../tool';
-import { PromiseDelegate } from '@lumino/coreutils';
 
 const activate = (
   app: JupyterFrontEnd<ISpectaShell>,
@@ -44,7 +43,8 @@ const activate = (
   contentFactory: NotebookPanel.IContentFactory,
   spectaLayoutRegistry: ISpectaLayoutRegistry,
   themeManager: IThemeManager,
-  spectaTopbar: ISpectaTopbarWidget
+  spectaTopbar: ISpectaTopbarWidget,
+  kernelSpecManager: KernelSpec.IManager
 ): IWidgetTracker => {
   const namespace = 'specta';
   const spectaTracker = new WidgetTracker<Widget>({ namespace });
@@ -59,7 +59,8 @@ const activate = (
     spectaTracker,
     spectaLayoutRegistry,
     themeManager,
-    spectaTopbar
+    spectaTopbar,
+    kernelSpecManager
   });
 
   return spectaTracker;
@@ -78,7 +79,8 @@ export const spectaDocument: JupyterFrontEndPlugin<
     NotebookPanel.IContentFactory,
     ISpectaLayoutRegistry,
     IThemeManager,
-    ISpectaTopbarWidgetToken
+    ISpectaTopbarWidgetToken,
+    IKernelSpecManager
   ],
   activate,
   provides: ISpectaDocTracker
@@ -164,17 +166,8 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         hideAppLoadingIndicator();
       } else {
         app.restored.then(async () => {
-          await new Promise(r => setTimeout(r, 200));
-          console.log('in specta app')
+          await new Promise(r => setTimeout(r, 100));
           await kernelSpecManager.ready;
-          const specs = kernelSpecManager.specs;
-          const pd = new PromiseDelegate<void>();
-          kernelSpecManager.specsChanged.connect((_, b) => {
-            pd.resolve();
-          });
-          if (!specs || Object.keys(specs.kernelspecs).length === 0) {
-            await pd.promise;
-          }
           if (PathExt.extname(path) === '.ipynb') {
             app.shell.addClass('specta-document-viewer');
             const widget = docManager.openOrReveal(path, 'specta');
