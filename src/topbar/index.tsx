@@ -43,13 +43,6 @@ export const topbarPlugin: JupyterFrontEndPlugin<
       app.shell.hideTopBar();
       return { addTopbarWidget: undefined };
     }
-    // const widget = ReactWidget.create(
-    //   <TopbarElement
-    //     config={config.topBar}
-    //     themeManager={themeManager}
-    //     layoutRegistry={layoutRegistry}
-    //   />
-    // );
 
     const widget = new TopbarWidget({
       config: config.topBar
