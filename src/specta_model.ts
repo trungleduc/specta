@@ -22,9 +22,9 @@ import {
 } from '@jupyterlab/notebook';
 import { OutputAreaModel, SimplifiedOutputArea } from '@jupyterlab/outputarea';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { ServiceManager } from '@jupyterlab/services';
+import { KernelSpec, ServiceManager } from '@jupyterlab/services';
 import { IExecuteReplyMsg } from '@jupyterlab/services/lib/kernel/messages';
-import { PartialJSONValue } from '@lumino/coreutils';
+import { PartialJSONValue, PromiseDelegate } from '@lumino/coreutils';
 
 import {
   createNotebookContext,
@@ -50,6 +50,14 @@ export class AppModel {
     options.context.fileChanged.connect(e => {
       this._fileChanged.emit(e.model.cells);
     });
+    this._kernelSpecManager = options.kernelSpecManager;
+    const specs = this._kernelSpecManager.specs;
+    this._kernelSpecManager.specsChanged.connect((_, b) => {
+      this._kernelReady.resolve();
+    });
+    if (specs && Object.keys(specs.kernelspecs).length !== 0) {
+      this._kernelReady.resolve();
+    }
   }
   /**
    * Whether the handler is disposed.
@@ -195,6 +203,12 @@ export class AppModel {
     if (cell.type !== 'code' || !this._context) {
       return;
     }
+    const specs = this._kernelSpecManager.specs;
+    if (specs && Object.keys(specs.kernelspecs).length !== 0) {
+      this._kernelReady.resolve();
+    } else {
+      await this._kernelReady.promise;
+    }
     const output = outputWrapper.cellOutput as SimplifiedOutputArea;
     const source = cell.sharedModel.source;
     const rep = await SimplifiedOutputArea.execute(
@@ -209,6 +223,8 @@ export class AppModel {
     return rep;
   }
 
+  private _kernelReady = new PromiseDelegate<void>();
+
   private _notebookPanel?: NotebookPanel;
   private _context?: DocumentRegistry.IContext<INotebookModel>;
   private _notebookModelJson: PartialJSONValue;
@@ -217,6 +233,7 @@ export class AppModel {
   private _kernelPreference: ISessionContext.IKernelPreference;
   private _fileChanged = new Signal<this, CellList>(this);
   private _filePath: string;
+  private _kernelSpecManager: KernelSpec.IManager;
 }
 
 export namespace AppModel {
@@ -230,6 +247,7 @@ export namespace AppModel {
     editorConfig: StaticNotebook.IEditorConfig;
     notebookConfig: StaticNotebook.INotebookConfig;
     editorServices: IEditorServices;
+    kernelSpecManager: KernelSpec.IManager;
   }
 }
 

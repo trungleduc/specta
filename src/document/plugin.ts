@@ -21,6 +21,8 @@ import {
   ISpectaDocTracker,
   ISpectaLayoutRegistry,
   ISpectaShell,
+  ISpectaTopbarWidget,
+  ISpectaTopbarWidgetToken,
   ISpectaUrlFactory,
   ISpectaUrlFactoryToken
 } from '../token';
@@ -40,7 +42,9 @@ const activate = (
   editorServices: IEditorServices,
   contentFactory: NotebookPanel.IContentFactory,
   spectaLayoutRegistry: ISpectaLayoutRegistry,
-  themeManager: IThemeManager
+  themeManager: IThemeManager,
+  spectaTopbar: ISpectaTopbarWidget,
+  kernelSpecManager: KernelSpec.IManager
 ): IWidgetTracker => {
   const namespace = 'specta';
   const spectaTracker = new WidgetTracker<Widget>({ namespace });
@@ -54,7 +58,9 @@ const activate = (
     contentFactory,
     spectaTracker,
     spectaLayoutRegistry,
-    themeManager
+    themeManager,
+    spectaTopbar,
+    kernelSpecManager
   });
 
   return spectaTracker;
@@ -72,7 +78,9 @@ export const spectaDocument: JupyterFrontEndPlugin<
     IEditorServices,
     NotebookPanel.IContentFactory,
     ISpectaLayoutRegistry,
-    IThemeManager
+    IThemeManager,
+    ISpectaTopbarWidgetToken,
+    IKernelSpecManager
   ],
   activate,
   provides: ISpectaDocTracker
@@ -82,7 +90,7 @@ export const spectaUrlFactory: JupyterFrontEndPlugin<ISpectaUrlFactory> = {
   id: 'specta/application-extension:urlFactory',
   autoStart: true,
   provides: ISpectaUrlFactoryToken,
-  activate() {
+  activate: () => {
     const urlFactory = (path: string) => {
       const baseUrl = PageConfig.getBaseUrl();
       let appUrl = PageConfig.getOption('appUrl');
@@ -158,7 +166,8 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         hideAppLoadingIndicator();
       } else {
         app.restored.then(async () => {
-          await new Promise(r => setTimeout(r, 200));
+          await new Promise(r => setTimeout(r, 100));
+          await kernelSpecManager.ready;
           if (PathExt.extname(path) === '.ipynb') {
             app.shell.addClass('specta-document-viewer');
             const widget = docManager.openOrReveal(path, 'specta');

@@ -6,7 +6,7 @@ import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { ICell, INotebookMetadata } from '@jupyterlab/nbformat';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
-import { Contents } from '@jupyterlab/services';
+import { Contents, KernelSpec } from '@jupyterlab/services';
 import { CommandRegistry } from '@lumino/commands';
 
 import { NotebookGridWidgetFactory } from './document/factory';
@@ -16,6 +16,7 @@ import {
   ISpectaCellConfig,
   ISpectaLayoutRegistry,
   ISpectaShell,
+  ISpectaTopbarWidget,
   ISpectaUrlFactory
 } from './token';
 
@@ -29,6 +30,8 @@ export function registerDocumentFactory(options: {
   spectaTracker: WidgetTracker;
   spectaLayoutRegistry: ISpectaLayoutRegistry;
   themeManager?: IThemeManager;
+  spectaTopbar: ISpectaTopbarWidget;
+  kernelSpecManager: KernelSpec.IManager;
 }) {
   const {
     factoryName,
@@ -39,7 +42,9 @@ export function registerDocumentFactory(options: {
     contentFactory,
     spectaTracker,
     spectaLayoutRegistry,
-    themeManager
+    themeManager,
+    spectaTopbar,
+    kernelSpecManager
   } = options;
 
   const spectaWidgetFactory = new SpectaWidgetFactory({
@@ -49,7 +54,8 @@ export function registerDocumentFactory(options: {
     contentFactory,
     mimeTypeService: editorServices.mimeTypeService,
     editorServices,
-    spectaLayoutRegistry
+    spectaLayoutRegistry,
+    kernelSpecManager
   });
   const widgetFactory = new NotebookGridWidgetFactory({
     name: factoryName,
@@ -58,7 +64,8 @@ export function registerDocumentFactory(options: {
     shell: app.shell,
     spectaWidgetFactory,
     themeManager,
-    spectaLayoutRegistry
+    spectaLayoutRegistry,
+    spectaTopbar
   });
 
   // Registering the widget factory
