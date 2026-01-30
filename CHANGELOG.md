@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.7
+
+([Full Changelog](https://github.com/trungleduc/specta/compare/v0.4.6...1eff62b8bab63ed9da78e221693820fa994c5778))
+
+### Enhancements made
+
+- Improve top bar and wait for kernel [#41](https://github.com/trungleduc/specta/pull/41) ([@trungleduc](https://github.com/trungleduc))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2026-01-16&to=2026-01-30&type=c))
+
+@trungleduc ([activity](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2026-01-16..2026-01-30&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.6
 
 ([Full Changelog](https://github.com/trungleduc/specta/compare/v0.4.5...be64f2eea59fa8118b9a93a76d77b555d8a03a28))
@@ -18,8 +37,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/trungleduc/specta/graphs/contributors?from=2026-01-09&to=2026-01-16&type=c))
 
 @trungleduc ([activity](https://github.com/search?q=repo%3Atrungleduc%2Fspecta+involves%3Atrungleduc+updated%3A2026-01-09..2026-01-16&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.5
 
