@@ -17,6 +17,13 @@ export interface ISpectaLayout {
     readyCallback: () => Promise<void>;
     spectaConfig: ISpectaAppConfig;
   }): Promise<void>;
+
+  export?: (options: {
+    items: SpectaCellOutput[];
+    notebook: nbformat.INotebookContent;
+    readyCallback: () => Promise<void>;
+    spectaConfig: ISpectaAppConfig;
+  }) => Promise<string>;
 }
 export interface ISpectaLayoutRegistry {
   get(name: string): ISpectaLayout | undefined;

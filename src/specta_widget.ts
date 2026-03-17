@@ -129,13 +129,23 @@ export class AppWidget extends Panel {
     const spectaLayout = this.getLayout();
     const readyCallback = async () => this.removeSpinner();
 
-    await spectaLayout.render({
-      host: this._host,
-      items: this._outputs,
-      notebook: this._model.context?.model.toJSON() as any,
-      readyCallback,
-      spectaConfig: this._spectaAppConfig
-    });
+    // await spectaLayout.render({
+    //   host: this._host,
+    //   items: this._outputs,
+    //   notebook: this._model.context?.model.toJSON() as any,
+    //   readyCallback,
+    //   spectaConfig: this._spectaAppConfig
+    // });
+    if (spectaLayout?.export) {
+      const res = await spectaLayout?.export({
+        items: this._outputs,
+        notebook: this._model.context?.model.toJSON() as any,
+        readyCallback,
+        spectaConfig: this._spectaAppConfig
+      });
+
+      this._host.node.innerHTML = res;
+    }
   }
 
   async rerender(newCells: CellList): Promise<void> {
