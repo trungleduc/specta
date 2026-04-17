@@ -2,7 +2,7 @@
 
 [![Github Actions Status](https://github.com/trungleduc/specta/workflows/Build/badge.svg)](https://github.com/trungleduc/specta/actions/workflows/build.yml)
 [![Documentation Status](https://readthedocs.org/projects/specta/badge/?version=latest)](https://specta.readthedocs.io/en/latest/?badge=latest)
-[![Try on lite](https://jupyterlite.rtfd.io/en/latest/_static/badge.svg)](https://trungleduc.github.io/specta/specta/)
+[![Try on lite](https://jupyterlite.rtfd.io/en/latest/_static/badge.svg)](https://notebook-link.github.io/specta/)
 
 <h2 align="center"> A JupyterLite app to present your Jupyter documents in different ways</h2>
 
