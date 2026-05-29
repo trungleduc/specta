@@ -77,6 +77,48 @@ export function registerDocumentFactory(options: {
     });
     spectaTracker.add(widget);
   });
+
+  // Define plainb format details
+  const plainbFormats = [
+    'parsepy',
+    'parsesphinxgallery',
+    'parseclassicmd',
+    'parsemystmd'
+  ];
+
+  const plainbLabels: Record<string, string> = {
+    parsepy: 'Specta (Percent .py)',
+    parsesphinxgallery: 'Specta (Sphinx Gallery .py)',
+    parseclassicmd: 'Specta (Classic Markdown .md)',
+    parsemystmd: 'Specta (MyST .md)'
+  };
+
+  for (const format of plainbFormats) {
+    const fileTypeName = `ptjnb-${format}`;
+    const modelName = `ptjnb-model-${format}`;
+    const factoryUniqueName = plainbLabels[format];
+
+    const plainbWidgetFactory = new NotebookGridWidgetFactory({
+      name: factoryUniqueName,
+      modelName: modelName,
+      fileTypes: [fileTypeName],
+      shell: app.shell,
+      spectaWidgetFactory,
+      themeManager,
+      spectaLayoutRegistry,
+      spectaTopbar
+    });
+
+    app.docRegistry.addWidgetFactory(plainbWidgetFactory);
+
+    // Connect the widget to the specta tracker
+    plainbWidgetFactory.widgetCreated.connect((_sender, widget) => {
+      widget.context.pathChanged.connect(() => {
+        spectaTracker.save(widget);
+      });
+      spectaTracker.add(widget);
+    });
+  }
 }
 
 export function createFileBrowser(options: {
