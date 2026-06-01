@@ -51,7 +51,9 @@ export const topbarPlugin: JupyterFrontEndPlugin<
     widget.id = 'specta-topbar-widget';
     app.shell.add(widget, 'top');
 
-    if (path && PathExt.extname(path) === '.ipynb') {
+    const fileTypes = app.docRegistry.getFileTypesForPath(path ?? '');
+    const isPlainb = fileTypes.some(ft => ft.name.startsWith('ptjnb-'));
+    if (path && (PathExt.extname(path) === '.ipynb' || isPlainb)) {
       // Specta document will handle the top bar.
       return widget;
     }

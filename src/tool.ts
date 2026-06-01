@@ -20,6 +20,13 @@ import {
   ISpectaUrlFactory
 } from './token';
 
+export const PLAINB_FACTORY_LABELS: Record<string, string> = {
+  parsepy: 'Specta (Percent .py)',
+  parsesphinxgallery: 'Specta (Sphinx Gallery .py)',
+  parseclassicmd: 'Specta (Classic Markdown .md)',
+  parsemystmd: 'Specta (MyST .md)'
+};
+
 export function registerDocumentFactory(options: {
   factoryName: string;
   app: JupyterFrontEnd<ISpectaShell>;
@@ -77,6 +84,36 @@ export function registerDocumentFactory(options: {
     });
     spectaTracker.add(widget);
   });
+
+  // Define plainb format details
+  const plainbFormats = Object.keys(PLAINB_FACTORY_LABELS);
+
+  for (const format of plainbFormats) {
+    const fileTypeName = `ptjnb-${format}`;
+    const modelName = `ptjnb-model-${format}`;
+    const factoryUniqueName = PLAINB_FACTORY_LABELS[format];
+
+    const plainbWidgetFactory = new NotebookGridWidgetFactory({
+      name: factoryUniqueName,
+      modelName: modelName,
+      fileTypes: [fileTypeName],
+      shell: app.shell,
+      spectaWidgetFactory,
+      themeManager,
+      spectaLayoutRegistry,
+      spectaTopbar
+    });
+
+    app.docRegistry.addWidgetFactory(plainbWidgetFactory);
+
+    // Connect the widget to the specta tracker
+    plainbWidgetFactory.widgetCreated.connect((_sender, widget) => {
+      widget.context.pathChanged.connect(() => {
+        spectaTracker.save(widget);
+      });
+      spectaTracker.add(widget);
+    });
+  }
 }
 
 export function createFileBrowser(options: {

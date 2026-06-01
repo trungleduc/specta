@@ -8,11 +8,11 @@
       },
       "defaultLayout": "default",
       "perFileConfig": {
-        "blog.ipynb": {
+        "files/blog.ipynb": {
           "hideTopbar": false,
           "defaultLayout": "article"
         },
-        "slides.ipynb": {
+        "files/slides.ipynb": {
           "hideTopbar": true,
           "slidesTheme": "sky"
         }

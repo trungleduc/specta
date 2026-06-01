@@ -31,6 +31,7 @@ import {
   createFileBrowser,
   hideAppLoadingIndicator,
   isSpectaApp,
+  PLAINB_FACTORY_LABELS,
   readSpectaConfig,
   registerDocumentFactory
 } from '../tool';
@@ -140,7 +141,11 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
       app.restored.then(async () => {
         const labShell = app.shell;
 
-        if (PathExt.extname(path) === '.ipynb') {
+        const fileTypes = app.docRegistry.getFileTypesForPath(path);
+        const fileTypeName = fileTypes[0]?.name;
+        const isPlainb = fileTypeName && fileTypeName.startsWith('ptjnb-');
+
+        if (PathExt.extname(path) === '.ipynb' || isPlainb) {
           const commands = app.commands;
           const spectaConfig = readSpectaConfig({});
           await configLabLayout({
@@ -148,7 +153,12 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
             labShell,
             commands
           });
-          const widget = docManager.openOrReveal(path, 'specta');
+          let factory = 'specta';
+          if (isPlainb) {
+            const format = fileTypeName.replace('ptjnb-', '');
+            factory = PLAINB_FACTORY_LABELS[format] ?? 'specta';
+          }
+          const widget = docManager.openOrReveal(path, factory);
           if (widget) {
             app.shell.add(widget, 'main');
           }
@@ -168,9 +178,18 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
         app.restored.then(async () => {
           await new Promise(r => setTimeout(r, 100));
           await kernelSpecManager.ready;
-          if (PathExt.extname(path) === '.ipynb') {
+          const fileTypes = app.docRegistry.getFileTypesForPath(path);
+          const fileTypeName = fileTypes[0]?.name;
+          const isPlainb = fileTypeName && fileTypeName.startsWith('ptjnb-');
+
+          if (PathExt.extname(path) === '.ipynb' || isPlainb) {
             app.shell.addClass('specta-document-viewer');
-            const widget = docManager.openOrReveal(path, 'specta');
+            let factory = 'specta';
+            if (isPlainb) {
+              const format = fileTypeName.replace('ptjnb-', '');
+              factory = PLAINB_FACTORY_LABELS[format] ?? 'specta';
+            }
+            const widget = docManager.openOrReveal(path, factory);
             if (widget) {
               app.shell.add(widget, 'main');
             }
