@@ -20,6 +20,13 @@ import {
   ISpectaUrlFactory
 } from './token';
 
+export const PLAINB_FACTORY_LABELS: Record<string, string> = {
+  parsepy: 'Specta (Percent .py)',
+  parsesphinxgallery: 'Specta (Sphinx Gallery .py)',
+  parseclassicmd: 'Specta (Classic Markdown .md)',
+  parsemystmd: 'Specta (MyST .md)'
+};
+
 export function registerDocumentFactory(options: {
   factoryName: string;
   app: JupyterFrontEnd<ISpectaShell>;
@@ -79,24 +86,12 @@ export function registerDocumentFactory(options: {
   });
 
   // Define plainb format details
-  const plainbFormats = [
-    'parsepy',
-    'parsesphinxgallery',
-    'parseclassicmd',
-    'parsemystmd'
-  ];
-
-  const plainbLabels: Record<string, string> = {
-    parsepy: 'Specta (Percent .py)',
-    parsesphinxgallery: 'Specta (Sphinx Gallery .py)',
-    parseclassicmd: 'Specta (Classic Markdown .md)',
-    parsemystmd: 'Specta (MyST .md)'
-  };
+  const plainbFormats = Object.keys(PLAINB_FACTORY_LABELS);
 
   for (const format of plainbFormats) {
     const fileTypeName = `ptjnb-${format}`;
     const modelName = `ptjnb-model-${format}`;
-    const factoryUniqueName = plainbLabels[format];
+    const factoryUniqueName = PLAINB_FACTORY_LABELS[format];
 
     const plainbWidgetFactory = new NotebookGridWidgetFactory({
       name: factoryUniqueName,

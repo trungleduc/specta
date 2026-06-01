@@ -31,6 +31,7 @@ import {
   createFileBrowser,
   hideAppLoadingIndicator,
   isSpectaApp,
+  PLAINB_FACTORY_LABELS,
   readSpectaConfig,
   registerDocumentFactory
 } from '../tool';
@@ -155,13 +156,7 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
           let factory = 'specta';
           if (isPlainb) {
             const format = fileTypeName.replace('ptjnb-', '');
-            const plainbLabels: Record<string, string> = {
-              parsepy: 'Specta (Percent .py)',
-              parsesphinxgallery: 'Specta (Sphinx Gallery .py)',
-              parseclassicmd: 'Specta (Classic Markdown .md)',
-              parsemystmd: 'Specta (MyST .md)'
-            };
-            factory = plainbLabels[format] ?? 'specta';
+            factory = PLAINB_FACTORY_LABELS[format] ?? 'specta';
           }
           const widget = docManager.openOrReveal(path, factory);
           if (widget) {
@@ -192,13 +187,7 @@ export const spectaOpener: JupyterFrontEndPlugin<void, ILabShell> = {
             let factory = 'specta';
             if (isPlainb) {
               const format = fileTypeName.replace('ptjnb-', '');
-              const plainbLabels: Record<string, string> = {
-                parsepy: 'Specta (Percent .py)',
-                parsesphinxgallery: 'Specta (Sphinx Gallery .py)',
-                parseclassicmd: 'Specta (Classic Markdown .md)',
-                parsemystmd: 'Specta (MyST .md)'
-              };
-              factory = plainbLabels[format] ?? 'specta';
+              factory = PLAINB_FACTORY_LABELS[format] ?? 'specta';
             }
             const widget = docManager.openOrReveal(path, factory);
             if (widget) {
